@@ -57,7 +57,7 @@ R.section("沒有播放鍵的實驗，操作說明要寫出怎麼開始");
    */
   const checks = [
     ["earth-shape", /播放/],
-    ["earth-layers-intro", /調整參數|滑桿|參數/],
+    ["solar-system-scale", /調整參數|滑桿|參數/],
     ["epicenter-locate", /調整參數|滑桿|參數|播放/]
   ];
   const bad = [];
