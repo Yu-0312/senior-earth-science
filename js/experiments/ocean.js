@@ -24,7 +24,6 @@
           // 左:一槽海水,鹽粒數量隨鹽度增減
           const bx = W * 0.04, by = H * 0.22, bw = W * 0.40, bh = H * 0.56;
           D.rect(ctx, bx, by, bw, bh, { fill: PL.theme.isLight() ? "rgba(74,163,216,0.30)" : "rgba(27,77,112,0.45)", stroke: PL.col("border"), width: 1.5, r: 10 });
-          D.line(ctx, bx, by, bx + bw, by, "rgba(255,255,255,0.65)", 1.6);
           for (let i = 0; i < Math.round(S * 1.5); i++) { const a = i * 2.39996, rr = Math.sqrt((i + 0.5) / 75) * bw * 0.46; D.disc(ctx, bx + bw / 2 + Math.cos(a) * rr, by + bh * 0.55 + Math.sin(a) * rr * 0.66, 3, { fill: "#ffe082" }); }
           CK.meter(ctx, bx + 4, by + bh + 14, bw - 8, 10, S / 50, { color: "#4fc3f7", label: "鹽度比例(大洋平均 35‰ = 0.7)" });
           if (evap > 0.2) for (let i = 0; i < 3; i++) D.arrow(ctx, bx + bw * (0.22 + i * 0.24), by - 12, bx + bw * (0.22 + i * 0.24), by - 26 - evap * 3.2, { color: "#ef8829", width: 2.2, label: i === 1 ? "蒸發" : "" });
@@ -94,8 +93,7 @@
           const { ctx, W, H } = ui.cv; CK.bench(ui.cv);
           const ts = surfS.get();
           const zn = ZONES.find(z => z.key === zoneSel.get()) || ZONES[1];
-          const bx = W * 0.06, by = H * 0.18, bw = W * 0.38, bh = H * 0.64;
-          const yOf = z => by + z / 4000 * bh;
+          const bx = W * 0.06, by = H * 0.18, bw = W * 0.38, bh = H * 0.64, yOf = z => by + z / 4000 * bh;
           for (let i = 0; i < 26; i++) D.rect(ctx, bx, yOf(i / 26 * 4000), bw, bh / 26 + 0.6, { fill: CK.tempColor(tempAt(i / 26 * 4000 + 75, ts, zn) / 32) });
           D.line(ctx, bx, by, bx + bw, by, "rgba(255,255,255,0.7)", 1.6);
           // 溫躍層標帶
@@ -108,11 +106,7 @@
           D.text(ctx, zn.name + "・表層 " + PL.fmt(ts, 1) + " °C", bx + 8, by - 20, { color: PL.col("text-dim"), size: 11, weight: "700" });
           // 溫度尺:游標跟著表層水溫
           const gx = bx + bw + 16, gy = by + 6, gh = bh - 12;
-          for (let k = 0; k <= 30; k += 6) {
-            const y = gy + gh * (1 - k / 30);
-            D.line(ctx, gx, y, gx + 6, y, PL.col("border"), 1);
-            D.text(ctx, k + "°", gx + 9, y + 3, { color: PL.col("text-faint"), size: 8.5 });
-          }
+          for (let k = 0; k <= 30; k += 6) { const y = gy + gh * (1 - k / 30); D.line(ctx, gx, y, gx + 6, y, PL.col("border"), 1); D.text(ctx, k + "°", gx + 9, y + 3, { color: PL.col("text-faint"), size: 8.5 }); }
           D.arrow(ctx, gx + 34, gy + gh * (1 - ts / 30), gx + 8, gy + gh * (1 - ts / 30), { color: PL.col("accent-2"), width: 2 });
           // 右側對照卡
           CK.panel(ctx, W * 0.60, H * 0.14, W * 0.36, H * 0.56, "各層溫度與密度");
@@ -255,9 +249,9 @@
           pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1])); ctx.stroke(); ctx.restore();
           const segs = pts.map((p, i) => [p, pts[Math.min(i + 1, pts.length - 1)]]);
           const cum = [0]; segs.forEach((s, i) => cum.push(cum[i] + Math.hypot(s[1][0] - s[0][0], s[1][1] - s[0][1])));
-          const tot = cum[cum.length - 1] || 1;
+          const tot = cum[cum.length - 1] || 1, spd = 10 + sink * 55;
           for (let k = 0; k < 9; k++) {
-            const d = ((t * (10 + sink * 55) + k * tot / 9) % tot);
+            const d = ((t * spd + k * tot / 9) % tot);
             let j = 0; while (j < cum.length - 2 && cum[j + 1] < d) j++;
             const f = (d - cum[j]) / Math.max(1, cum[j + 1] - cum[j]);
             D.disc(ctx, lerp(segs[j][0][0], segs[j][1][0], f), lerp(segs[j][0][1], segs[j][1][1], f), 3, { fill: "#7fd4ff", glow: "#4fc3f7", glowSize: 5 });
@@ -412,10 +406,7 @@
           for (let i = 0; i < 4; i++) { const a = i * 1.7 + 0.6, rr = r * 0.55; ctx.beginPath(); ctx.ellipse(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr, r * 0.2, r * 0.13, a, 0, TAU); ctx.fill(); }
           ctx.restore();
           const th = -phi;
-          for (const s of [1, -1]) {
-            const tx = cx + Math.cos(th) * rx * s, ty = cy + Math.sin(th) * rx * s;
-            D.arrow(ctx, tx, ty, tx + Math.cos(th) * 16 * s, ty + Math.sin(th) * 16 * s, { color: "#4fc3f7", width: 2.4, label: s > 0 ? "朝月漲潮" : "背月漲潮" });
-          }
+          for (const s of [1, -1]) { const tx = cx + Math.cos(th) * rx * s, ty = cy + Math.sin(th) * rx * s; D.arrow(ctx, tx, ty, tx + Math.cos(th) * 16 * s, ty + Math.sin(th) * 16 * s, { color: "#4fc3f7", width: 2.4, label: s > 0 ? "朝月漲潮" : "背月漲潮" }); }
           CK.badge(ctx, W * 0.36, H * 0.10, f > 0.72 ? "大潮(朔・望)" : f < 0.28 ? "小潮(上下弦)" : "尋常潮", f > 0.72 ? "#ef5350" : f < 0.28 ? "#5c91dc" : "#66bb6a");
           CK.meter(ctx, W * 0.20, H * 0.88, W * 0.32, 10, (1.2 + 2.9 * f) / 4.5, { color: "#4fc3f7", label: "西岸淺灘潮差放大效應" });
           rPhase.set(["朔・新月", "上弦", "望・滿月", "下弦"][Math.round(day / 7.38) % 4]);
@@ -477,8 +468,8 @@
           const depthFrac = km => clamp(km / shownKm, 0, 1.05);
           D.rect(ctx, box.x, box.y, box.w, box.h, { fill: PL.theme.isLight() ? "rgba(74,163,216,0.80)" : "rgba(27,77,112,0.85)" });
           const feats = [
-            ["大陸棚", 10, 0.15], ["大陸坡", 8, 3.0], ["大陸隆堆", 8, 4.5], ["深海平原", 20, 5.2],
-            ["中洋脊", 16, 2.4], ["深海平原", 18, 5.5], ["海溝", 7, 10.9], ["島弧", 8, 1.5]
+            ["大陸棚", 10, 0.15], ["大陸坡", 8, 3.0], ["大陸隆堆", 8, 4.5], ["深海平原", 20, 5.2], ["中洋脊", 16, 2.4],
+            ["深海平原", 18, 5.5], ["海溝", 7, 10.9], ["島弧", 8, 1.5]
           ].map(fd => ({ label: fd[0], w: fd[1], depth: depthFrac(fd[2]) }));
           const prof = CK.seaProfile(ctx, box, feats, {});
           // 深度尺
@@ -568,10 +559,7 @@
           D.text(ctx, "南美", bx + bw - W * 0.02, by + H * 0.13, { color: "#fff", size: 9.5, align: "center" });
           // 海面溫度色帶:西暖東冷,聖嬰時暖水東移
           const Te = 23 + anom, Tw = 29.5 - Math.max(0, anom) * 0.35;
-          for (let i = 0; i < 14; i++) {
-            const xf = i / 13, T = Te + (Tw - Te) * Math.pow(1 - xf, 1.2);
-            D.rect(ctx, bx + xf * bw, surf, bw / 13 + 0.8, 16, { fill: CK.tempColor((T - 16) / 15) });
-          }
+          for (let i = 0; i < 14; i++) { const xf = i / 13, T = Te + (Tw - Te) * Math.pow(1 - xf, 1.2); D.rect(ctx, bx + xf * bw, surf, bw / 13 + 0.8, 16, { fill: CK.tempColor((T - 16) / 15) }); }
           // 暖水堆:位置隨信風強度滑動
           const px = bx + bw * (0.12 + Math.max(0, 5 - trade) * 0.017);
           ctx.save(); ctx.fillStyle = "rgba(255,171,64,0.5)";
