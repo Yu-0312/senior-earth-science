@@ -26,7 +26,7 @@
   // 岩層配色（由新到舊的沉積岩常見色階）
   const ROCK_COLORS = {
     sandstone: "#d9b36c", shale: "#8b95a3", limestone: "#cfd4d8",
-    conglomerate: "#b78d5e", basalt: "#4a4f57", granite: "#c9a9a0",
+    conglomerate: "#b78d5e", basalt: "#4e5c74", granite: "#c9a9a0",
     slate: "#5d6672", schist: "#7a8a96", marble: "#e3e7ea", gneiss: "#a89a8c"
   };
   function rockColor(name) { return ROCK_COLORS[name] || "#9aa8b8"; }

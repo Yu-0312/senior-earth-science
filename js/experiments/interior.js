@@ -32,8 +32,7 @@
           const A = dg => [cx - R * Math.cos(dg * RAD), cy - R * Math.sin(dg * RAD)];
           if (fan) [25, 50, 75, 100].forEach(dg => {
             const a = A(dg);
-            D.line(ctx, E[0], E[1], a[0], a[1], "rgba(92,145,220,0.8)", 1.7);
-            D.line(ctx, E[0], E[1], a[0], a[1], "rgba(239,83,80,0.75)", 1.7, [6, 4]);
+            D.line(ctx, E[0], E[1], a[0], a[1], "rgba(92,145,220,0.8)", 1.7); D.line(ctx, E[0], E[1], a[0], a[1], "rgba(239,83,80,0.75)", 1.7, [6, 4]);
           });
           // 穿核 P 波(示意):經核函界線折射、變慢,從 143° 以外冒出
           if (fan) [146, 158, 170].forEach(dg => {
@@ -52,23 +51,19 @@
           // 跟蹤波相:亮點沿路徑走,速度 = 該層波速
           let dot = null, dist = 0, arrive = "行進中", vTxt;
           if (ph === "pkp") {
-            const a = A(170);
-            const Lpx = Math.hypot(a[0] - E[0], a[1] - E[1]);
-            dist = Math.min(9.6 * tt, Lpx * kmPx); // 核內平均 9.6 km/s
-            const f = clamp(dist / (Lpx * kmPx), 0, 1);
-            const q = ff => [ (1 - ff) * (1 - ff) * E[0] + 2 * (1 - ff) * ff * cx + ff * ff * a[0],
-                              (1 - ff) * (1 - ff) * E[1] + 2 * (1 - ff) * ff * (cy - R * 0.02) + ff * ff * a[1] ];
-            dot = q(f); vTxt = "平均 ≈ 9.6 km/s(核內變慢折射)";
+            const a = A(170), Lkm = Math.hypot(a[0] - E[0], a[1] - E[1]) * kmPx;
+            dist = Math.min(9.6 * tt, Lkm); // 核內平均 9.6 km/s
+            const f = clamp(dist / Lkm, 0, 1), g0 = 1 - f;
+            dot = [g0 * g0 * E[0] + 2 * g0 * f * cx + f * f * a[0], g0 * g0 * E[1] + 2 * g0 * f * (cy - R * 0.02) + f * f * a[1]];
+            vTxt = "平均 ≈ 9.6 km/s(核內變慢折射)";
             if (f >= 1) arrive = "已到達 170°(陰影帶外)";
           } else {
-            const a = A(100), Lkm = Math.hypot(a[0] - E[0], a[1] - E[1]) * kmPx;
-            const v = ph === "p" ? 10.5 : 6.2;
+            const a = A(100), Lkm = Math.hypot(a[0] - E[0], a[1] - E[1]) * kmPx, v = ph === "p" ? 10.5 : 6.2;
             dist = Math.min(v * tt, Lkm);
             const f = clamp(dist / Lkm, 0, 1);
             dot = [E[0] + (a[0] - E[0]) * f, E[1] + (a[1] - E[1]) * f];
             vTxt = ph === "p" ? "地函中 ≈ 10.5 km/s" : "地函中 ≈ 6.2 km/s";
-            if (f >= 1) arrive = "已到達 100° 測站";
-            if (ph === "s" && v * tt > Lkm) arrive = "已到達;S 波若對準外核:在此被擋";
+            if (f >= 1) arrive = ph === "s" ? "已到達;S 波若對準外核:在此被擋" : "已到達 100° 測站";
           }
           D.disc(ctx, dot[0], dot[1], 5, { fill: ph === "s" ? "#ef5350" : "#5c91dc", glow: "#ffd54f", glowSize: 9 });
           CK.panel(ctx, W * 0.64, H * 0.12, W * 0.33, H * 0.52, "地震波分層探測");
@@ -77,9 +72,7 @@
             D.text(ctx, rw[0], W * 0.66, H * 0.22 + i * 26, { color: PL.col("text-dim"), size: 10.5 });
             D.text(ctx, rw[1], W * 0.95, H * 0.22 + i * 26, { color: i === 2 ? "#ef5350" : PL.col("text"), size: 10.5, align: "right", weight: i === 2 ? "700" : "400" });
           });
-          CK.legend(ctx, W * 0.66, H * 0.55, [
-            { color: "#5c91dc", label: "P 波(固液皆可穿)" }, { color: "#ef5350", label: "S 波(只走固體)" },
-            { color: "#ffb300", label: "陰影帶:兩種直達波都缺" }], 17);
+          CK.legend(ctx, W * 0.66, H * 0.55, [{ color: "#5c91dc", label: "P 波(固液皆可穿)" }, { color: "#ef5350", label: "S 波(只走固體)" }, { color: "#ffb300", label: "陰影帶:兩種直達波都缺" }], 17);
           D.text(ctx, "vP ≈ 1.7 × vS", W * 0.80, H * 0.56, { color: PL.col("text-faint"), size: 11, align: "center", weight: "700" });
           rPhase.set(PH[ph]); rDist.set(dist, 0); rArr.set(arrive); rSpd.set(vTxt);
           vPh.set(ph === "s" ? "S 波進不了液態外核 → 遠側留下陰影帶" : ph === "pkp" ? "P 波穿核變慢折射,從 143° 以外冒出" : "P 波直達:最遠到 103°,再遠要穿核", ph === "s" ? "bad" : "info");
@@ -105,10 +98,8 @@
       PL.ui.note(ui.L.controls, "地震波是唯一能「照進」地球內部的手電筒:波速突變的深度就是不連續面;S 波在哪一層消失,那一層就是液態。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀出液態外核",
-        steps: ["拉「地震經過時間」,跟蹤直達 S 波:紅點一路順暢到 100°。",
-          "把射線束打開:對準外核的 S 波全部止步於核函界線。",
-          "改跟蹤穿核 P 波:它在液核變慢、折射,從 143° 以外重新冒出。",
-          "對照下圖:S 波速度在外核歸零——這就是「液態」的觀測證據。"],
+        steps: ["拉「地震經過時間」,跟蹤直達 S 波:紅點一路順暢到 100°。", "把射線束打開:對準外核的 S 波全部止步於核函界線。",
+          "改跟蹤穿核 P 波:它在液核變慢、折射,從 143° 以外重新冒出。", "對照下圖:S 波速度在外核歸零——這就是「液態」的觀測證據。"],
         rule: "「外核液態」不是假設,是 S 波陰影帶的直接推論;但別把「地函可流動」也當成液態——地函是固體,S 波照樣通過。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -116,10 +107,8 @@
         { label: "P 波穿核", apply: () => { phSel.set("pkp"); timeS.set(1100); fanChk.set(true); ui.redraw(); drawChart(); } },
         { label: "剛發震", apply: () => { timeS.set(60); ui.redraw(); drawChart(); } }
       ] });
-      const rPhase = PL.ui.readout(ui.L.readouts, { label: "跟蹤波相" });
-      const rDist = PL.ui.readout(ui.L.readouts, { label: "已行距離", unit: "km" });
-      const rArr = PL.ui.readout(ui.L.readouts, { label: "狀態" });
-      const rSpd = PL.ui.readout(ui.L.readouts, { label: "目前波速" });
+      const rPhase = PL.ui.readout(ui.L.readouts, { label: "跟蹤波相" }), rDist = PL.ui.readout(ui.L.readouts, { label: "已行距離", unit: "km" });
+      const rArr = PL.ui.readout(ui.L.readouts, { label: "狀態" }), rSpd = PL.ui.readout(ui.L.readouts, { label: "目前波速" });
       const vPh = PL.ui.verdict(ui.L.readouts, { label: "判定" });
       return { stop() { ui.stop(); } };
     }
@@ -148,7 +137,7 @@
           // 海洋柱:海水 + 玄武岩質薄殼
           const oL = W * 0.56, oR = W * 0.93, sfY = ySurf + dW * pxKm;
           D.rect(ctx, oL, ySurf, oR - oL, dW * pxKm, { fill: "rgba(74,144,217,0.85)" });
-          D.rect(ctx, oL, sfY, oR - oL, 7 * pxKm, { fill: "#4a4f57" });
+          D.rect(ctx, oL, sfY, oR - oL, 7 * pxKm, { fill: "#4e5c74" });
           D.text(ctx, "海水 " + PL.fmt(dW, 1) + " km", (oL + oR) / 2, ySurf + dW * pxKm * 0.55, { color: "#fff", size: 10, align: "center" });
           D.text(ctx, "海洋地殼(玄武岩質 3.0)", (oL + oR) / 2, sfY + 3.5 * pxKm, { color: "#e8eef7", size: 9.5, align: "center" });
           // 莫氏不連續面(兩柱各自深度)
@@ -189,10 +178,8 @@
       PL.ui.note(ui.L.controls, "莫氏面在全世界的深度不一樣:大陸 30–70 km、海洋只有 5–10 km——地殼厚薄與密度差,正是板塊浮沉的基礎。");
       PL.ui.procedure(ui.L.controls, {
         title: "看懂地殼均衡",
-        steps: ["把「山地高度」歸零:莫氏面回到約 35 km 的標準深度。",
-          "拉高到 6 km:山根同步下探,地殼總厚逼近 60 km。",
-          "讀山根深度:大約是山高的 4.5 倍——這就是 Airy 均衡。",
-          "對照右柱:海洋地殼又薄又重(3.0),所以海底低於陸地。"],
+        steps: ["把「山地高度」歸零:莫氏面回到約 35 km 的標準深度。", "拉高到 6 km:山根同步下探,地殼總厚逼近 60 km。",
+          "讀山根深度:大約是山高的 4.5 倍——這就是 Airy 均衡。", "對照右柱:海洋地殼又薄又重(3.0),所以海底低於陸地。"],
         rule: "「山有多高、根有多深」:冰期冰蓋熔掉後,斯堪地那維亞至今仍在回彈——地殼像浮在地函上的木筏,載重變了吃水就跟著變。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -200,10 +187,8 @@
         { label: "中央山脈", apply: () => { mtnS.set(3.5); seaS.set(1); ui.redraw(); drawChart(); } },
         { label: "深海平原", apply: () => { mtnS.set(0); seaS.set(5.5); ui.redraw(); drawChart(); } }
       ] });
-      const rCrust = PL.ui.readout(ui.L.readouts, { label: "陸殼總厚", unit: "km" });
-      const rRoot = PL.ui.readout(ui.L.readouts, { label: "山根深度", unit: "km" });
-      const rSea = PL.ui.readout(ui.L.readouts, { label: "海水深度", unit: "km" });
-      const rType = PL.ui.readout(ui.L.readouts, { label: "地殼類型" });
+      const rCrust = PL.ui.readout(ui.L.readouts, { label: "陸殼總厚", unit: "km" }), rRoot = PL.ui.readout(ui.L.readouts, { label: "山根深度", unit: "km" });
+      const rSea = PL.ui.readout(ui.L.readouts, { label: "海水深度", unit: "km" }), rType = PL.ui.readout(ui.L.readouts, { label: "地殼類型" });
       return { stop() { ui.stop(); } };
     }
   });
@@ -266,10 +251,8 @@
       PL.ui.note(ui.L.controls, "地函幾乎全是固態(S 波通過就是證據),但在千萬年尺度下像極黏的瀝青會流動:熱的上升、冷的下沉,板塊就騎在這條輸送帶上。");
       PL.ui.procedure(ui.L.controls, {
         title: "對流與板塊怎麼合作",
-        steps: ["拉高「對流強度」:對流胞變大、光點加速,板塊速率讀數跟著上升。",
-          "調高「黏度」:同樣熱差,流動變慢——速率 = 推力 ÷ 阻力。",
-          "看洋脊與海溝:上升處張裂生成新殼,下沉處把舊殼拖回地函。",
-          "對照右表:實測板塊速率都在每年數公分,和模型量級一致。"],
+        steps: ["拉高「對流強度」:對流胞變大、光點加速,板塊速率讀數跟著上升。", "調高「黏度」:同樣熱差,流動變慢——速率 = 推力 ÷ 阻力。",
+          "看洋脊與海溝:上升處張裂生成新殼,下沉處把舊殼拖回地函。", "對照右表:實測板塊速率都在每年數公分,和模型量級一致。"],
         rule: "板塊不是被「地函滾水」推著走的浮船:隱沒板片的下拉力才是主力,對流與板塊運動互為因果,不是單向誰推誰。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -277,10 +260,8 @@
         { label: "今日地球", apply: () => { convS.set(0.6); visS.set(1); ui.redraw(); } },
         { label: "內部冷卻後", apply: () => { convS.set(0.15); visS.set(3); ui.redraw(); } }
       ] });
-      const rRate = PL.ui.readout(ui.L.readouts, { label: "板塊移動速率", unit: "cm/年" });
-      const rCycle = PL.ui.readout(ui.L.readouts, { label: "對流一輪約", unit: "億年" });
-      const rAst = PL.ui.readout(ui.L.readouts, { label: "軟流圈物態" });
-      const rDrv = PL.ui.readout(ui.L.readouts, { label: "主要驅動" });
+      const rRate = PL.ui.readout(ui.L.readouts, { label: "板塊移動速率", unit: "cm/年" }), rCycle = PL.ui.readout(ui.L.readouts, { label: "對流一輪約", unit: "億年" });
+      const rAst = PL.ui.readout(ui.L.readouts, { label: "軟流圈物態" }), rDrv = PL.ui.readout(ui.L.readouts, { label: "主要驅動" });
       return { stop() { ui.stop(); } };
     }
   });
@@ -345,10 +326,8 @@
       PL.ui.note(ui.L.controls, "張裂生成新海洋地殼、聚合把舊地殼消滅回地函、錯動不生不滅只滑移——全球板塊表面積守恆,靠這三種邊界分配。");
       PL.ui.procedure(ui.L.controls, {
         title: "一張圖判邊界",
-        steps: ["切四種邊界:看箭頭方向與地殼剖面有什麼不同。",
-          "拉速率與地質時間:8 cm/年跑 1,000 萬年 = 800 km 的位移。",
-          "切到聚合·隱沒,速率拉過 7:火山開始猛烈噴發。",
-          "對照下圖:為什麼深源地震只出現在隱沒帶?冷板片下插到 700 km 還是脆的。"],
+        steps: ["切四種邊界:看箭頭方向與地殼剖面有什麼不同。", "拉速率與地質時間:8 cm/年跑 1,000 萬年 = 800 km 的位移。",
+          "切到聚合·隱沒,速率拉過 7:火山開始猛烈噴發。", "對照下圖:為什麼深源地震只出現在隱沒帶?冷板片下插到 700 km 還是脆的。"],
         rule: "錯動邊界地震淺而強、幾乎沒有火山;別把「地震多」直接等同「有火山」——兩者由不同的機制決定。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -357,10 +336,8 @@
         { label: "喜馬拉雅", apply: () => { typeSel.set("convergent-cont"); rateS.set(5); timeS.set(10); ui.redraw(); drawChart(); } },
         { label: "聖安德烈斯", apply: () => { typeSel.set("transform"); rateS.set(5); timeS.set(10); ui.redraw(); drawChart(); } }
       ] });
-      const rType = PL.ui.readout(ui.L.readouts, { label: "邊界類型" });
-      const rLand = PL.ui.readout(ui.L.readouts, { label: "代表地形" });
-      const rQ = PL.ui.readout(ui.L.readouts, { label: "地震深度" });
-      const rD = PL.ui.readout(ui.L.readouts, { label: "累積位移", unit: "km" });
+      const rType = PL.ui.readout(ui.L.readouts, { label: "邊界類型" }), rLand = PL.ui.readout(ui.L.readouts, { label: "代表地形" });
+      const rQ = PL.ui.readout(ui.L.readouts, { label: "地震深度" }), rD = PL.ui.readout(ui.L.readouts, { label: "累積位移", unit: "km" });
       return { stop() { ui.stop(); } };
     }
   });
@@ -428,10 +405,8 @@
       PL.ui.note(ui.L.controls, "海底不是一個平盤:棚、坡、隆堆、平原、洋脊、海溝各有深度與年齡的規律——這些地形就是板塊生成與隱沒的紀錄。");
       PL.ui.procedure(ui.L.controls, {
         title: "為什麼地圖上的海看起來很平",
-        steps: ["誇大 5×:剖面幾乎是平線——真實比例下 11 km 的起伏根本看不見。",
-          "拉到 40×:大陸棚、洋脊的細節浮出來,海溝卻切出畫面下緣。",
-          "切到活動邊緣:海溝出現,深度直逼 11 km。",
-          "拉沉積物滑桿:靠陸側厚、近洋脊薄——離脊越遠地殼越老、沉積越久。"],
+        steps: ["誇大 5×:剖面幾乎是平線——真實比例下 11 km 的起伏根本看不見。", "拉到 40×:大陸棚、洋脊的細節浮出來,海溝卻切出畫面下緣。",
+          "切到活動邊緣:海溝出現,深度直逼 11 km。", "拉沉積物滑桿:靠陸側厚、近洋脊薄——離脊越遠地殼越老、沉積越久。"],
         rule: "大陸棚水深小於 200 m、寬可達上百公里;別把「海岸線」當成「大陸邊緣的盡頭」——真正的邊界在大陸坡腳。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -439,10 +414,8 @@
         { label: "太平洋型", apply: () => { actSel.set("active"); exagS.set(12); ui.redraw(); drawChart(); } },
         { label: "看洋脊細節", apply: () => { actSel.set("passive"); exagS.set(40); sedS.set(0.5); ui.redraw(); drawChart(); } }
       ] });
-      const rShelf = PL.ui.readout(ui.L.readouts, { label: "大陸棚水深", unit: "km" });
-      const rDeep = PL.ui.readout(ui.L.readouts, { label: "剖面最深", unit: "km" });
-      const rRidge = PL.ui.readout(ui.L.readouts, { label: "洋脊峰水深", unit: "km" });
-      const rSed = PL.ui.readout(ui.L.readouts, { label: "沉積物最厚", unit: "km" });
+      const rShelf = PL.ui.readout(ui.L.readouts, { label: "大陸棚水深", unit: "km" }), rDeep = PL.ui.readout(ui.L.readouts, { label: "剖面最深", unit: "km" });
+      const rRidge = PL.ui.readout(ui.L.readouts, { label: "洋脊峰水深", unit: "km" }), rSed = PL.ui.readout(ui.L.readouts, { label: "沉積物最厚", unit: "km" });
       const vMarg = PL.ui.verdict(ui.L.readouts, { label: "邊緣性質" });
       return { stop() { ui.stop(); } };
     }
@@ -463,8 +436,8 @@
           D.rect(ctx, box.x, box.y, box.w, box.h, { fill: "rgba(70,110,160,0.35)", stroke: PL.col("border"), r: 8 });
           BANDS.forEach(b => {
             const x1 = b[1] * v * 10 * u, x0 = b[0] * v * 10 * u;
-            D.rect(ctx, rx + x0, box.y, x1 - x0, box.h, { fill: b[2] ? "#37474f" : "#b0bec5" });
-            D.rect(ctx, rx - x1, box.y, x1 - x0, box.h, { fill: b[2] ? "#37474f" : "#b0bec5" });
+            D.rect(ctx, rx + x0, box.y, x1 - x0, box.h, { fill: b[2] ? "#3f5568" : "#b0bec5" });
+            D.rect(ctx, rx - x1, box.y, x1 - x0, box.h, { fill: b[2] ? "#3f5568" : "#b0bec5" });
           });
           if (tick) BANDS.forEach(b => {
             const x = b[1] * v * 10 * u;
@@ -498,7 +471,7 @@
             D.disc(ctx, rx - d, box.y + box.h * 0.55, 2.6, { fill: "#ffcc80" });
           }
           CK.legend(ctx, W * 0.68, H * 0.20, [
-            { color: "#37474f", label: "正磁極條帶(同現在)" }, { color: "#b0bec5", label: "反磁極條帶(磁北反轉)" },
+            { color: "#3f5568", label: "正磁極條帶(同現在)" }, { color: "#b0bec5", label: "反磁極條帶(磁北反轉)" },
             { color: "rgba(255,235,59,0.9)", label: "聚焦:兩側同齡、鏡像對稱" }], 19);
           D.text(ctx, "條帶對稱於洋脊 = 海底正被等速帶開", W * 0.83, H * 0.40, { color: PL.col("text-dim"), size: 11, align: "center", weight: "700" });
           D.text(ctx, "最老海底只約 2 億年;大陸岩石可達 40 億年", W * 0.83, H * 0.47, { color: PL.col("text-faint"), size: 10.5, align: "center" });
@@ -523,10 +496,8 @@
       PL.ui.note(ui.L.controls, "熔岩冷卻時,磁性礦物像小磁針一樣定格當時的地磁方向;地磁不定期反轉,於是洋脊兩側留下一圈圈對稱的磁條帶——海底擴張的錄音帶。");
       PL.ui.procedure(ui.L.controls, {
         title: "用量尺驗證擴張",
-        steps: ["拉「聚焦條帶年代」:黃色亮帶永遠同時出現在脊的兩側。",
-          "把速率調到 10:所有條帶變寬——同樣年代擠出更長的距離。",
-          "讀「距脊 100 km 的年齡」:速率越快,同距離越年輕。",
-          "對照下圖兩條直線:斜率就是擴張快慢。"],
+        steps: ["拉「聚焦條帶年代」:黃色亮帶永遠同時出現在脊的兩側。", "把速率調到 10:所有條帶變寬——同樣年代擠出更長的距離。",
+          "讀「距脊 100 km 的年齡」:速率越快,同距離越年輕。", "對照下圖兩條直線:斜率就是擴張快慢。"],
         rule: "v = 條帶距離 ÷ 反轉年齡;對稱性是海底擴張的指紋,不是畫圖時「畫漂亮」的巧合。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -534,11 +505,8 @@
         { label: "東太平洋(快)", apply: () => { vS.set(9); ui.redraw(); drawChart(); } },
         { label: "布容反轉(0.78 Ma)", apply: () => { ageS.set(0.76); ui.redraw(); drawChart(); } }
       ] });
-      const rHalf = PL.ui.readout(ui.L.readouts, { label: "條帶半寬(1 Ma)", unit: "km" });
-      const rAge100 = PL.ui.readout(ui.L.readouts, { label: "距脊 100 km 年齡", unit: "Ma" });
-      const rSym = PL.ui.readout(ui.L.readouts, { label: "對稱性" });
-      const rOld = PL.ui.readout(ui.L.readouts, { label: "最老海底" });
-      const rFoc = PL.ui.readout(ui.L.readouts, { label: "聚焦條帶" });
+      const rHalf = PL.ui.readout(ui.L.readouts, { label: "條帶半寬(1 Ma)", unit: "km" }), rAge100 = PL.ui.readout(ui.L.readouts, { label: "距脊 100 km 年齡", unit: "Ma" });
+      const rSym = PL.ui.readout(ui.L.readouts, { label: "對稱性" }), rOld = PL.ui.readout(ui.L.readouts, { label: "最老海底" }), rFoc = PL.ui.readout(ui.L.readouts, { label: "聚焦條帶" });
       return { stop() { ui.stop(); } };
     }
   });
@@ -609,10 +577,8 @@
       PL.ui.note(ui.L.controls, "熱點是板塊內部的固定噴口:板塊像輸送帶把火山一個個帶走,新島在熱點上誕生——島鏈年齡沿鏈遞增,方向就是板塊運動方向。");
       PL.ui.procedure(ui.L.controls, {
         title: "用島鏈解出速度向量",
-        steps: ["拉「島鏈總時間」:島變多、鏈變長,老島在鏈的末端。",
-          "拉「板塊速率」:島距變寬,右圖斜率變陡。",
-          "拉「移動方向」:整條鏈跟著轉——鏈的方向與運動方向平行、相反於運動前方。",
-          "勾轉折:40 Ma 前板塊向北,島鏈折出天皇海嶺的 L 形。"],
+        steps: ["拉「島鏈總時間」:島變多、鏈變長,老島在鏈的末端。", "拉「板塊速率」:島距變寬,右圖斜率變陡。",
+          "拉「移動方向」:整條鏈跟著轉——鏈的方向與運動方向平行、相反於運動前方。", "勾轉折:40 Ma 前板塊向北,島鏈折出天皇海嶺的 L 形。"],
         rule: "島被帶走的方向 = 板塊運動方向;熱點不受邊界限制,所以島鏈可以橫切海底地形與磁條帶——別把方向畫反。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -620,10 +586,8 @@
         { label: "夏威夷-天皇", apply: () => { rateS.set(10); dirS.set(285); spanS.set(60); bendChk.set(true); ui.redraw(); drawChart(); } },
         { label: "慢速熱點鏈", apply: () => { rateS.set(3); dirS.set(285); spanS.set(40); bendChk.set(false); ui.redraw(); drawChart(); } }
       ] });
-      const rSp2 = PL.ui.readout(ui.L.readouts, { label: "相鄰島距(2 Ma)", unit: "km" });
-      const rOld = PL.ui.readout(ui.L.readouts, { label: "最老島齡", unit: "Ma" });
-      const rLen = PL.ui.readout(ui.L.readouts, { label: "鏈總長", unit: "km" });
-      const rHot = PL.ui.readout(ui.L.readouts, { label: "熱點狀態" });
+      const rSp2 = PL.ui.readout(ui.L.readouts, { label: "相鄰島距(2 Ma)", unit: "km" }), rOld = PL.ui.readout(ui.L.readouts, { label: "最老島齡", unit: "Ma" });
+      const rLen = PL.ui.readout(ui.L.readouts, { label: "鏈總長", unit: "km" }), rHot = PL.ui.readout(ui.L.readouts, { label: "熱點狀態" });
       return { stop() { ui.stop(); } };
     }
   });
@@ -697,10 +661,8 @@
       PL.ui.note(ui.L.controls, "台灣站在兩個板塊的撞擊點上:呂宋島弧隨菲律賓海板塊以每年約 8 公分向西北撞進大陸邊緣,沉積層被擠壓成中央山脈——造山現在進行式。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀出台灣的地質位址",
-        steps: ["看紅色箭頭:菲律賓海板塊往西北推,速率讀數 8 cm/年。",
-          "拉「回溯地質時間」:半透明老位置在東南方,台灣整體被推向西北。",
-          "拉高聚合速率:每百萬年縮短量與累積曲線斜率同步變大。",
-          "找到紅線(花東縱谷):它以東屬菲律賓海板塊、以西屬歐亞板塊。"],
+        steps: ["看紅色箭頭:菲律賓海板塊往西北推,速率讀數 8 cm/年。", "拉「回溯地質時間」:半透明老位置在東南方,台灣整體被推向西北。",
+          "拉高聚合速率:每百萬年縮短量與累積曲線斜率同步變大。", "找到紅線(花東縱谷):它以東屬菲律賓海板塊、以西屬歐亞板塊。"],
         rule: "花東縱谷是兩板塊的縫合線,不是普通河谷;台灣的地震因此集中在東部縱谷一帶與西南活動斷層區——位址決定災害分布。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -708,10 +670,8 @@
         { label: "回溯 5 Ma", apply: () => { rateS.set(8); tmS.set(5); ui.redraw(); drawChart(); } },
         { label: "快速聚合", apply: () => { rateS.set(12); tmS.set(3); ui.redraw(); drawChart(); } }
       ] });
-      const rRate = PL.ui.readout(ui.L.readouts, { label: "聚合速率", unit: "cm/年" });
-      const rShort = PL.ui.readout(ui.L.readouts, { label: "每百萬年縮短", unit: "km" });
-      const rAcc = PL.ui.readout(ui.L.readouts, { label: "累積縮短", unit: "km" });
-      const rUpl = PL.ui.readout(ui.L.readouts, { label: "造山狀態" });
+      const rRate = PL.ui.readout(ui.L.readouts, { label: "聚合速率", unit: "cm/年" }), rShort = PL.ui.readout(ui.L.readouts, { label: "每百萬年縮短", unit: "km" });
+      const rAcc = PL.ui.readout(ui.L.readouts, { label: "累積縮短", unit: "km" }), rUpl = PL.ui.readout(ui.L.readouts, { label: "造山狀態" });
       const vTw = PL.ui.verdict(ui.L.readouts, { label: "判定" });
       return { stop() { ui.stop(); } };
     }
