@@ -206,7 +206,7 @@ function layout(o) {
 ${o.jsonLd ? '<script type="application/ld+json">' + JSON.stringify(o.jsonLd) + "</script>\n" : ""}</head>
 <body class="static-page">
 <header class="license-topbar">
-  <a class="license-home" href="${o.base}index.html"><span class="license-home-mark" aria-hidden="true">CH</span>化學實驗室</a>
+  <a class="license-home" href="${o.base}index.html"><span class="license-home-mark" aria-hidden="true">ES</span>地科實驗室</a>
   <div class="license-topbar-actions">
     <a class="license-toplink" href="${o.base}experiments.html">全部實驗</a>
     <a class="license-toplink" href="${o.base}licensing.html">授權</a>
@@ -255,7 +255,7 @@ ${points}
 
   <section class="license-section">
     <h2>動手操作</h2>
-    <p>這個主題有可即時操作的模擬：調整參數、用滴定管與量筒量測、記錄資料並自動作圖求出化學量。</p>
+    <p>這個主題有可即時操作的模擬：調整參數、用剖面圖與量具讀取、記錄資料並自動作圖求出待測量。</p>
     <div class="license-cta">
       <a class="static-cta" href="${escapeHtml(appUrl)}">開啟「${escapeHtml(exp.title)}」互動模擬</a>
       <a href="worksheet-${escapeHtml(exp.id)}.html">列印學習單</a>
@@ -268,7 +268,7 @@ ${points}
   </nav>`;
 
   return layout({
-    title: exp.title + "｜化學實驗室 · " + mod.title,
+    title: exp.title + "｜地科實驗室 · " + mod.title,
     description: description,
     canonical, base: "../", build: site.build,
     body,
@@ -377,7 +377,7 @@ ${rows}
     <section class="worksheet-block">
       <h2><span class="ws-num">7</span>由圖求值</h2>
       <p class="worksheet-lines">直線斜率 = ________________　　截距 = ________________</p>
-      <p class="worksheet-lines">由圖形求得的化學量 = ________________</p>
+      <p class="worksheet-lines">由圖形求得的待測量 = ________________</p>
       <p class="worksheet-lines">與公認值的誤差 = ____________ %　　可能的誤差來源：____________________</p>
     </section>
 
@@ -388,7 +388,7 @@ ${rows}
       <p class="worksheet-lines">_______________________________________________________________</p>
     </section>
 
-    <p class="worksheet-foot">化學實驗室（${escapeHtml(site.siteUrl)}）· 採 CC BY-NC-SA 4.0 授權，歡迎教學使用與改編</p>
+    <p class="worksheet-foot">地科實驗室（${escapeHtml(site.siteUrl)}）· 採 CC BY-NC-SA 4.0 授權，歡迎教學使用與改編</p>
   </div>
 
   <div class="worksheet-actions">
@@ -398,7 +398,7 @@ ${rows}
 
 
   return layout({
-    title: exp.title + " 學習單｜化學實驗室",
+    title: exp.title + " 學習單｜地科實驗室",
     description: "可列印的「" + exp.title + "」實驗學習單，含資料記錄表格、作圖區與由圖求值欄位。",
     canonical: site.siteUrl + "p/worksheet-" + exp.id + ".html",
     base: "../", build: site.build,
@@ -423,13 +423,13 @@ ${items}
   }).join("\n");
 
   const body = `  <p class="license-kicker">全部實驗一覽</p>
-  <h1>${total} 個互動化學實驗</h1>
-  <p class="license-lead">從國中自然銜接到高中 108 課綱與選修化學，每個主題都有可即時操作的模擬、可操作的量測工具，以及可列印的學習單。全部免費、繁體中文原創。</p>
+  <h1>${total} 個互動地科實驗</h1>
+  <p class="license-lead">從國中自然銜接到高中 108 課綱與選修地科，每個主題都有可即時操作的模擬、可操作的量測工具，以及可列印的學習單。全部免費、繁體中文原創。</p>
 ${sections}`;
 
   return layout({
-    title: "全部實驗一覽｜化學實驗室 · 台灣中學互動化學",
-    description: total + " 個對齊 108 課綱的互動化學模擬，涵蓋物質計量、原子結構、酸鹼、氧化還原、有機與選修化學，全部免費使用。",
+    title: "全部實驗一覽｜地科實驗室 · 台灣中學互動化學",
+    description: total + " 個對齊 108 課綱的互動化學模擬，涵蓋物質計量、原子結構、酸鹼、氧化還原、有機與選修地科，全部免費使用。",
     canonical: site.siteUrl + "experiments.html",
     base: "", build: site.build,
     body

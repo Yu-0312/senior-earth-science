@@ -50,7 +50,6 @@
           D.disc(ctx, E[0], E[1], 5, { fill: "#ff8a65", glow: "#ff5722", glowSize: 10 });
           D.text(ctx, "震央", E[0] - 6, E[1] - 10, { color: PL.col("text-dim"), size: 10, align: "right" });
           // 跟蹤波相:亮點沿路徑走,速度 = 該層波速
-          const path = { p: [A(100)], s: [A(100)], pkp: [[146, 158, 170]] };
           let dot = null, dist = 0, arrive = "行進中", vTxt;
           if (ph === "pkp") {
             const a = A(170);
@@ -224,8 +223,8 @@
           const cut = CK.earthCut(ctx, box, LAYERS, { mode: "half" });
           const cx = cut.cx, cy = cut.cy, R = Math.min(box.w / 2, box.h);
           const rate = clamp(2 + 9 * st / visc, 0.5, 12);
-          // 對流胞畫在地函環帶內(clip 進環帶)
-          const m0 = cut.out[1].r0, m1 = cut.out[1].r1, cH = R * (0.17 + 0.07 * st);
+          // 對流胞畫在地函環帶內(clip 進環帶);有效推力 = 熱差 ÷ 黏度
+          const eff = st / visc, m0 = cut.out[1].r0, m1 = cut.out[1].r1, cH = R * (0.17 + 0.07 * eff);
           ctx.save();
           ctx.beginPath(); ctx.arc(cx, cy, m0, Math.PI, 0); ctx.arc(cx, cy, m1, 0, Math.PI, true); ctx.closePath(); ctx.clip();
           [[cx - R * 0.42, -1], [cx + R * 0.42, 1]].forEach(([ccx, dir], k) => {
@@ -233,14 +232,14 @@
             ctx.save(); ctx.strokeStyle = k ? "rgba(92,145,220,0.5)" : "rgba(255,112,67,0.55)"; ctx.lineWidth = 1.6;
             ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.ellipse(ccx, cy0, rx, cH, 0, 0, TAU); ctx.stroke(); ctx.restore();
             for (let i = 0; i < 7; i++) {
-              const th = dir * t * (0.25 + 0.55 * st / visc) + i * TAU / 7 + (k ? Math.PI : 0);
+              const th = dir * t * (0.25 + 0.55 * eff) + i * TAU / 7 + (k ? Math.PI : 0);
               const x = ccx + Math.cos(th) * rx, y = cy0 + Math.sin(th) * cH;
               const rising = dir * Math.cos(th) < 0; // 垂直速度往上 = 熱流
               D.disc(ctx, x, y, 3.4, { fill: rising ? "#ff7043" : "#5c91dc", glow: rising ? "#ff5722" : null, glowSize: 6 });
             }
           });
           // 洋脊下的上升熱柱
-          const pl = ctx.createRadialGradient(cx, cy - R * 0.94, 1, cx, cy - R * 0.94, R * (0.05 + 0.11 * st));
+          const pl = ctx.createRadialGradient(cx, cy - R * 0.94, 1, cx, cy - R * 0.94, R * (0.05 + 0.11 * eff));
           pl.addColorStop(0, "rgba(255,112,67," + (0.35 + 0.4 * st) + ")"); pl.addColorStop(1, "rgba(255,112,67,0)");
           ctx.fillStyle = pl; ctx.fillRect(cx - R * 0.2, cy - R * 1.05, R * 0.4, R * 0.4);
           ctx.restore();
@@ -475,10 +474,10 @@
           });
           // 聚焦條帶:同一地質年代,兩側對稱出現
           const band = BANDS.find(b => tAge >= b[0] && tAge < b[1]) || BANDS[0];
-          const d0 = band[0] * v * 10 * u, d1 = band[1] * v * 10 * u;
-          [[rx + d0, d1], [rx - d1, d0]].forEach(seg => {
+          const d0 = band[0] * v * 10 * u, d1 = band[1] * v * 10 * u, bw = Math.max(2, d1 - d0);
+          [rx + d0, rx - d1].forEach(x => {
             ctx.save(); ctx.fillStyle = "rgba(255,235,59,0.28)";
-            ctx.fillRect(seg[0], box.y, Math.max(2, seg[1] - seg[0]), box.h); ctx.restore();
+            ctx.fillRect(x, box.y, bw, box.h); ctx.restore();
           });
           const mid = (band[0] + band[1]) / 2 * v * 10 * u;
           D.disc(ctx, rx + mid, box.y + box.h * 0.3, 4, { fill: "#ffd54f", glow: "#ffb300", glowSize: 8 });

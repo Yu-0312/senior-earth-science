@@ -72,7 +72,7 @@ function idsIn(file) {
   sandbox.PhysicsLab = stubLab(collected);
   vm.createContext(sandbox);
 
-  // 課程資料有些實驗檔會在註冊時讀取，先載入；化學共用器材庫也必須在實驗檔之前
+  // 課程資料有些實驗檔會在註冊時讀取，先載入；地科共用器材庫也必須在實驗檔之前
   // 任一科的共用器材庫（chem-kit / bio-kit / earth-kit）都要在實驗檔之前載入
   ["js/curriculum.js", "js/chem-kit.js", "js/bio-kit.js", "js/earth-kit.js"].filter(x => fs.existsSync(path.join(ROOT, x))).forEach(f => {
     const full = path.join(ROOT, f);
