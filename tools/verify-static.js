@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+/*
+ * verify-static.js — 靜態層的自我檢查
+ *
+ * 在 CI 裡跑，確保「內容真的進得了 HTML」這件事不會悄悄壞掉。
+ * 這正是原本最嚴重的問題：頁面看起來正常，但爬蟲讀到的是空的。
+ */
+"use strict";
+const fs = require("fs");
+const path = require("path");
+const vm = require("vm");
+
+const ROOT = path.resolve(__dirname, "..");
+let failed = 0;
+const check = (name, ok, extra) => {
+  if (!ok) failed += 1;
+  console.log((ok ? "  ✓ " : "  ✗ ") + name + (extra ? "  " + extra : ""));
+};
+
+/* 載入課程資料以取得應有的實驗數 */
+const sandbox = { window: {}, document: { documentElement: {}, head: { appendChild() {} }, createElement: () => ({}) }, console };
+sandbox.window.window = sandbox.window;
+vm.createContext(sandbox);
+["js/site-config.js", "js/curriculum.js", "js/advanced-curriculum.js", "js/comprehensive-curriculum.js",
+ "js/extension-registry.js", "js/open-curriculum.js", "js/school-curriculum.js", "js/exam-curriculum.js"].forEach(f => {
+  const full = path.join(ROOT, f);
+  if (fs.existsSync(full)) vm.runInContext(fs.readFileSync(full, "utf8"), sandbox, { filename: f });
+});
+const C = sandbox.window.PhysicsLabCurriculum;
+const site = sandbox.window.PhysicsLabSite || {};
+const flat = [];
+C.modules.forEach(m => m.experiments.forEach(e => flat.push({ e, m })));
+console.log("=== 靜態層檢查 ===");
+
+check("每個實驗都有說明頁", flat.every(x => fs.existsSync(path.join(ROOT, "p", x.e.id + ".html"))),
+  flat.length + " 個");
+check("每個實驗都有學習單", flat.every(x => fs.existsSync(path.join(ROOT, "p", "worksheet-" + x.e.id + ".html"))));
+check("有總索引頁", fs.existsSync(path.join(ROOT, "experiments.html")));
+check("有 sitemap.xml", fs.existsSync(path.join(ROOT, "sitemap.xml")));
+check("有 robots.txt", fs.existsSync(path.join(ROOT, "robots.txt")));
+
+/* 最關鍵的一項：內容必須真的在 HTML 裡，不是靠 JS 生成 */
+const indexHtml = fs.readFileSync(path.join(ROOT, "experiments.html"), "utf8");
+const titlesInHtml = flat.filter(x => indexHtml.includes(x.e.title)).length;
+check("索引頁含有全部實驗標題（爬蟲讀得到）", titlesInHtml === flat.length,
+  titlesInHtml + " / " + flat.length);
+
+const sample = fs.readFileSync(path.join(ROOT, "p", flat[0].e.id + ".html"), "utf8");
+check("實驗頁含有概念敘述", sample.includes(flat[0].e.concept.slice(0, 20)));
+check("實驗頁含有結構化資料", sample.includes("LearningResource"));
+check("實驗頁指向互動版本", sample.includes("index.html#"));
+
+/* 站台完全公開：必須開放索引，且不能殘留 noindex */
+const robots = fs.readFileSync(path.join(ROOT, "robots.txt"), "utf8");
+check("robots.txt 開放索引", robots.includes("Allow: /"));
+check("頁面沒有 noindex", !sample.includes("noindex"));
+
+const sitemap = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
+const urlCount = (sitemap.match(/<url>/g) || []).length;
+check("sitemap 涵蓋所有實驗頁與學習單", urlCount >= flat.length * 2, urlCount + " 筆");
+
+/*
+ * 首頁的 canonical 與 og:url 是手寫在 index.html 裡的，不會被建置腳本重新產生。
+ *
+ * 換網域之後，全站的網址都跟著 siteUrl 換了，
+ * 只有首頁這兩行留在原地，指向一個已經回 404 的位置——
+ * 而且 sitemap、robots、96 個實驗頁全部是對的，看起來一切正常。
+ * 這種「只有一個角落沒跟上」的錯，靠人工複查是抓不到的。
+ */
+{
+  const home = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const base = String(site.siteUrl || "").replace(/\/+$/, "");
+  const canonical = (/<link[^>]+rel="canonical"[^>]+href="([^"]+)"/.exec(home) || [])[1] || "";
+  const ogUrl = (/<meta[^>]+property="og:url"[^>]+content="([^"]+)"/.exec(home) || [])[1] || "";
+  check("首頁 canonical 與 siteUrl 一致", canonical.replace(/\/+$/, "") === base, canonical || "（找不到）");
+  check("首頁 og:url 與 siteUrl 一致", ogUrl.replace(/\/+$/, "") === base, ogUrl || "（找不到）");
+}
+
+console.log(failed ? "\n" + failed + " 項未通過" : "\n全部通過");
+process.exit(failed ? 1 : 0);

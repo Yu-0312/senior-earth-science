@@ -1,0 +1,49 @@
+# 建置與測試檢查
+#
+# 網站由 GitHub Pages 直接從 main 分支根目錄服務（Deploy from a branch），
+# 推上 main 就會自動上線，因此這裡不做任何部署步驟。
+#
+# 但「有沒有人推壞掉的東西上來」還是要有人看。這份流程只做檢查、不動任何線上內容：
+# 建置得起來、產出通得過驗證、測試全綠。
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # 靜態說明頁、學習單、sitemap 與 robots 都由課程資料自動產生，
+      # 這裡重新建置一次，確認它們和實驗清單沒有失去同步。
+      - name: Build experiment manifest
+        run: node tools/build-manifest.js
+      - name: Build static pages
+        run: node tools/build-static.js
+      - name: Verify build
+        run: node tools/verify-static.js
+      # 完整版（含兩支耗時稽核）。CI 不趕時間，不需要 --fast。
+      - name: Run test suite
+        run: node tools/tests/run-all.js
+      # 建置產物有進版控。若 CI 重新建置後和版控裡的不一樣，
+      # 代表有人改了課程資料卻沒重新建置就推上來。
+      # 這種不同步在 GitHub Pages 時代會被部署流程默默蓋過去，現在要明講。
+      - name: Check generated files are committed
+        run: |
+          if ! git diff --quiet; then
+            echo "::error::建置產物與版控內容不一致，請在本機執行 node tools/build-static.js 後重新提交"
+            git diff --stat
+            exit 1
+          fi
