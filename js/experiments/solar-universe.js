@@ -152,7 +152,7 @@
           const aAU = aS.get();
           // 第一律:橢圓軌道
           const box = { x: W * 0.06, y: H * 0.10, w: W * 0.50, h: H * 0.62 };
-          D.rect(ctx, box.x, box.y, box.w, box.h, { fill: "rgba(20,28,40,0.5)", stroke: PL.col("border"), r: 8 });
+          D.rect(ctx, box.x, box.y, box.w, box.h, { fill: PL.theme.isLight() ? "rgba(64,88,120,0.30)" : "rgba(20,28,40,0.5)", stroke: PL.col("border"), r: 8 });
           const orb = CK.orbitEllipse(ctx, { x: box.x + box.w * 0.14, y: box.y + box.h * 0.12, w: box.w * 0.72, h: box.h * 0.76 }, { ecc, showAxes: true });
           // 第二律:行星沿軌道跑,近日快遠日慢(角動量守恆)
           const T = Math.pow(aAU, 1.5);   // 第三律 T²=a³
@@ -475,7 +475,7 @@
             D.line(ctx, ex, sunY, stX, stY, side > 0 ? "rgba(102,187,106,0.6)" : "rgba(239,136,41,0.6)", 1.6);
           });
           // 背景天球
-          D.rect(ctx, W * 0.72, H * 0.14, W * 0.10, H * 0.62, { fill: "rgba(20,30,50,0.6)", stroke: PL.col("border"), r: 4 });
+          D.rect(ctx, W * 0.72, H * 0.14, W * 0.10, H * 0.62, { fill: PL.theme.isLight() ? "rgba(70,95,125,0.35)" : "rgba(20,30,50,0.6)", stroke: PL.col("border"), r: 4 });
           for (let i = 0; i < 8; i++) D.disc(ctx, W * 0.735 + (i % 2) * W * 0.045, H * (0.18 + i * 0.075), 1.6, { fill: "rgba(255,255,255,0.6)" });
           // 恆星視位移
           const shiftPx = clamp(140 / d, 6, 90);

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yu-0312.github.io/senior-earth-science/sitemap.xml
