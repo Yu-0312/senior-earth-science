@@ -19,7 +19,7 @@ const SLOW = new Set(["meaning-audit.js", "theme-audit.js"]);
 const dir = path.join(__dirname);
 const files = fs.readdirSync(dir)
   .filter(f => f.endsWith(".js"))
-  .filter(f => !["harness.js", "_lib.js", "run-all.js"].includes(f))
+  .filter(f => !["harness.js", "_lib.js", "run-all.js", "module-smoke.js"].includes(f)) // module-smoke 需要模組參數,僅供開發時手動呼叫
   .sort();
 
 let pass = 0, fail = 0, skipped = 0;
