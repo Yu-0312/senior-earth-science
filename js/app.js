@@ -1168,7 +1168,7 @@
       if (key && key.startsWith("pl-")) data[key] = localStorage.getItem(key);
     }
     return {
-      app: "senior-chemistry",
+      app: "senior-earth-science",
       version: 1,
       exportedAt: new Date().toISOString(),
       totalExperiments: C.totalExperiments,
@@ -1182,7 +1182,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "senior-chemistry-save-" + todayKey() + ".json";
+    a.download = "senior-earth-science-save-" + todayKey() + ".json";
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -1200,7 +1200,7 @@
       let entries;
       try {
         const save = JSON.parse(String(reader.result || ""));
-        if (!save || (save.app !== "senior-chemistry" && save.app !== "senior-science") || !save.data || typeof save.data !== "object") {
+        if (!save || (save.app !== "senior-earth-science" && save.app !== "senior-science") || !save.data || typeof save.data !== "object") {
           showSaveStatus("存檔格式不正確", "warn");
           return;
         }

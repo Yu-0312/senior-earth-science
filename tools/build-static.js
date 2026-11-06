@@ -456,7 +456,7 @@ function resolveSiteUrl(site) {
     const url = /^https?:\/\//.test(env) ? env : "https://" + env;
     return withSlash(url);
   }
-  return withSlash(site.siteUrl || "https://yu-0312.github.io/senior-chemistry/");
+  return withSlash(site.siteUrl || "https://yu-0312.github.io/senior-earth-science/");
 }
 
 /* ---------------------------------------------------------------------------
