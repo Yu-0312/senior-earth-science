@@ -39,6 +39,7 @@ node --max-old-space-size=4096 tools/tests/meaning-audit.js   # 這支單跑要�
 | `probe-pollution-test.js` | 探測引擎（sim-insight）掃滑桿量關係後，必須把實驗還原到使用者看到的狀態：同一實驗建置兩次、有無探測，讀數都要一致 |
 | `formula-text-test.js` | 公式轉純文字（說明頁 `p/` 與離線退路共用）：不認得的 LaTeX 指令不可被吃掉，⇌、↑↓、上下標等都要保留 |
 | `learning-path-test.js` | 銜接學習路徑：每條路徑三段齊全、id 都有互動模擬且不重複、學段與課程 level 一致、首頁章節編號連續 |
+| `record-test.js` | 實驗記錄表：記一行存下當下的參數與讀數、點一列滑桿與讀數都回到那一列、欄位變更時舊紀錄作廢 |
 
 `meaning-audit` 與 `control-response-test` 看起來重疊，其實守的是不同狀態：
 前者在動畫跑著的時候量，後者在「剛打開、還沒按播放」的時候量。

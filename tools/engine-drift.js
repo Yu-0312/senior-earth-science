@@ -26,7 +26,7 @@ if (!others.length) {
 }
 
 const SHARED = [
-  "js/sim-core.js", "js/sim-tools.js", "js/sim-insight.js", "js/sim-a11y.js", "js/sim-observe.js",
+  "js/sim-core.js", "js/sim-tools.js", "js/sim-insight.js", "js/sim-a11y.js", "js/sim-observe.js", "js/sim-record.js",
   "js/app.js", "duo/duo.js", "duo/duo.css", "css/style.css", "sw.js",
   "tools/build-manifest.js", "tools/build-static.js", "tools/verify-static.js", "tools/stage-fit-check.js",
   "tools/tests/_lib.js", "tools/tests/harness.js", "tools/tests/run-all.js"

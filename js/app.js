@@ -224,7 +224,7 @@
        * 量測工具、洞察、教師提示、無障礙這四支也只在實驗建置時掛鉤子（PL._hooks），首頁用不到，
        * 一起改成延遲載入：首次載入少約 42 KB gzip。順序維持原本 index.html 的順序（鉤子依註冊順序執行）。
        */
-      const addons = ["sim-tools", "sim-insight", "sim-a11y", "earth-kit"].map(f => loadScript("js/" + f + ".js" + v).catch(err => { console.warn(err); }));
+      const addons = ["sim-tools", "sim-insight", "sim-a11y", "sim-record", "earth-kit"].map(f => loadScript("js/" + f + ".js" + v).catch(err => { console.warn(err); }));
       apparatusPromise = Promise.all(addons.concat([loadScript("js/sim-apparatus.js" + v), loadScript("js/sim-observe.js" + v).catch(err => { console.warn(err); })]))
         .then(() => true)
         .catch(err => { console.error(err); apparatusPromise = null; return false; });
@@ -2632,7 +2632,8 @@
        * 以前空白鍵一律被攔下來切換播放（preventDefault 讓按鈕按不下去），
        * 鍵盤使用者在實驗頁裡沒辦法用空白鍵按任何按鈕；在晶片上按方向鍵還會直接跳到別的實驗。
        */
-      const onWidget = !!(e.target.closest && e.target.closest('button, a[href], summary, [role="button"], [role="radio"], [role="tab"], [role="checkbox"], [role="switch"], [role="slider"], [role="link"], [contenteditable="true"]'));
+      // 元件自己已經處理掉的按鍵（例如記錄表的列按空白鍵＝套用），全域快捷鍵不再搶
+      const onWidget = e.defaultPrevented || !!(e.target.closest && e.target.closest('button, a[href], summary, tr[tabindex], [role="button"], [role="radio"], [role="tab"], [role="checkbox"], [role="switch"], [role="slider"], [role="link"], [contenteditable="true"]'));
       if (currentId && $("#exp-view").style.display !== "none") {
         const f = byId[currentId];
         if (!onWidget && e.key === "ArrowRight" && FLAT[f.order + 1]) { location.hash = "#" + FLAT[f.order + 1].exp.id; }
