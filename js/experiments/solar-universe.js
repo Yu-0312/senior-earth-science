@@ -83,43 +83,60 @@
           const { ctx, W, H } = ui.cv; CK.bench(ui.cv);
           const pick = pickSel.get();
           CK.scene(ui.cv, { kind: "sky", night: true, horizon: 0.99 });
+          /*
+           * 八大行星都要在：選單寫「全部八顆」、「類地(內側四顆)」，以前卻只畫了六顆（少了金星與天王星）。
+           * tone 是 RGB 陣列：PL.apparatus.planet() 用陣列解構取色，傳 "#rrggbb" 字串會變成 NaN，
+           * addColorStop 直接丟例外，整個畫面停在空白的夜空（2026-11 前這個實驗一打開就是空的）。
+           */
           const PLANETS = [
-            { name: "水星", kind: "rock", r: 12, tone: "#b8a99a", density: 5.4, note: "晝 430°C 夜 −180°C,無大氣" },
-            { name: "地球", kind: "rock", r: 14, tone: "#5da8dd", density: 5.5, note: "液態水+大氣+生命" },
-            { name: "火星", kind: "rock", r: 11, tone: "#d97b52", density: 3.9, note: "鐵鏽沙漠,有極冠與峽谷" },
-            { name: "木星", kind: "gas", r: 30, tone: "#d9a06a", density: 1.3, note: "氣態巨行星,大紅斑風暴" },
-            { name: "土星", kind: "gas", r: 26, tone: "#e8d6a0", density: 0.7, note: "冰環系統,密度比水低" },
-            { name: "海王星", kind: "ice", r: 20, tone: "#5a7fd9", density: 1.6, note: "強風 2,000 km/h" }
+            { name: "水星", kind: "rock", r: 12, tone: [184, 169, 154], density: 5.4 },
+            { name: "金星", kind: "rock", r: 14, tone: [226, 196, 140], density: 5.2 },
+            { name: "地球", kind: "earth", r: 14, tone: [93, 168, 221], density: 5.5 },
+            { name: "火星", kind: "rock", r: 11, tone: [217, 123, 82], density: 3.9 },
+            { name: "木星", kind: "gas", r: 30, tone: [217, 160, 106], density: 1.3 },
+            { name: "土星", kind: "gas", r: 26, tone: [232, 214, 160], density: 0.7 },
+            { name: "天王星", kind: "ice", r: 20, tone: [134, 206, 214], density: 1.3 },
+            { name: "海王星", kind: "ice", r: 20, tone: [90, 127, 217], density: 1.6 }
           ];
-          // 排一排(大小誇大)
-          const n = PLANETS.length;
+          // 排一排(大小誇大;窄畫布等比縮小,土星環不撞木星)
+          const n = PLANETS.length, gap = 0.86 / (n - 1), k = Math.min(1, W / 760);
+          const px = i => W * (0.07 + i * gap);
+          const narrow = W < 600;   // 手機寬：八顆的密度標籤會互相重疊，單位改寫在下方分組標籤
           PLANETS.forEach((p, i) => {
-            const x = W * (0.10 + i * 0.155);
+            const x = px(i), r = p.r * k;
             const y = H * (pick === "all" ? 0.30 : 0.34);
-            const active = pick === "all" || (pick === "terrestrial" && p.kind === "rock") || (pick === "gas" && p.kind !== "rock");
+            const active = pick === "all" || (pick === "terrestrial" && p.kind !== "gas" && p.kind !== "ice") || (pick === "gas" && (p.kind === "gas" || p.kind === "ice"));
             ctx.save();
             ctx.globalAlpha = active ? 1 : 0.22;
-            if (PL.apparatus.planet) PL.apparatus.planet(ctx, x, y, p.r, p.tone, p.kind === "rock" ? "rock" : "gas");
-            else D.disc(ctx, x, y, p.r, { fill: p.tone });
-            if (p.name === "土星") D.ring(ctx, x, y, p.r + 8, "rgba(230,220,180,0.85)", 3);
+            if (PL.apparatus.planet) PL.apparatus.planet(ctx, x, y, r, p.tone, p.kind === "earth" ? "earth" : p.kind === "rock" ? "rock" : "gas");
+            else D.disc(ctx, x, y, r, { fill: "rgb(" + p.tone.join(",") + ")" });
+            if (p.name === "土星") D.ring(ctx, x, y, r + 8 * k, "rgba(230,220,180,0.85)", 3);
             ctx.restore();
-            D.text(ctx, p.name, x, y + p.r + 18, { color: active ? PL.col("text") : PL.col("text-faint"), size: 11, align: "center", weight: "700" });
-            D.text(ctx, p.density + " g/cm³", x, y + p.r + 32, { color: PL.col("text-faint"), size: 9, align: "center" });
+            // 背景永遠是夜空：標籤用固定的亮色（主題色在淺色主題是深字，疊在夜空上幾乎看不見）
+            const lr = p.name === "土星" ? r + 8 * k + 3 : r;   // 土星環外再放字，不壓到環
+            D.text(ctx, p.name, x, y + lr + 18, { color: active ? "#eef3fb" : "rgba(238,243,251,0.42)", size: 11, align: "center", weight: "700" });
+            D.text(ctx, p.density + (narrow ? "" : " g/cm³"), x, y + lr + 32, { color: active ? "rgba(214,224,240,0.85)" : "rgba(214,224,240,0.4)", size: 9, align: "center" });
           });
           // 分界線:小行星帶
-          const bx = W * (0.10 + 3 * 0.155) - W * 0.075;
+          const bx = (px(3) + px(4)) / 2;   // 火星與木星之間
           D.line(ctx, bx, H * 0.16, bx, H * 0.52, "rgba(255,138,101,0.5)", 1.6, [4, 5]);
           D.text(ctx, "小行星帶", bx, H * 0.14, { color: "#ffab91", size: 10, align: "center" });
-          D.text(ctx, "← 類地(岩石金屬)", bx - 40, H * 0.58, { color: PL.col("text-dim"), size: 10.5, align: "center" });
-          D.text(ctx, "類木(氣冰)→", bx + 44, H * 0.58, { color: PL.col("text-dim"), size: 10.5, align: "center" });
+          D.text(ctx, "← 類地(岩石金屬)", bx - 12, H * 0.58, { color: "rgba(214,224,240,0.85)", size: 10.5, align: "right" });
+          D.text(ctx, "類木(氣冰)→", bx + 12, H * 0.58, { color: "rgba(214,224,240,0.85)", size: 10.5, align: "left" });
+          if (narrow) D.text(ctx, "密度單位:g/cm³", W * 0.03, H * 0.08, { color: "rgba(214,224,240,0.75)", size: 9.5, align: "left" });
           // 資料卡
-          const sel = pick === "all" ? null : PLANETS.find(p => pick === "terrestrial" ? p.kind === "rock" : p.kind !== "rock");
-          CK.panel(ctx, W * 0.62, H * 0.66, W * 0.32, H * 0.28, "成因一句話");
-          D.text(ctx, "雪線以內太熱:冰與氣無法凝結,", W * 0.78, H * 0.76, { color: PL.col("text-dim"), size: 10, align: "center" });
-          D.text(ctx, "只能靠岩石金屬吸積成小而密的類地行星;", W * 0.78, H * 0.82, { color: PL.col("text-dim"), size: 10, align: "center" });
-          D.text(ctx, "雪線外先長出冰核,再吸大量氫氦成巨行星。", W * 0.78, H * 0.88, { color: PL.col("text-dim"), size: 10, align: "center" });
+          const isInner = p => p.kind === "rock" || p.kind === "earth";
+          const group = pick === "all" ? null : PLANETS.filter(p => pick === "terrestrial" ? isInner(p) : !isInner(p));
+          // 代表密度取該組平均,而不是剛好排第一顆的那顆
+          const meanRho = group ? group.reduce((a, p) => a + p.density, 0) / group.length : null;
+          // 卡片寬度要放得下最長的一句（約 19 個字 × 10px）；手機寬改成橫跨整個畫布
+          const cw = narrow ? W * 0.9 : Math.max(W * 0.32, 230), cx0 = narrow ? W * 0.05 : W * 0.94 - cw;
+          CK.panel(ctx, cx0, H * 0.66, cw, H * 0.28, "成因一句話");
+          D.text(ctx, "雪線以內太熱:冰與氣無法凝結,", cx0 + cw / 2, H * 0.76, { color: PL.col("text-dim"), size: 10, align: "center" });
+          D.text(ctx, "只能靠岩石金屬吸積成小而密的類地行星;", cx0 + cw / 2, H * 0.82, { color: PL.col("text-dim"), size: 10, align: "center" });
+          D.text(ctx, "雪線外先長出冰核,再吸大量氫氦成巨行星。", cx0 + cw / 2, H * 0.88, { color: PL.col("text-dim"), size: 10, align: "center" });
           rPick.set(pick === "all" ? "八大行星(對比)" : pick === "terrestrial" ? "類地行星:小、密、岩石" : "類木行星:大、輕、氣冰");
-          rRho.set(sel ? sel.density : 5.5, 1);
+          rRho.set(meanRho != null ? meanRho : 5.5, 1);
         }
       });
       const pickSel = PL.ui.select(ui.L.controls, { label: "分組", value: "all", options: [
@@ -129,8 +146,8 @@
       PL.ui.procedure(ui.L.controls, {
         title: "讀行星的密度",
         steps: [
-          "類地:5.5、5.4、3.9 g/cm³——岩石金屬的密度。",
-          "類木:0.7–1.6 g/cm³——土星比水還輕!",
+          "類地:水星 5.4、金星 5.2、地球 5.5、火星 3.9 g/cm³——岩石金屬的密度。",
+          "類木:木星 1.3、土星 0.7、天王星 1.3、海王星 1.6 g/cm³——土星比水還輕!",
           "分界就在小行星帶:那裡是「沒長成行星」的原始材料。"
         ],
         rule: "類木沒有「表面」:木星的大紅斑底下沒有陸地,只有越深越密的氫氦。"

@@ -348,7 +348,24 @@
           // 模擬視野:雙星分辨
           const vx = W * 0.66, vy = H * 0.34, vr = H * 0.24;
           D.disc(ctx, vx, vy, vr, { fill: "#0d1524", stroke: PL.col("border"), width: 2 });
-          if (PL.apparatus.starfield) PL.apparatus.starfield(ctx, vx - vr, vy - vr, Math.round(vr * 2), 0);
+          /*
+           * 視野裡的背景星。starfield(ctx, W, H, salt) 畫的是從 (0,0) 起的整塊矩形，
+           * 以前把視野左上角當成 W、H 傳進去，星星與星雲霧撒在畫布左上角的望遠鏡上，
+           * 視野圓裡反而一顆都沒有。改成裁切在視野圓內、平移到圓的外接方框再畫；
+           * 視野本身永遠是暗的，星點用亮色自己畫，不跟淺色主題的「深色星點」走。
+           */
+          ctx.save();
+          ctx.beginPath(); ctx.arc(vx, vy, vr - 1, 0, TAU); ctx.clip();
+          let seed = 20261107;
+          const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+          const faint = clamp(0.35 + gain / 400, 0.35, 0.95);   // 口徑越大，看得到的暗星越多越亮
+          const count = Math.round(18 + clamp(lm - 6, 0, 8) * 9);
+          for (let i = 0; i < count; i++) {
+            const sx = vx + (rnd() * 2 - 1) * vr, sy = vy + (rnd() * 2 - 1) * vr, sr = rnd() < 0.85 ? 0.8 : 1.3;
+            ctx.fillStyle = "rgba(220,230,255," + (faint * (0.35 + rnd() * 0.65)).toFixed(3) + ")";
+            ctx.beginPath(); ctx.arc(sx, sy, sr, 0, TAU); ctx.fill();
+          }
+          ctx.restore();
           const sep = clamp(46 / mag, 1.5, 40);              // 視間距隨倍率縮小
           const resLimit = clamp(res * 8, 1.5, 40);
           const bright = clamp(gain / 60, 0.25, 1);

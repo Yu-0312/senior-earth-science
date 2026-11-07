@@ -399,11 +399,15 @@
       const chart = ui.chart("重建 vs 實際", "粗色線=代用重建、灰虛線=「實際」氣候:樹輪追得最緊;沉積物(每 4 年一筆)把快速起伏抹平——解析度決定看得到什麼。");
       const drawChart = () => {
         const mode = proxSel.get(), dT = tS.get(), dP = pS.get();
+        /*
+         * 先把整條「實際」序列建好，再算代用紀錄。
+         * 石筍取前後兩年的移動平均，以前在同一個迴圈裡讀 ts[i + 1]——那一格還沒建，
+         * 一切到「石筍」圖表就丟 TypeError，整張圖停在上一個畫面。
+         */
         const ts = [], proxy = [];
+        for (let i = 0; i < N; i++) ts.push([i, i >= N - 6 ? dT : HIST[i]]);
         let hold = 0;
         for (let i = 0; i < N; i++) {
-          const use = i >= N - 6;
-          ts.push([i, use ? dT : HIST[i]]);
           if (mode === "tree") proxy.push([i, ts[i][1] + ((i * 37) % 11 - 5) * 0.02]);
           else if (mode === "stal") {
             const a = i > 0 ? ts[i - 1][1] : ts[i][1], b = i < N - 1 ? ts[i + 1][1] : ts[i][1];
@@ -414,7 +418,7 @@
           }
         }
         CK.plot(chart, {
-          x0: 0, x1: N - 1, y0: -2.5, y1: 2.5, xlabel: "年(由舊到新)", ylabel: "溫度異常 (°C)",
+          x0: 0, x1: N - 1, y0: -3.5, y1: 3.5, xlabel: "年(由舊到新)", ylabel: "溫度異常 (°C)",
           series: [{ pts: ts, color: PL.col("text-faint"), dash: [4, 3], width: 1.6 }, { pts: proxy, color: PL.col("accent"), width: 2.4 }]
         });
       };

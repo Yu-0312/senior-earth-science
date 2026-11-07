@@ -135,6 +135,15 @@
       g.addColorStop(1, PL.theme.isLight() ? day[1] : "#1d2c4a");
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, horizon);
+      /*
+       * 天空是用漸層直接 fillRect 畫的，墨色層不知道這塊是暗的：
+       * 淺色主題的夜空（深藍）上，文字仍被當成「淺底」而選深色墨，幾乎看不見。
+       * 把上下兩半各自的底色登記進墨色層，疊在天空上的標註才會自動選對墨色。
+       */
+      if (PL.theme && PL.theme.note) {
+        PL.theme.note(ctx, PL.theme.isLight() ? day[0] : "#16233f", 0, 0, W, horizon / 2);
+        PL.theme.note(ctx, PL.theme.isLight() ? day[1] : "#1d2c4a", 0, horizon / 2, W, horizon / 2);
+      }
       // 地表
       D.rect(ctx, 0, horizon, W, H - horizon, { fill: o.ground || (PL.theme.isLight() ? "#8fae6f" : "#3d4a35") });
       if (o.night && PL.apparatus.starfield) PL.apparatus.starfield(ctx, W, horizon, o.seed || 4);
