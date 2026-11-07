@@ -98,13 +98,13 @@ const SYMBOLS = {
   leftarrow: " ← ", leftrightarrow: " ↔ ", rightleftharpoons: " ⇌ ", leftrightarrows: " ⇄ ",
   uparrow: "↑", downarrow: "↓",
   propto: " ∝ ", pm: "±", mp: "∓", leq: "≤", geq: "≥", neq: "≠", ne: "≠", le: "≤", ge: "≥",
-  equiv: " ≡ ", sim: "∼", gg: " ≫ ", ll: " ≪ ", supset: " ⊃ ", parallel: "∥", mid: " | ", oplus: "⊕",
+  equiv: " ≡ ", sim: "∼", gg: " ≫ ", ll: " ≪ ", supset: " ⊃ ", perp: " ⊥ ", parallel: "∥", mid: " | ", oplus: "⊕",
   nabla: "∇", oint: "∮", langle: "⟨", rangle: "⟩",
   infty: "∞", ell: "ℓ", hbar: "ℏ", partial: "∂", circ: "°", degree: "°",
   cdots: "⋯", ldots: "…", dots: "…", sum: "Σ", int: "∫", quad: " ", qquad: "  "
 };
 /* 加在字母上的記號：向量箭頭、平均值橫線、波浪號（Unicode 組合字元） */
-const ACCENTS = { vec: "\u20d7", bar: "\u0304", tilde: "\u0303" };
+const ACCENTS = { vec: "\u20d7", bar: "\u0304", tilde: "\u0303", dot: "\u0307", hat: "\u0302", overline: "\u0305" };
 const HANDLED = ["dfrac", "frac", "tfrac", "sqrt", "text", "mathrm", "xrightarrow", "overset", "underset", "left", "right"]
   .concat(Object.keys(GREEK), Object.keys(SYMBOLS), Object.keys(ACCENTS),
     ["sin", "cos", "tan", "cot", "sec", "csc", "ln", "log", "exp", "arcsin", "arccos", "arctan", "max", "min"]);
@@ -201,7 +201,8 @@ function plainFormula(latex) {
     }
     if (name === "text" || name === "mathrm") {
       const a = readGroup(src, cursor);
-      if (a) { out += a.body; i = a.end; continue; }
+      // 文字模式裡的間距指令（\, \; \ ）照樣是空白；\cdot、\mu 這類符號也照樣換，不能原樣留下反斜線
+      if (a) { out += a.body.replace(/\\[,;: ]/g, " ").replace(/\\!/g, "").replace(/\\([A-Za-z]+) ?/g, (m, n) => SYMBOLS[n] != null ? SYMBOLS[n] : GREEK[n] || m); i = a.end; continue; }
     }
     // \xrightarrow[下方]{上方} → 「 →(上方／下方) 」
     if (name === "xrightarrow") {
@@ -226,6 +227,9 @@ function plainFormula(latex) {
     if (ACCENTS[name]) {
       const a = readGroup(src, cursor);
       if (a) { out += plainFormula(a.body) + ACCENTS[name]; i = a.end; continue; }
+      // \vec B（不加大括號）：記號加在下一個字母上
+      const c = skipSpace(src, cursor);
+      if (/[A-Za-z]/.test(src[c] || "")) { out += src[c] + ACCENTS[name]; i = c + 1; continue; }
     }
     if (GREEK[name]) { out += GREEK[name]; i = skipSpace(src, cursor); continue; }
     if (SYMBOLS[name] != null) { out += SYMBOLS[name]; i = skipSpace(src, cursor); continue; }
