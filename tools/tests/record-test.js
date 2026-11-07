@@ -83,10 +83,21 @@ const click = b => (b._listeners && b._listeners.click || []).forEach(f => f({ p
   R.ok(s.read() === s.min, "點第一列：滑桿回到記錄時的值", s.read() + " vs " + s.min);
   R.ok(nums().slice(0, 3).join() === rowA.join(), "點第一列：讀數也回到那一列的值", nums().slice(0, 3).join() + " vs " + rowA.join());
 
+  R.section("讀數算不出來（—）時");
+  // isFinite(null) 是 true：以前 null 會被當成數字交給 fmt，整頁報錯
+  const numeric = c.readouts.filter(r => r.number != null)[0];
+  numeric.number = null;
+  let threw = null;
+  try { click(byText("記一行")); } catch (e) { threw = e; }
+  const lastCells = all(all(all(panel, "TBODY")[0], "TR").slice(-1)[0], "TD").map(td => td.textContent);
+  R.ok(!threw, "讀數為 null 時記一行不報錯", threw && threw.message);
+  R.ok(lastCells.indexOf("—") >= 0, "算不出來的讀數記成「—」", lastCells.join(" "));
+  click(byText("刪最後一列"));
+
   R.section("保存與欄位變更");
   const key = "pl-record-" + pick.id;
   const saved = JSON.parse(localStorage.getItem(key) || "[]");
-  R.ok(saved.length === 2 && saved.every(r => r.sig), "存進 localStorage，每列帶欄位簽章");
+  R.ok(saved.length === 2 && saved.every(r => r.sig), "存進 localStorage，每列帶欄位簽章", saved.length + " 列");
   localStorage.setItem(key, JSON.stringify(saved.map(r => Object.assign({}, r, { sig: "舊版欄位" }))));
   const root2 = document.createElement("div"); root2.dataset = { simId: pick.id }; root2.isConnected = true;
   PL.get(pick.id).build(root2); window.flushFrames && window.flushFrames(2);
