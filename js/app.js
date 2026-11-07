@@ -2402,7 +2402,7 @@
         return;
       }
       status.textContent = navigator.onLine
-        ? "基本內容已可離線使用。按下方按鈕可把全部 " + FLAT.length + " 個實驗一次存起來（壓縮後約 550 KB），之後沒有網路也能開。"
+        ? "基本內容已可離線使用。按下方按鈕可把全部 " + FLAT.length + " 個實驗與公式排版一次存起來（約 0.8 MB），之後沒有網路也能開。"
         : "目前沒有網路連線。已經看過的實驗仍可正常開啟。";
     }
     describe();
@@ -2440,10 +2440,12 @@
           fill.style.width = "100%";
           progressText.textContent = "完成，全部實驗都可以離線使用了。";
           cacheBtn.textContent = "已下載完成";
-          try { store.set("pl-offline-cached", true); } catch (e) {}
+          // 記住是「哪一版」下載完成：發新版時 SW 會清掉舊快取，旗標也要跟著失效，否則按鈕會永遠停在「已下載完成」
+          try { store.set("pl-offline-cached", (window.PhysicsLabSite && window.PhysicsLabSite.build) || true); } catch (e) {}
         }
       });
-      if (store.get("pl-offline-cached", false)) {
+      const cachedBuild = store.get("pl-offline-cached", false);
+      if (cachedBuild && cachedBuild === ((window.PhysicsLabSite && window.PhysicsLabSite.build) || true)) {
         cacheBtn.textContent = "已下載完成";
         cacheBtn.disabled = true;
       }
@@ -2592,12 +2594,18 @@
         }
       }
       if (e.target.tagName === "INPUT" || e.target.tagName === "SELECT" || e.target.tagName === "TEXTAREA") return;
+      /*
+       * 焦點在按鈕、連結、選項晶片上時，空白鍵與方向鍵屬於那個元件：
+       * 以前空白鍵一律被攔下來切換播放（preventDefault 讓按鈕按不下去），
+       * 鍵盤使用者在實驗頁裡沒辦法用空白鍵按任何按鈕；在晶片上按方向鍵還會直接跳到別的實驗。
+       */
+      const onWidget = !!(e.target.closest && e.target.closest('button, a[href], summary, [role="button"], [role="radio"], [role="tab"], [role="checkbox"], [role="switch"], [role="slider"], [role="link"], [contenteditable="true"]'));
       if (currentId && $("#exp-view").style.display !== "none") {
         const f = byId[currentId];
-        if (e.key === "ArrowRight" && FLAT[f.order + 1]) { location.hash = "#" + FLAT[f.order + 1].exp.id; }
-        if (e.key === "ArrowLeft" && FLAT[f.order - 1]) { location.hash = "#" + FLAT[f.order - 1].exp.id; }
+        if (!onWidget && e.key === "ArrowRight" && FLAT[f.order + 1]) { location.hash = "#" + FLAT[f.order + 1].exp.id; }
+        if (!onWidget && e.key === "ArrowLeft" && FLAT[f.order - 1]) { location.hash = "#" + FLAT[f.order - 1].exp.id; }
         // 空白鍵＝播放／暫停（PhET 慣例）：雙手留在鍵盤上就能推進 demo
-        if (e.key === " " && !e.repeat) {
+        if (!onWidget && e.key === " " && !e.repeat) {
           const playBtn = document.querySelector(".sim-transport-play");
           if (playBtn && !playBtn.hidden) { e.preventDefault(); playBtn.click(); }
         }

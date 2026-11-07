@@ -78,6 +78,13 @@ htmls.forEach(f => {
 ok(notCached.length === 0, "沒有「有引用卻沒快取」的資源",
   notCached.slice(0, 8).join("\n      "));
 
+console.log("\n=== MathJax 網址一致 ===");
+{
+  const app = fs.readFileSync("js/app.js", "utf8");
+  const a = (app.match(/MATHJAX_SRC\s*=\s*"([^"]+)"/) || [])[1], b = (sw.match(/const MATHJAX\s*=\s*"([^"]+)"/) || [])[1];
+  ok(!!a && a === b, "app.js 載入的 MathJax 與 sw.js「下載全部實驗」存的是同一個網址", a + " / " + b);
+}
+
 console.log("\n=== 社群分享預覽圖（og:image） ===");
 {
   /*

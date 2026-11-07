@@ -1198,7 +1198,8 @@
     const simRoot = parent.closest && parent.closest(".lab-sim");
     if (simRoot && simRoot._labReadouts) simRoot._labReadouts.push(record);
     if (buildContext) buildContext.readouts.push(record);
-    const paint = () => { v.textContent = record.value + (unit ? " " + unit : ""); };
+    // 沒有值（「—」）時不要掛單位：「— ×」「— cm」讀起來像壞掉的數字
+    const paint = () => { v.textContent = record.value + (unit && record.value !== "—" ? " " + unit : ""); };
     return {
       set: (val, digits) => {
         // 沒有值（null／undefined）或算不出來（NaN、∞）一律顯示「—」，不要把 null、NaN 原樣印給學生看
