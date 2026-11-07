@@ -26,7 +26,11 @@ python3 -m http.server 8080
 node tools/build-manifest.js   # 重建實驗延遲載入清單
 node tools/build-static.js     # 重建靜態說明頁 / sitemap
 node tools/tests/run-all.js    # 全套測試（--fast 略過慢的稽核）
+node tools/engine-drift.js ../senior-chemistry ../senior-biology   # 共用引擎和其他站有沒有分岔
 ```
+
+本站與物理（senior-science）、化學、生物版共用同一套引擎（sim-core、app、sim-*、duo、樣式表、SW、建置工具）。
+引擎層的修正請同步到每個 repo；`engine-drift.js` 會抹平學科名稱與版本號，只列出真正分岔的行。
 
 ## 授權
 
