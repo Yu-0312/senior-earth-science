@@ -82,8 +82,32 @@ const escapeHtml = s => String(s == null ? "" : s)
 const GREEK = {
   pi: "π", theta: "θ", lambda: "λ", mu: "μ", rho: "ρ", alpha: "α", beta: "β",
   gamma: "γ", Delta: "Δ", delta: "δ", omega: "ω", Omega: "Ω", varepsilon: "ε",
-  epsilon: "ε", phi: "φ", sigma: "σ", tau: "τ", nu: "ν", eta: "η"
+  epsilon: "ε", phi: "φ", sigma: "σ", tau: "τ", nu: "ν", eta: "η",
+  kappa: "κ", psi: "ψ", varphi: "φ", xi: "ξ", zeta: "ζ", chi: "χ",
+  Gamma: "Γ", Lambda: "Λ", Phi: "Φ", Psi: "Ψ", Sigma: "Σ", Theta: "Θ", Pi: "Π"
 };
+
+/*
+ * 箭頭與關係符號（2026-11 補齊）
+ * 以前表裡沒有的指令一律「直接略過」：N₂ + 3H₂ ⇌ 2NH₃ 變成「N₂+3H₂2NH₃」、
+ * 「濃度↑ → 速率↑」掉了箭頭只剩「濃度 → 速率」，三站共 81 條公式在說明頁上意思走樣。
+ * tools/tests/formula-text-test.js 會檢查課程裡用到的每一個指令都在這裡有對應。
+ */
+const SYMBOLS = {
+  times: "×", cdot: "·", approx: "≈", Rightarrow: " ⇒ ", rightarrow: " → ", to: " → ",
+  leftarrow: " ← ", leftrightarrow: " ↔ ", rightleftharpoons: " ⇌ ", leftrightarrows: " ⇄ ",
+  uparrow: "↑", downarrow: "↓",
+  propto: " ∝ ", pm: "±", mp: "∓", leq: "≤", geq: "≥", neq: "≠", ne: "≠", le: "≤", ge: "≥",
+  equiv: " ≡ ", sim: "∼", gg: " ≫ ", ll: " ≪ ", supset: " ⊃ ", parallel: "∥", mid: " | ", oplus: "⊕",
+  nabla: "∇", oint: "∮", langle: "⟨", rangle: "⟩",
+  infty: "∞", ell: "ℓ", hbar: "ℏ", partial: "∂", circ: "°", degree: "°",
+  cdots: "⋯", ldots: "…", dots: "…", sum: "Σ", int: "∫", quad: " ", qquad: "  "
+};
+/* 加在字母上的記號：向量箭頭、平均值橫線、波浪號（Unicode 組合字元） */
+const ACCENTS = { vec: "\u20d7", bar: "\u0304", tilde: "\u0303" };
+const HANDLED = ["dfrac", "frac", "tfrac", "sqrt", "text", "mathrm", "xrightarrow", "overset", "underset", "left", "right"]
+  .concat(Object.keys(GREEK), Object.keys(SYMBOLS), Object.keys(ACCENTS),
+    ["sin", "cos", "tan", "cot", "sec", "csc", "ln", "log", "exp", "arcsin", "arccos", "arctan", "max", "min"]);
 
 /* LaTeX 用空白當指令名的結尾，那個空白不是真的空格：\Delta P 應該是 ΔP */
 const skipSpace = (src, i) => { while (i < src.length && src[i] === " ") i += 1; return i; };
@@ -122,9 +146,16 @@ function plainFormula(latex) {
   while (i < src.length) {
     const ch = src[i];
     if (ch !== "\\") {
+      // ^\circ、^\prime：上標的是符號本身，直接交給後面的指令（以前會留下「6.5^°C」）
+      if (ch === "^" && src[i + 1] === "\\") { i += 1; continue; }
       if (ch === "^" || ch === "_") {
         const group = readGroup(src, i + 1);
-        if (group) { out += ch + plainFormula(group.body); i = group.end; continue; }
+        if (group) {
+          // ^{\circ}：整個上標就是一個符號時，不留插入號（以前輸出「90^°」）
+          const inner = plainFormula(group.body);
+          out += (ch === "^" && /^\\(circ|prime)$/.test(group.body.trim()) ? "" : ch) + inner;
+          i = group.end; continue;
+        }
       }
       if (ch === "{" || ch === "}") { i += 1; continue; }
       out += ch; i += 1; continue;
@@ -150,15 +181,32 @@ function plainFormula(latex) {
       const a = readGroup(src, cursor);
       if (a) { out += a.body; i = a.end; continue; }
     }
+    // \xrightarrow[下方]{上方} → 「 →(上方／下方) 」
+    if (name === "xrightarrow") {
+      let below = "";
+      let j = skipSpace(src, cursor);
+      if (src[j] === "[") { const close = src.indexOf("]", j); below = plainFormula(src.slice(j + 1, close)); j = close + 1; }
+      const a = readGroup(src, skipSpace(src, j));
+      const above = a ? plainFormula(a.body) : "";
+      const label = [above, below].filter(Boolean).join("／");
+      out += " →" + (label ? "(" + label + ")" : "") + " ";
+      i = a ? a.end : j; continue;
+    }
+    // \overset{上}{符號}、\underset{下}{符號} → 「符號(上／下)」
+    if (name === "overset" || name === "underset") {
+      const a = readGroup(src, cursor), b = a ? readGroup(src, a.end) : null;
+      if (a && b) {
+        const base = plainFormula(b.body), note = plainFormula(a.body);
+        out += base.endsWith(")") && name === "underset" ? base.slice(0, -1) + "／" + note + ")" : base + "(" + note + ")";
+        i = b.end; continue;
+      }
+    }
+    if (ACCENTS[name]) {
+      const a = readGroup(src, cursor);
+      if (a) { out += plainFormula(a.body) + ACCENTS[name]; i = a.end; continue; }
+    }
     if (GREEK[name]) { out += GREEK[name]; i = skipSpace(src, cursor); continue; }
-
-    const symbols = {
-      times: "×", cdot: "·", approx: "≈", Rightarrow: " ⇒ ", rightarrow: " → ",
-      propto: " ∝ ", pm: "±", leq: "≤", geq: "≥", neq: "≠", ne: "≠", le: "≤", ge: "≥",
-      infty: "∞", ell: "ℓ", hbar: "ℏ", partial: "∂", circ: "°", degree: "°",
-      cdots: "⋯", ldots: "…", sum: "Σ", int: "∫", quad: " ", qquad: "  "
-    };
-    if (symbols[name] != null) { out += symbols[name]; i = skipSpace(src, cursor); continue; }
+    if (SYMBOLS[name] != null) { out += SYMBOLS[name]; i = skipSpace(src, cursor); continue; }
 
     // 函數名要保留：\tan\theta_c 掉了 tan 就變成看不懂的 θ_c
     const functions = ["sin", "cos", "tan", "cot", "sec", "csc", "ln", "log", "exp",
@@ -564,4 +612,5 @@ function main() {
   console.log("已是公開模式，搜尋引擎可以索引全部內容。");
 }
 
-main();
+if (require.main === module) main();
+module.exports = { plainFormula, HANDLED };

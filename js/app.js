@@ -587,15 +587,22 @@
   const GREEK = {
     pi: "π", theta: "θ", lambda: "λ", mu: "μ", rho: "ρ", alpha: "α", beta: "β",
     gamma: "γ", Delta: "Δ", delta: "δ", omega: "ω", Omega: "Ω", sigma: "σ",
-    varepsilon: "ε", epsilon: "ε", phi: "φ", tau: "τ", nu: "ν", eta: "η"
+    varepsilon: "ε", epsilon: "ε", phi: "φ", tau: "τ", nu: "ν", eta: "η",
+    kappa: "κ", psi: "ψ", varphi: "φ", xi: "ξ", zeta: "ζ", chi: "χ",
+    Gamma: "Γ", Lambda: "Λ", Phi: "Φ", Psi: "Ψ", Sigma: "Σ", Theta: "Θ", Pi: "Π"
   };
   const SYM = {
     propto: "∝", times: "×", cdot: "·", pm: "±", approx: "≈", neq: "≠",
     leq: "≤", geq: "≥", ll: "≪", gg: "≫", to: "→", Rightarrow: "⇒",
     infty: "∞", quad: " ", qquad: "  ", left: "", right: "", displaystyle: "",
-    mathrm: "", text: "", ldots: "…", cdots: "⋯"
+    mathrm: "", text: "", ldots: "…", cdots: "⋯", dots: "…",
+    // 2026-11 補齊：以前沒有的指令直接被吃掉，⇌、↑↓ 這些箭頭在離線時整個消失
+    leftarrow: "←", leftrightarrow: "↔", rightleftharpoons: "⇌", leftrightarrows: "⇄",
+    uparrow: "↑", downarrow: "↓", mp: "∓", equiv: "≡", sim: "∼", supset: "⊃",
+    parallel: "∥", mid: "|", oplus: "⊕", nabla: "∇", oint: "∮", langle: "⟨", rangle: "⟩"
   };
-  const OPERATOR = new Set(["∝", "×", "·", "±", "≈", "≠", "≤", "≥", "≪", "≫", "→", "⇒"]);
+  const ACCENT = { vec: "\u20d7", bar: "\u0304", tilde: "\u0303" };
+  const OPERATOR = new Set(["∝", "×", "·", "±", "≈", "≠", "≤", "≥", "≪", "≫", "→", "⇒", "←", "↔", "⇌", "⇄", "≡", "⊃", "|"]);
   const SUP = { "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹", "+": "⁺", "-": "⁻", n: "ⁿ", i: "ⁱ" };
   const SUB = { "0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄", "5": "₅", "6": "₆", "7": "₇", "8": "₈", "9": "₉", "+": "₊", "-": "₋" };
   const isAtomic = s => /^[A-Za-z0-9ℏℓπθλμρσταβγδεφωνηΔΩ]+$/.test(s);
@@ -644,6 +651,26 @@
           const a = readGroup(src, j);
           if (a) { out += a.body; i = a.end; continue; }
         }
+        // \xrightarrow[下]{上} → 「 →(上／下) 」；\overset、\underset → 「符號(上／下)」
+        if (name === "xrightarrow") {
+          let below = "";
+          if (src[j] === "[") { const close = src.indexOf("]", j); below = plainFormula(src.slice(j + 1, close)); j = close + 1; while (src[j] === " ") j++; }
+          const a = readGroup(src, j);
+          const label = [a ? plainFormula(a.body) : "", below].filter(Boolean).join("／");
+          out += " →" + (label ? "(" + label + ")" : "") + " "; i = a ? a.end : j; continue;
+        }
+        if (name === "overset" || name === "underset") {
+          const a = readGroup(src, j), b = a ? readGroup(src, a.end) : null;
+          if (a && b) {
+            const base = plainFormula(b.body), note = plainFormula(a.body);
+            out += base.endsWith(")") && name === "underset" ? base.slice(0, -1) + "／" + note + ")" : base + "(" + note + ")";
+            i = b.end; continue;
+          }
+        }
+        if (ACCENT[name]) {
+          const a = readGroup(src, j);
+          if (a) { out += plainFormula(a.body) + ACCENT[name]; i = a.end; continue; }
+        }
         // 希臘字母是變數，\Delta P 要黏成 ΔP；運算子則要留空白，∝ √L 才讀得順
         if (GREEK[name]) { out += GREEK[name]; i = j; continue; }
         if (name in SYM) {
@@ -654,6 +681,7 @@
         }
         out += name; i = j; continue;
       }
+      if (ch === "^" && src[i + 1] === "\\") { i += 1; continue; }   // ^\circ：上標的是符號本身
       if (ch === "^" || ch === "_") {
         const table = ch === "^" ? SUP : SUB;
         const g = readGroup(src, i + 1);

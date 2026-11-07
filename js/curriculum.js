@@ -344,7 +344,7 @@
           points: ["每種代用資料有解析度限制", "交叉定年排除個體差異", "多重代用資料互相校準", "重建曲線銜接儀器紀錄"] },
         { id: "global-warming", title: "全球暖化的觀測證據", interactive: I, level: "junior",
           concept: "全球均溫比工業革命前高約 1.3–1.4 °C（長期平均），2024 年單年約 1.55 °C、首度超過 1.5 °C，近十年都是有紀錄以來最暖。海冰縮減、冰川退卻、海面上升與極端天氣頻率上升，多項獨立證據指向同一結論。",
-          formula: R`\( \Delta T_{\text{全球}}\approx +1.2\ ^\circ\text{C}\ (\text{1880 至今}) \)`,
+          formula: R`\( \Delta T_{\text{全球}}\approx +1.3\text{–}1.4\ ^\circ\text{C}\ (\text{相對工業前，長期平均}) \)`,
           points: ["陸地暖化快於海洋", "北極放大效應最顯著", "夜間最低溫上升更快", "暖化速率仍在加快"] },
         { id: "sea-level-rise", title: "海水面上升的兩大來源", interactive: I, level: "senior",
           concept: "海面上升來自兩方面：海水受熱膨脹（熱膨脹）與陸地冰的融化（冰河與冰蓋）。衛星測高顯示 1993 年以來海面每年上升約 3 mm，且速率加快。",

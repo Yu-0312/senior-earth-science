@@ -36,6 +36,8 @@ node --max-old-space-size=4096 tools/tests/meaning-audit.js   # 這支單跑要�
 | `graph-ink-test.js` | 圖表裡的曲線與陰影，在兩種主題下都與底板有足夠對比 |
 | `lab-test.js` | 自訂實驗室的混合模型：酸鹼中和、緩衝、沉澱、氣體與指示劑（39 項） |
 | `control-response-test.js` | **暫停狀態下**每一根滑桿、每一個步進器（− +）都要造成看得見的改變；選項晶片列出沒有立即反應的 |
+| `probe-pollution-test.js` | 探測引擎（sim-insight）掃滑桿量關係後，必須把實驗還原到使用者看到的狀態：同一實驗建置兩次、有無探測，讀數都要一致 |
+| `formula-text-test.js` | 公式轉純文字（說明頁 `p/` 與離線退路共用）：不認得的 LaTeX 指令不可被吃掉，⇌、↑↓、上下標等都要保留 |
 
 `meaning-audit` 與 `control-response-test` 看起來重疊，其實守的是不同狀態：
 前者在動畫跑著的時候量，後者在「剛打開、還沒按播放」的時候量。
