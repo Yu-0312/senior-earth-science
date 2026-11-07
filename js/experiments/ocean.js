@@ -238,7 +238,7 @@
           // 簡化世界帶:左=大西洋、中=南極繞極、右=太平洋印度洋
           D.rect(ctx, W * 0.03, H * 0.20, W * 0.60, H * 0.60, { fill: PL.theme.isLight() ? "rgba(74,163,216,0.22)" : "rgba(27,77,112,0.4)", stroke: PL.col("border"), width: 1.5, r: 12 });
           D.rect(ctx, W * 0.10, H * 0.20, W * 0.16, H * 0.07, { fill: "#8fae6f" });
-          D.text(ctx, "北大西洋", W * 0.18, H * 0.245, { color: "#fff", size: 10, align: "center", weight: "700" });
+          D.text(ctx, "北大西洋", W * 0.18, H * 0.205, { color: "#eaf4fb", size: 10, align: "center", weight: "700" });
           D.text(ctx, "南極繞極深水", W * 0.33, H * 0.76, { color: PL.col("text-faint"), size: 10, align: "center" });
           // 下沉區:箭頭長度與下沉強度成正比
           for (let i = 0; i < 3; i++) D.arrow(ctx, W * (0.145 + i * 0.03), H * 0.29, W * (0.145 + i * 0.03), H * 0.29 + 10 + sink * 26, { color: "#5c91dc", width: 2 + sink * 1.6, label: i === 1 ? "高鹽冷水下沉" : "" });
@@ -256,7 +256,7 @@
             const f = (d - cum[j]) / Math.max(1, cum[j + 1] - cum[j]);
             D.disc(ctx, lerp(segs[j][0][0], segs[j][1][0], f), lerp(segs[j][0][1], segs[j][1][1], f), 3, { fill: "#7fd4ff", glow: "#4fc3f7", glowSize: 5 });
           }
-          D.arrow(ctx, W * 0.56, H * 0.42, W * 0.56, H * 0.34, { color: "#ffb74d", width: 2.2, label: "太平洋・印度洋緩慢湧升" });
+          D.arrow(ctx, W * 0.56, H * 0.42, W * 0.56, H * 0.34, { color: "#ffb74d", width: 2.2, label: "太平洋緩慢湧升" });
           D.text(ctx, "深水形成區只剩兩處:北大西洋與南極", W * 0.33, H * 0.16, { color: PL.col("text-dim"), size: 11, align: "center", weight: "700" });
           CK.panel(ctx, W * 0.67, H * 0.14, W * 0.30, H * 0.58, "輸送帶量級");
           const rows = [["一圈時間", "約 1,000 年"], ["深水形成區", "北大西洋＋南極"], ["年輕水特徵", "含氧量高"], ["動力來源", "密度差(非風)"]];

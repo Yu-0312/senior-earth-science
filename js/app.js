@@ -2600,7 +2600,8 @@
     }
 
     // PWA
-    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")
+      && !/:(8321|8322)$/.test(location.host)) { // 開發埠不註冊 SW,避免快取舊檔
       window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
     }
     initOfflineCard();

@@ -267,10 +267,20 @@
           const gY = H * 0.90, scale = H * 0.74 / 6;
           const Y = kk => gY - kk * scale;
           ctx.save();                                 // 山坡（地形舉升）
-          ctx.fillStyle = PL.theme.isLight() ? "#7d9660" : "#46543c";
+          const mgrad = ctx.createLinearGradient(0, Y(6), 0, gY);
+          if (PL.theme.isLight()) { mgrad.addColorStop(0, "#8fae6f"); mgrad.addColorStop(0.55, "#6d8a54"); mgrad.addColorStop(1, "#55693f"); }
+          else { mgrad.addColorStop(0, "#54654a"); mgrad.addColorStop(0.55, "#46543c"); mgrad.addColorStop(1, "#333f2c"); }
+          ctx.fillStyle = mgrad;
           ctx.beginPath();
           ctx.moveTo(0, gY); ctx.lineTo(W * 0.34, Y(6)); ctx.lineTo(W * 0.62, gY);
-          ctx.closePath(); ctx.fill(); ctx.restore();
+          ctx.closePath(); ctx.fill();
+          // 雪線:峰頂淺色帶
+          ctx.fillStyle = PL.theme.isLight() ? "rgba(245,248,252,0.85)" : "rgba(210,225,240,0.5)";
+          ctx.beginPath();
+          ctx.moveTo(W * 0.305, Y(5.55)); ctx.lineTo(W * 0.34, Y(6)); ctx.lineTo(W * 0.375, Y(5.55));
+          ctx.lineTo(W * 0.355, Y(5.72)); ctx.lineTo(W * 0.33, Y(5.58)); ctx.closePath();
+          ctx.fill();
+          ctx.restore();
           noteBg(ctx, 0, Y(6), W * 0.62, gY - Y(6), "#7d9660", "#46543c");
           D.text(ctx, "地形舉升", W * 0.15, Y(3.1), { color: "#eef6e6", size: 11, align: "center", weight: "700" });
           if (lcl <= 6) {

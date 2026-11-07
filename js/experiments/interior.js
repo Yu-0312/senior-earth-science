@@ -292,8 +292,8 @@
           CK.panel(ctx, W * 0.66, H * 0.14, W * 0.31, H * 0.52, "這種邊界會出現什麼");
           const inf = INFO[type];
           [["代表地形", inf.land], ["火山活動", inf.volc], ["地震深度", inf.quake], ["實例", inf.ex]].forEach((rw, i) => {
-            D.text(ctx, rw[0], W * 0.68, H * 0.24 + i * 40, { color: PL.col("text-faint"), size: 10 });
-            D.text(ctx, rw[1], W * 0.68, H * 0.24 + i * 40 + 15, { color: PL.col("text"), size: 11, weight: "700" });
+            D.text(ctx, rw[0], W * 0.68, H * 0.22 + i * 34, { color: PL.col("text-faint"), size: 10 });
+            D.text(ctx, rw[1], W * 0.68, H * 0.22 + i * 34 + 14, { color: PL.col("text"), size: 11, weight: "700" });
           });
           rType.set(type === "divergent" ? "張裂邊界(⊕←→)" : type === "transform" ? "錯動邊界(↑↓)" : type === "convergent-ocean" ? "聚合邊界·海溝隱沒(→←)" : "聚合邊界·陸陸碰撞(→←)");
           rLand.set(inf.land); rQ.set(inf.quake); rD.set(dist, 0);
