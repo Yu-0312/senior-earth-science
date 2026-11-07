@@ -747,14 +747,23 @@
   function requestMathJax() {
     if (mathRequested || mathFailed) return;
     mathRequested = true;
-    const tag = document.createElement("script");
-    tag.src = MATHJAX_SRC;
-    tag.async = true;
-    tag.crossOrigin = "anonymous";   // 走 CORS 才能讓 Service Worker 存成一般回應（不透明回應不能放心快取）
-    tag.onerror = failMath;
-    // 被代理伺服器換成空檔或錯誤頁時 onerror 不會觸發：載完卻沒有 MathJax 本體（version）就當失敗
-    tag.onload = () => { if (!(window.MathJax && MathJax.version)) failMath(); };
-    document.head.appendChild(tag);
+    /*
+     * 先走 CORS：這樣 Service Worker 才能存成一般回應（不透明回應不能放心快取），離線也能排公式。
+     * 但有些校園代理伺服器會拿掉 Access-Control-Allow-Origin，檔案明明抓得到，
+     * 瀏覽器卻因為 CORS 檢查失敗而觸發 onerror——公式全部退成純文字。
+     * 所以 CORS 失敗時再用一般方式載一次；這次不會被快取，但至少線上排得出來。
+     */
+    const load = cors => {
+      const tag = document.createElement("script");
+      tag.src = MATHJAX_SRC;
+      tag.async = true;
+      if (cors) tag.crossOrigin = "anonymous";
+      tag.onerror = () => { tag.remove(); if (cors && !mathFailed) load(false); else failMath(); };
+      // 被代理伺服器換成空檔或錯誤頁時 onerror 不會觸發：載完卻沒有 MathJax 本體（version）就當失敗
+      tag.onload = () => { if (!(window.MathJax && MathJax.version)) failMath(); };
+      document.head.appendChild(tag);
+    };
+    load(true);
     // 慢速行動網路下載 660 KB 需要數秒，留 15 秒；真正離線時 onerror 會更早觸發
     setTimeout(failMath, 15000);
   }
