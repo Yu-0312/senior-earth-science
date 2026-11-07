@@ -34,7 +34,7 @@ node tools/verify-static.js
 1. `SITE_URL` 環境變數
 2. `js/site-config.js` 的 `siteUrl`
 
-換網域時兩者擇一更新，並重新建置靜態頁；首頁的 canonical／og:url 是手寫的，也要一起改。
+換網域時兩者擇一更新，並重新建置靜態頁；首頁、lab.html、licensing.html 的 canonical／og:url／og:image 是手寫的，也要一起改。
 
 ## 快取與版本號
 
