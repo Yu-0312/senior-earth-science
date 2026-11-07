@@ -47,7 +47,8 @@
             D.text(ctx, k, W * 0.65, H * (0.66 + i * 0.11), { color: PL.col("text-dim"), size: 10.5 });
             D.text(ctx, v, W * 0.92, H * (0.66 + i * 0.11), { color: i === 0 ? PL.col("accent") : PL.col("text"), size: 11.5, align: "right", weight: i === 0 ? "700" : "" });
           });
-          rDay.set(day, 1); rPhase.set(label); rVis.set(Math.round(Math.abs(Math.sin(phase * TAU)) * 100), 0);
+          rDay.set(day, 1); rPhase.set(label); // 被照亮的比例 = (1 − cos 相位角)/2：朔 0%、上弦 50%、望 100%（以前用 |sin| 會讓滿月變 0%、上弦變 100%）
+          rVis.set(Math.round((1 - Math.cos(phase * TAU)) / 2 * 100), 0);
         }
       });
       const dayS = PL.ui.slider(ui.L.controls, { label: "朔望月日數", min: 0, max: 29.5, step: 0.5, value: 7, unit: "天", digits: 1 });
@@ -201,7 +202,7 @@
             D.text(ctx, Tp.toFixed(2) + " 年", W * 0.92, y, { color: Math.abs(aAU - a) < 0.3 ? PL.col("accent") : PL.col("text-faint"), size: 10.5, align: "right", weight: Math.abs(aAU - a) < 0.3 ? "700" : "" });
           });
           D.text(ctx, "a = " + aAU.toFixed(1) + " AU → T = " + Math.pow(aAU, 1.5).toFixed(1) + " 年", W * 0.77, H * 0.74, { color: PL.col("accent-2"), size: 12, align: "center", weight: "700" });
-          rEcc.set(ecc, 2); rT.set(T, 2); rSpeed.set(1 + ecc * 2.4, 2);
+          rEcc.set(ecc, 2); rT.set(T, 2); rSpeed.set((1 + ecc) / (1 - ecc), 2);   // 角動量守恆：v近/v遠 = r遠/r近 = (1+e)/(1−e)
         }
       });
       const eccS = PL.ui.slider(ui.L.controls, { label: "軌道偏心率", min: 0, max: 0.8, step: 0.05, value: 0.3, digits: 2 });
@@ -403,10 +404,10 @@
           const hr = CK.hrDiagram(ctx, { x: W * 0.05, y: H * 0.08, w: W * 0.56, h: H * 0.80 }, {});
           // 標記選中的恆星
           const STARS = {
-            sun: { T: 5800, L: 0.6, name: "太陽", note: "G 型主序星,黃矮星" },
+            sun: { T: 5800, L: 0, name: "太陽", note: "G 型主序星,黃矮星" },
             betelgeuse: { T: 3600, L: 4.2, name: "參宿四", note: "紅超巨星,即將爆炸" },
             sirius: { T: 9900, L: 1.4, name: "天狼星", note: "A 型主序星,全天最亮" },
-            siriusB: { T: 25000, L: -3.4, name: "天狼伴星", note: "白矮星:小而熱而暗" },
+            siriusB: { T: 25000, L: -1.25, name: "天狼伴星", note: "白矮星:小而熱而暗" },
             betelgeuse2: null
           };
           const key = starSel.get();
@@ -420,7 +421,7 @@
           }
           // 主序帶上的樣本星
           if (mode !== "stars") {
-            [[30000, 4.5], [15000, 3.2], [9000, 1.8], [7000, 0.8], [5800, 0.5], [4500, -0.6], [3200, -2.2]].forEach(([T, L]) => {
+            [[30000, 4.5], [15000, 3.2], [9000, 1.8], [7000, 0.8], [5800, 0], [4500, -0.7], [3200, -2.2]].forEach(([T, L]) => {
               D.disc(ctx, hr.X(T), hr.Y(L), 2.4, { fill: "rgba(255,255,255,0.85)" });
             });
           }

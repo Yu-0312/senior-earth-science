@@ -156,6 +156,8 @@
   /* 季節與黃赤交角 */
   PL.register("seasons", {
     build(root) {
+      // 滑桿 6 = 六月夏至、3／9 = 春秋分、0 與 12 = 十二月冬至；以前顯示成 1 + 值，夏至被標成「7 月」
+      const monthOf = m => { const k = Math.round(m) % 12; return k === 0 ? 12 : k; };
       const ui = CK.scaffold(root, {
         aspect: 0.58, animate: true,
         draw(dt, t) {
@@ -188,7 +190,7 @@
           const season = decl > 15 ? "北半球夏季" : decl > 5 ? "北半球春末" : decl < -15 ? "北半球冬季" : decl < -5 ? "北半球冬末" : "春分/秋分附近";
           CK.panel(ctx, W * 0.06, H * 0.12, W * 0.26, H * 0.70, "季節判讀");
           const rows = [
-            ["月份", Math.round(1 + dateM % 12) + " 月"],
+            ["月份", monthOf(dateM) + " 月"],
             ["直射緯度", (decl >= 0 ? "+" : "") + decl.toFixed(1) + "°"],
             ["季節", season],
             ["台灣正午影長", decl > 10 ? "全年最短" : decl < -10 ? "全年最長" : "中等"]
@@ -198,7 +200,7 @@
             D.text(ctx, v, W * 0.29, H * (0.28 + i * 0.14), { color: i === 2 ? PL.col("accent") : PL.col("text"), size: 12, align: "right", weight: i === 2 ? "700" : "" });
           });
           D.text(ctx, "黃赤交角 23.5° 是季節的根本原因", W * 0.19, H * 0.76, { color: PL.col("warn"), size: 10, align: "center" });
-          rDate.set(Math.round(1 + dateM % 12), 0); rDec.set(decl, 1); rSeason.set(season);
+          rDate.set(monthOf(dateM), 0); rDec.set(decl, 1); rSeason.set(season);
         }
       });
       const dateS = PL.ui.slider(ui.L.controls, { label: "日期(月)", min: 0, max: 12, step: 0.25, value: 6, digits: 2 });
@@ -228,6 +230,8 @@
   /* 太陽軌跡與日出日落 */
   PL.register("solar-path", {
     build(root) {
+      // 北緯 25° 的正午太陽高度：夏至 90−25+23.5、春秋分 90−25、冬至 90−25−23.5（畫面標籤與讀數共用同一張表）
+      const NOON_ALT = { summer: 88.5, equinox: 65, winter: 41.5 };
       const ui = CK.scaffold(root, {
         aspect: 0.60, animate: true,
         draw(dt, t) {
@@ -265,7 +269,7 @@
           if (f > 0.01 && f < 0.99) {
             CK.sunIcon(ctx, sx, sy, 13, { time: t });
             D.line(ctx, sx, sy + 14, sx, horizon, "rgba(255,202,40,0.4)", 1.4, [3, 4]);
-            const noonH = { summer: 89 - 25, equinox: 90 - 25, winter: 90 - 25 - 47 }[season];
+            const noonH = NOON_ALT[season];
             const alt = Math.sin(f * Math.PI) * noonH;
             D.text(ctx, "太陽高度 " + Math.max(0, alt).toFixed(0) + "°", sx + 16, sy, { color: PL.col("text"), size: 10.5 });
             // 影子
@@ -288,7 +292,7 @@
           });
           D.text(ctx, "太陽能板傾角 = 緯度 ± 15°(冬夏調整)", W * 0.81, H * 0.62, { color: PL.col("text-faint"), size: 9.5, align: "center" });
           rSeason.set({ summer: "夏至", equinox: "春秋分", winter: "冬至" }[season]);
-          rHour.set(hour, 1); rDay.set(dayLen, 1); rAlt.set(Math.max(0, Math.sin(f * Math.PI) * { summer: 64, equinox: 65, winter: 41.5 }[season]), 0);
+          rHour.set(hour, 1); rDay.set(dayLen, 1); rAlt.set(Math.max(0, Math.sin(f * Math.PI) * NOON_ALT[season]), 0);
         }
       });
       const seasonSel = PL.ui.select(ui.L.controls, { label: "季節", value: "summer", options: [
@@ -342,8 +346,13 @@
             D.line(ctx, cx - 100, cy + k * 12, cx + 86, cy + k * 5, "rgba(255,224,130,0.45)", 1.4);
           }
           // 集光力與極限星等
-          const gain = Math.pow(D_cm / 0.5, 2) * 0.25;      // 相對肉眼 5mm
-          const lm = 2.1 + 5 * Math.log10(D_cm / 0.7);       // 極限星等經驗式
+          /*
+           * 和暗適應的肉眼（瞳孔 7 mm）比：集光力 = (D / 0.7 cm)²，極限星等 = 6 + 5 log₁₀(D / 0.7 cm)。
+           * 以前集光力多乘了 0.25（等於拿 1 cm 瞳孔比）、極限星等的常數寫成 2.1——
+           * 肉眼本身就看得到 6 等星，10 cm 望遠鏡卻只算出 7.9 等；正確約 11.8 等。
+           */
+          const gain = Math.pow(D_cm / 0.7, 2);
+          const lm = 6 + 5 * Math.log10(D_cm / 0.7);
           const res = 11.6 / D_cm * 1.22;                    // 星等 1 處的解析角秒(示意)
           // 模擬視野:雙星分辨
           const vx = W * 0.66, vy = H * 0.34, vr = H * 0.24;
@@ -358,8 +367,8 @@
           ctx.beginPath(); ctx.arc(vx, vy, vr - 1, 0, TAU); ctx.clip();
           let seed = 20261107;
           const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-          const faint = clamp(0.35 + gain / 400, 0.35, 0.95);   // 口徑越大，看得到的暗星越多越亮
-          const count = Math.round(18 + clamp(lm - 6, 0, 8) * 9);
+          const faint = clamp(0.35 + D_cm * D_cm / 400, 0.35, 0.95);   // 口徑越大，看得到的暗星越多越亮
+          const count = Math.round(18 + clamp(lm - 9, 0, 6) * 12);
           for (let i = 0; i < count; i++) {
             const sx = vx + (rnd() * 2 - 1) * vr, sy = vy + (rnd() * 2 - 1) * vr, sr = rnd() < 0.85 ? 0.8 : 1.3;
             ctx.fillStyle = "rgba(220,230,255," + (faint * (0.35 + rnd() * 0.65)).toFixed(3) + ")";
@@ -368,7 +377,7 @@
           ctx.restore();
           const sep = clamp(46 / mag, 1.5, 40);              // 視間距隨倍率縮小
           const resLimit = clamp(res * 8, 1.5, 40);
-          const bright = clamp(gain / 60, 0.25, 1);
+          const bright = clamp(D_cm * D_cm / 60, 0.25, 1);
           [[-1, "#ffe082"], [1, "#ffd54f"]].forEach(([s, c]) => {
             D.disc(ctx, vx + s * sep / 2, vy - 6, 5 * (0.5 + bright * 0.7), { fill: c, glow: c, glowSize: 8 * bright });
           });

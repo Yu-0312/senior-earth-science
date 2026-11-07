@@ -501,7 +501,8 @@
             D.text(ctx, rw[0], W * 0.66, H * 0.25 + i * 38, { color: PL.col("text-dim"), size: 10.5 });
             D.text(ctx, rw[1], W * 0.94, H * 0.25 + i * 38, { color: PL.col("text"), size: 10.5, align: "right" });
           });
-          rRate.set(rate, 0); rAge.set(Math.round(200 / rate), 0); rEx.set(exag, 0);
+          // 4000 km = 4×10⁸ cm，÷ 半速率(cm/年) → 年；以前寫成 200，算出來的年齡少一半
+          rRate.set(rate, 0); rAge.set(Math.round(400 / rate), 0); rEx.set(exag, 0);
           vSym.set("脊兩側的地形、年齡、磁條帶都對稱——這是海底擴張最直接的證據", "info");
         }
       });
@@ -533,7 +534,7 @@
         CK.plot(chart, {
           x0: 0, x1: 160, y0: 0, y1: 8, xlabel: "海底年齡 (百萬年)", ylabel: "水深 (km)",
           series: [{ fn: a => 2.5 + 0.35 * Math.sqrt(a), color: PL.col("accent") }],
-          marks: [{ dot: [Math.min(160, 200 / rate), 2.5 + 0.35 * Math.sqrt(Math.min(160, 200 / rate))], color: PL.col("accent-2") }, { hline: 2.5, color: "#ef8829", dash: [5, 4] }]
+          marks: [{ dot: [Math.min(160, 400 / rate), 2.5 + 0.35 * Math.sqrt(Math.min(160, 400 / rate))], color: PL.col("accent-2") }, { hline: 2.5, color: "#ef8829", dash: [5, 4] }]
         });
       }
       chart.onResize(drawChart); drawChart();

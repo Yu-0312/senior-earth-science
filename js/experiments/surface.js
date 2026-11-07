@@ -7,13 +7,17 @@
   /* 風化作用:物理與化學 */
   PL.register("weathering", {
     build(root) {
+      // 讀數與圖表共用同一條公式（以前圖表的衰減快了 10 倍）
+      const grainAt = (cyc, yr) => Math.max(0.2, 80 / Math.pow(2, cyc * yr / 300));
       const ui = CK.scaffold(root, {
         aspect: 0.60, animate: true,
         draw(dt, t) {
           const { ctx, W, H } = ui.cv; CK.bench(ui.cv);
           const cyc = cycS.get(), chem = chemS.get(), yr = yrS.get();
           const E = cyc * yr / 10, n = clamp(1 + Math.floor(E / 16), 1, 8);
-          const d = 80 / Math.pow(2, E / 30), gap = Math.min(1 + E * 0.012, 12);
+          // 凍融把岩塊一再劈半，但物理風化只能碎到砂礫（約 0.2 cm），更細要靠化學風化；
+          // 以前沒有下限，預設值就算出 6.9×10⁻¹⁷ cm——比原子還小
+          const d = grainAt(cyc, yr), gap = Math.min(1 + E * 0.012, 12);
           const soil = Math.min(chem * yr * 0.05, 120);
           const { horizon } = CK.scene(ui.cv, { kind: "sky", horizon: 0.66 });
           // 大岩塊:凍融裂成 n×n 塊;化學風化染上鏽色(成分改變)
@@ -55,10 +59,10 @@
       const drawChart = () => CK.plot(chart, {
         x0: 0, x1: 1000, y0: 0, y1: 85, xlabel: "風化時間(年)", ylabel: "平均粒徑(cm)",
         series: [
-          { fn: y => 80 / Math.pow(2, 25 * y / 30), color: "rgba(140,160,180,0.45)", width: 1.4 },
-          { fn: y => 80 / Math.pow(2, 60 * y / 30), color: "rgba(140,160,180,0.45)", width: 1.4 },
-          { fn: y => 80 / Math.pow(2, cycS.get() * y / 30), color: PL.col("accent"), width: 2.2 }],
-        marks: [{ dot: [yrS.get(), 80 / Math.pow(2, cycS.get() * yrS.get() / 30)], color: PL.col("warn"), label: "目前" }]
+          { fn: y => grainAt(25, y), color: "rgba(140,160,180,0.45)", width: 1.4 },
+          { fn: y => grainAt(60, y), color: "rgba(140,160,180,0.45)", width: 1.4 },
+          { fn: y => grainAt(cycS.get(), y), color: PL.col("accent"), width: 2.2 }],
+        marks: [{ dot: [yrS.get(), grainAt(cycS.get(), yrS.get())], color: PL.col("warn"), label: "目前" }]
       });
       chart.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
@@ -119,7 +123,7 @@
             D.text(ctx, r[0], W * 0.685, H * 0.23 + i * 46, { color: PL.col("text-faint"), size: 10 });
             D.text(ctx, r[1], W * 0.685, H * 0.23 + i * 46 + 15, { color: i === 0 ? PL.col("accent") : PL.col("text"), size: 10.5, weight: i === 0 ? "700" : "400" });
           });
-          rDm.set(force === "ice" ? "全部" : PL.fmt(dm, dm >= 1 ? 1 : 3));
+          rDm.set(force === "ice" ? "全部" : PL.fmt(dm, dm >= 1 ? 1 : 3) + " mm");
           rMode.set(force === "ice" ? "冰河推運" : force === "wind" ? "躍移+懸浮" : v < 12 ? "推移" : v < 45 ? "跳躍" : "懸浮"); rSort.set(force === "ice" ? "無分選" : deposited === 3 ? "分選良好" : "搬運中");
         }
       });
