@@ -39,7 +39,13 @@ R.ok(dirty.length === 0, "沒有殘留 \\ 或大括號", dirty.slice(0, 5).map(d
 
 R.section("抽查");
 const sample = (latex, expect) => R.ok(plainFormula(latex) === expect, latex + " → " + expect, "得到 " + plainFormula(latex));
-sample("\\text{N}_2+3\\text{H}_2\\rightleftharpoons2\\text{NH}_3", "N_2+3H_2 ⇌ 2NH_3");
+sample("\\text{N}_2+3\\text{H}_2\\rightleftharpoons2\\text{NH}_3", "N₂+3H₂ ⇌ 2NH₃");
+sample("\\text{Zn}+\\text{Cu}^{2+}", "Zn+Cu²⁺");
+sample("r\\approx10^{-15}\\,\\text{m}", "r≈10⁻¹⁵m");
+sample("pK_a", "pK_a");
+sample("k=Ae^{-E_a/RT}", "k=Ae^(-E_a/RT)");
+sample("q_{\\text{放}}=q_{\\text{吸}}", "q_放=q_吸");
+sample("90^{\\circ}", "90°");
 sample("A\\xrightarrow{\\text{加熱}}B", "A →(加熱) B");
 sample("\\underset{\\text{升溫}}{\\overset{\\text{過熱}}{\\rightleftharpoons}}", "⇌(過熱／升溫)");
 R.done();

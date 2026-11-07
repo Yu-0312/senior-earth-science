@@ -2399,6 +2399,25 @@ body.stage-only .content-grid > .card:first-child { background: transparent; bor
 }
 
 .brand-text .brand-name { font-family: var(--font-display); font-weight: 900; font-size: 18px; letter-spacing: 0.06em; }
+/*
+ * 手機頂列：品牌名稱被右側四顆按鈕蓋住，只剩「化學實驗」。
+ * 原因是 .brand 與 .spacer 在窄版都是 flex: 1，兩者平分剩餘寬度，品牌只拿到一半；
+ * 加上上面這條 18px 的展示字級寫在手機規則之後，把 15px 蓋掉了。
+ * 窄版收掉 spacer、字級回到 15px；再窄一點收掉燒瓶圖示、按鈕縮成 36px，仍不夠才出省略號。
+ */
+@media (max-width: 600px) {
+  .topbar .spacer { display: none; }
+  .brand-text { min-width: 0; }
+  .brand { gap: 7px; }
+  .brand-text .brand-name { font-size: 15px; letter-spacing: 0.02em; overflow: hidden; text-overflow: ellipsis; }
+}
+@media (max-width: 380px) {
+  .brand-logo { display: none; }
+}
+@media (max-width: 340px) {
+  .topbar { gap: 6px; padding-inline: 10px; }
+  .topbar .icon-btn, .topbar .menu-toggle { width: 36px; min-width: 36px; height: 36px; min-height: 36px; }
+}
 .pill { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.02em; }
 
 #home-view { max-width: 1140px; margin: 0 auto; container-type: inline-size; }

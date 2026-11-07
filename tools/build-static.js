@@ -109,6 +109,17 @@ const HANDLED = ["dfrac", "frac", "tfrac", "sqrt", "text", "mathrm", "xrightarro
   .concat(Object.keys(GREEK), Object.keys(SYMBOLS), Object.keys(ACCENTS),
     ["sin", "cos", "tan", "cot", "sec", "csc", "ln", "log", "exp", "arcsin", "arccos", "arctan", "max", "min"]);
 
+/* 上下標：只換 Unicode 有、而且中文字型普遍有字形的字元 */
+// 字母上標只有 ⁿ ⁱ 少數幾個，混用會變成「[A]^m[B]ⁿ」這種一半換一半沒換的寫法，乾脆只換數字與正負號
+const SUP = { "0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹", "+": "⁺", "-": "⁻" };
+const SUB = { "0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄", "5": "₅", "6": "₆", "7": "₇", "8": "₈", "9": "₉", "+": "₊", "-": "₋" };
+function mapScript(body, table) {
+  if (!body) return null;
+  let out = "";
+  for (const c of body) { if (!table[c]) return null; out += table[c]; }
+  return out;
+}
+
 /* LaTeX 用空白當指令名的結尾，那個空白不是真的空格：\Delta P 應該是 ΔP */
 const skipSpace = (src, i) => { while (i < src.length && src[i] === " ") i += 1; return i; };
 
@@ -150,11 +161,22 @@ function plainFormula(latex) {
       if (ch === "^" && src[i + 1] === "\\") { i += 1; continue; }
       if (ch === "^" || ch === "_") {
         const group = readGroup(src, i + 1);
-        if (group) {
+        const raw = group ? group.body : src[i + 1];
+        const next = group ? group.end : i + 2;
+        if (raw != null && raw !== "\\") {
+          const inner = plainFormula(raw);
           // ^{\circ}：整個上標就是一個符號時，不留插入號（以前輸出「90^°」）
-          const inner = plainFormula(group.body);
-          out += (ch === "^" && /^\\(circ|prime)$/.test(group.body.trim()) ? "" : ch) + inner;
-          i = group.end; continue;
+          if (ch === "^" && /^\\(circ|prime)$/.test(raw.trim())) { out += inner; i = next; continue; }
+          /*
+           * 數字與正負號換成 Unicode 上下標：N_2 → N₂、Zn^{2+} → Zn²⁺、10^{-15} → 10⁻¹⁵。
+           * 說明頁是給搜尋引擎與列印看的，「H_2SO_4」對學生來說是亂碼。
+           * 字母下標（K_a、E_a）的上下標字形在中文字型裡常常缺字，維持 _ 的寫法。
+           */
+          const mapped = mapScript(inner, ch === "^" ? SUP : SUB);
+          if (mapped != null) { out += mapped; i = next; continue; }
+          // e^{-E_a/RT}：多字元的上標裡有運算子時要包括號，否則讀成 e^-E_a 再除以 RT
+          out += ch + (ch === "^" && inner.length > 1 && /[-+/*=\s]/.test(inner) ? "(" + inner + ")" : inner);
+          i = next; continue;
         }
       }
       if (ch === "{" || ch === "}") { i += 1; continue; }
