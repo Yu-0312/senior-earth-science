@@ -265,8 +265,8 @@
             if (!intrusive) for (let i = 0; i < 7; i++) D.disc(ctx, bx + bw * (0.1 + (i * 41 % 80) / 100), by + bh * (0.18 + (i * 29 % 64) / 100), 3, { fill: "rgba(0,0,0,0.4)" });
           }
           if (porph) for (let i = 0; i < 5; i++) D.disc(ctx, bx + bw * (0.14 + (i * 0.19) % 0.76), by + bh * (0.24 + (i * 0.27) % 0.56), 9, { fill: CK.mix(c.color, "#ffffff", 0.5), stroke: "rgba(0,0,0,0.3)", width: 1 });
-          D.rect(ctx, bx - 8, by - 22, 252, 20, { fill: PL.theme.isLight() ? "rgba(40,32,24,0.78)" : "rgba(0,0,0,0.45)", r: 4 });
-          D.text(ctx, "晶粒放大：" + (d < 0.03 ? "玻璃質（無晶粒）" : "直徑約 " + (d < 0.1 ? d.toFixed(3) : d.toFixed(2)) + " mm" + (porph ? "＋大斑晶" : "")), bx, by - 8, { color: "#f4ead9", size: 10.5 });
+          D.rect(ctx, bx - 8, by - 22, 252, 20, { fill: PL.theme.isLight() ? "rgba(255,248,235,0.9)" : "rgba(0,0,0,0.45)", r: 4 });
+          D.text(ctx, "晶粒放大：" + (d < 0.03 ? "玻璃質（無晶粒）" : "直徑約 " + (d < 0.1 ? d.toFixed(3) : d.toFixed(2)) + " mm" + (porph ? "＋大斑晶" : "")), bx, by - 8, { color: PL.theme.isLight() ? "#4a3a28" : "#f4ead9", size: 10.5 });
           // 成分資料卡
           CK.panel(ctx, W * 0.60, H * 0.16, W * 0.35, H * 0.44, c.name + "岩漿");
           const rows = [["SiO₂ 含量", c.sio], ["主要礦物", c.min], ["深成 →", c.intr], ["噴出 →", c.extr], ["常見位置", c.site]];
