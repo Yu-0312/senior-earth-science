@@ -371,6 +371,7 @@
       head.appendChild(lab); head.appendChild(val);
       const input = document.createElement("input");
       input.type = "range"; input.min = min; input.max = max; input.step = step; input.value = value;
+      input.setAttribute("aria-label", label);   // 視覺標題是旁邊的 <span>，螢幕報讀器需要直接的名稱
       input.addEventListener("input", () => {
         const v = Number(input.value);
         val.textContent = v + (unit ? " " + unit : "");
