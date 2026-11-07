@@ -936,10 +936,33 @@
     const owner = buildContext;      // 這個迴圈屬於哪一次建置
 
     function onVisibilityChange() {
-      if (!document.hidden && running && !raf) {
+      if (!document.hidden && running && !raf && onScreen) {
         last = 0;
         raf = requestAnimationFrame(frame);
       }
+    }
+    /*
+     * 畫面外暫停（2026-11）
+     *
+     * 一半以上的實驗進場就自動播放，學生往下捲去讀概念、作答時，畫布早就不在視窗裡，
+     * 迴圈卻照樣每秒畫 45 影格（實測每秒 1,500 多個繪圖指令），手機就這樣一直耗電發燙。
+     * 現在用 IntersectionObserver 看整個實驗區（畫布＋讀數＋圖表）：完全離開視窗就停在當下，
+     * 捲回來再從同一個時間點繼續。時間是凍結而不是偷偷往前跑，觀察點也不會在看不到的時候錯過。
+     * 只有在實驗區整個看不見時才停；圖表還在視窗裡就照常更新。
+     */
+    let onScreen = true, io = null;
+    function watchVisibility() {
+      if (io || typeof IntersectionObserver !== "function" || !owner || !owner.root || !owner.root.isConnected) return;
+      io = new IntersectionObserver(entries => {
+        const e = entries[entries.length - 1];
+        onScreen = !e || e.isIntersecting;
+        if (onScreen && running && !raf && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); }
+      }, { rootMargin: "120px 0px" });
+      io.observe(owner.root);
+    }
+    function unwatchVisibility() {
+      if (io) { io.disconnect(); io = null; }
+      onScreen = true;
     }
     function advance(dt) {
       t += dt;
@@ -948,7 +971,7 @@
     }
     function frame(now) {
       if (!running) return;
-      if (document.hidden) { raf = null; last = 0; return; }
+      if (document.hidden || !onScreen) { raf = null; last = 0; return; }
       if (!last) {
         last = now;
         step(0, t);
@@ -973,13 +996,15 @@
         if (running) return;
         running = true; last = 0; armed = false;
         if (!listening) { document.addEventListener("visibilitychange", onVisibilityChange); listening = true; }
-        if (!document.hidden) raf = requestAnimationFrame(frame);
+        watchVisibility();
+        if (!document.hidden && onScreen) raf = requestAnimationFrame(frame);
       },
       stop() {
         running = false; armed = false;
         if (raf) cancelAnimationFrame(raf);
         raf = null;
         if (listening) { document.removeEventListener("visibilitychange", onVisibilityChange); listening = false; }
+        unwatchVisibility();
       },
       toggle() { running ? ctrl.stop() : ctrl.start(); },
       render() { step(0, t); },
