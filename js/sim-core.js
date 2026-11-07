@@ -1176,7 +1176,9 @@
     const paint = () => { v.textContent = record.value + (unit ? " " + unit : ""); };
     return {
       set: (val, digits) => {
-        record.value = typeof val === "number" ? fmt(val, digits) : val;
+        // 沒有值（null／undefined）或算不出來（NaN、∞）一律顯示「—」，不要把 null、NaN 原樣印給學生看
+        const missing = val == null || (typeof val === "number" && !isFinite(val));
+        record.value = missing ? "—" : typeof val === "number" ? fmt(val, digits) : val;
         // 保留未經格式化的原始數值：探測引擎若讀四捨五入後的字串，
         // 小數值的相對誤差會很大，冪次律會被算歪（P ∝ V² 會變成 V^1.93）。
         record.number = typeof val === "number" && isFinite(val) ? val : null;
