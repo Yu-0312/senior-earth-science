@@ -37,7 +37,7 @@
         { id: "earth-origin", title: "太陽系與地球的誕生", interactive: I, level: "senior",
           concept: "約 46 億年前，星雲受重力收縮旋轉成扁平盤面，中心形成太陽，殘餘物質吸積成行星。內側高溫只留下岩石金屬（類地行星），外側可凝結冰與氣體（類木行星）。",
           formula: R`\( \text{星雲}\rightarrow\text{吸積}\rightarrow\text{原行星}\rightarrow\text{行星} \)`,
-          points: ["太陽系年龄約 46 億年", "類地行星靠近太陽", "雪線以外行星可長巨大", "隕石是最古老的標本"] },
+          points: ["太陽系年齡約 46 億年", "類地行星靠近太陽", "雪線以外行星可長巨大", "隕石是最古老的標本"] },
         { id: "earth-history-timeline", title: "地球 46 億年大事記", interactive: I, level: "senior",
           concept: "把地球史壓縮成一天：午夜誕生，凌晨海洋形成，清晨出現生命，晚上 9 點多寒武紀大爆發，晚上 11 點恐龍繁盛，11 點 39 分小行星撞擊滅絕恐龍，人類在最後幾秒登場。",
           formula: R`\( t_{\text{事件}}/t_{\text{總}}= \text{一天中的時刻} \)`,
@@ -67,7 +67,7 @@
         { id: "mantle-convection", title: "地函對流與板塊驅動", interactive: I, level: "senior",
           concept: "地函雖為固體，但在長時間尺度上可像極黏的流體般流動。熱物質上升、冷物質下沉的對流，配合板塊自身的下拉與推擠，驅動板塊以每年數公分移動。",
           formula: R`\( v_{\text{板塊}}\approx 1{-}10\ \text{cm/年} \)`,
-          points: ["對流是驅動力之一", "板塊可攜帶大陸移動", "GNS 系統量測板塊速率", "軟流圈是板塊的滑動面"] },
+          points: ["對流是驅動力之一", "板塊可攜帶大陸移動", "GNSS 衛星定位量測板塊速率", "軟流圈是板塊的滑動面"] },
         { id: "plate-boundaries", title: "三種板塊邊界", interactive: I, level: "senior",
           concept: "張裂邊界（中洋脊）生成新的海洋地殼；聚合邊界使板塊相撞，形成海溝、山脈與火山；錯動邊界（轉形斷層）板塊平行滑移，地震頻繁但少火山。",
           formula: R`\( \text{張裂}:\ \oplus\leftarrow\rightarrow;\quad \text{聚合}:\ \rightarrow\leftarrow;\quad \text{錯動}:\ \uparrow\downarrow \)`,
@@ -239,7 +239,7 @@
         { id: "taiwan-landforms", title: "台灣的地形特色", interactive: I, level: "junior",
           concept: "台灣由板塊擠壓造出高山與縱深極短的地形剖面：中央山脈東陡西緩，河川短促湍急，平原盆地狹小分散。侵蝕速率居全球前列，地形年輕而多變。",
           formula: R`\( \text{抬升速率}\approx 5\ \text{mm/年}\gg\text{侵蝕亦盛} \)`,
-          points: ["玉山 3,952 m 為東亞高峰", "西部堆積平原持續擴張", "短急河川搬運量巨大", "地形塑造主因是造山運動"] }
+          points: ["玉山 3,952 m 為東北亞最高峰", "西部堆積平原持續擴張", "短急河川搬運量巨大", "地形塑造主因是造山運動"] }
       ]
     },
     {
@@ -349,7 +349,7 @@
         { id: "sea-level-rise", title: "海水面上升的兩大來源", interactive: I, level: "senior",
           concept: "海面上升來自兩方面：海水受熱膨脹（熱膨脹）與陸地冰的融化（冰河與冰蓋）。衛星測高顯示 1993 年以來海面每年上升約 3 mm，且速率加快。",
           formula: R`\( \Delta h=\Delta h_{\text{熱膨脹}}+\Delta h_{\text{融冰}} \)`,
-          points: ["熱膨脹占目前一半", "格陵蘭冰蓋損耗加速", "上升速率逐年增加", "低窪地區最先受衝擊"] },
+          points: ["1971–2018 年熱膨脹約占一半，近年冰融占比漸增", "格陵蘭冰蓋損耗加速", "上升速率逐年增加", "低窪地區最先受衝擊"] },
         { id: "climate-adaptation", title: "減緩與調適策略", interactive: I, level: "senior",
           concept: "減緩從源頭降低排放：再生能源、能效提升、碳捕存；調適則準備面對已無法避免的改變：海岸防護、耐旱育種、城市降溫。兩者並行才能控制風險。",
           formula: R`\( \text{總風險}=\text{危害}\times\text{暴露}\times\text{脆弱度} \)`,
@@ -443,7 +443,7 @@
         { id: "cosmic-background", title: "宇宙微波背景輻射", interactive: I, level: "advanced",
           concept: "大霹靂後 38 萬年，宇宙冷卻到原子可形成、光子得以自由飛行，這批光子紅移至今成為 2.7 K 的微波背景，均勻中帶有十萬分之一的溫度漣漪——星系的種子。",
           formula: R`\( T_{\text{CMB}}=2.725\ \text{K} \)`,
-          points: ["CMB 是最古老的 Light", "各向異性對應物質分布", "支持熱霹靂模型", "普朗克衛星繪出精細圖"] },
+          points: ["CMB 是可觀測到最古老的光", "各向異性對應物質分布", "支持熱霹靂模型", "普朗克衛星繪出精細圖"] },
         { id: "galaxies", title: "星系的分類與銀河系", interactive: I, level: "senior",
           concept: "哈伯把星系分為橢圓、螺旋與棒旋三大類：橢圓星系老星多、氣體少；螺旋星系有旋臂與活躍造星。銀河系是棒旋星系，太陽位於獵戶臂，距中心約 2.6 萬光年。",
           formula: R`\( v_{\text{太陽繞銀心}}\approx 220\ \text{km/s} \)`,

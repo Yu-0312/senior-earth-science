@@ -1716,7 +1716,7 @@ input[type=range]::-moz-range-thumb { width: 16px; height: 16px; border-radius: 
    --------------------------------------------------------------------------- */
 /*
  * 深色主題也要調：大多數模組色是 300 號亮色，但紫（#9575cd）、靛（#7986cb）、棕（#a1887f、#8d6e63）
- * 在深色底上只有 3.1–4.4:1。掺 30% 白提亮到 AA 以上，色相不變（tools/tests/contrast-test.js 逐色檢查）。
+ * 在深色底上只有 3.1–4.4:1。摻 30% 白提亮到 AA 以上，色相不變（tools/tests/contrast-test.js 逐色檢查）。
  */
 :root, .module, .mcard, .sr-item, .review-focus-item, #exp-view, .chapter-checkpoint, .license-summary, .path-stage {
   --m-ink: color-mix(in srgb, var(--m-color, var(--accent)) 70%, #ffffff);

@@ -31,6 +31,7 @@ node --max-old-space-size=4096 tools/tests/meaning-audit.js   # 這支單跑要�
 | `a11y-test.js` | 畫布的文字替代、觸控目標尺寸 |
 | `perf-test.js` | 首次載入（壓縮後）與延遲載入沒有被抵銷 |
 | `apparatus-test.js` | 器材層瘦身後的安全網：原始碼裡每個 `PL.apparatus.*` 呼叫都有匯出、匯出的器材都有人用、gzip 不超過 16 KB |
+| `zh-hant-test.js` | 網站檔案不可混進簡體字（內嵌 2,233 個「只存在於簡體」的常用字，不需安裝套件） |
 | `build-consistency.js` | 全站版本號一致（含 `duo/` 的兩個頁面）、SW 快取清單與實際檔案相符 |
 | `graph-ink-test.js` | 圖表裡的曲線與陰影，在兩種主題下都與底板有足夠對比 |
 | `lab-test.js` | 自訂實驗室的混合模型：酸鹼中和、緩衝、沉澱、氣體與指示劑（39 項） |
