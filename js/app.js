@@ -187,9 +187,17 @@
      --------------------------------------------------------------------- */
   const EXPERIMENT_FILES = window.PhysicsLabExperimentFiles || {};
   const loadedFiles = new Map();
+  /*
+   * 新版上線、但這個分頁還沒重新整理（見 startApp 的 controllerchange）。
+   * sw.js 用 skipWaiting＋clients.claim，新版一裝好就接管已開著的分頁；記憶體裡還是舊的引擎，
+   * 之後延遲載入的實驗檔卻會從網路拿到新版（GitHub Pages 不看 ?v=）——舊引擎配新實驗檔可能直接壞掉。
+   * 這時要載任何新檔案，就改成整頁重新整理（網址的 #實驗 會保留，等於直接開新版的那個實驗）。
+   */
+  let updatePending = false;
 
   function loadScript(src) {
     if (loadedFiles.has(src)) return loadedFiles.get(src);
+    if (updatePending) { location.reload(); return new Promise(() => {}); }
     const promise = new Promise((resolve, reject) => {
       const tag = document.createElement("script");
       tag.src = src;
@@ -273,6 +281,7 @@
     if (net && (net.saveData || /2g/.test(net.effectiveType || ""))) return;
     const idle = window.requestIdleCallback || (fn => setTimeout(fn, 1200));
     idle(() => {
+      if (updatePending) return;   // 預先抓檔會觸發整頁重新整理（見 loadScript），等使用者自己換頁
       [order - 1, order + 1].forEach(i => {
         const item = FLAT[i];
         if (!item || PL.has(item.exp.id)) return;
@@ -2683,8 +2692,33 @@
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")
       && !/:(8321|8322)$/.test(location.host)) { // 開發埠不註冊 SW,避免快取舊檔
       window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+      /*
+       * 新版接管這個分頁時提示一聲。第一次安裝（原本沒有 controller）不算更新，不提示。
+       * 不自動重新整理：學生可能正在填預測、記數據；按「重新整理」或換到還沒載過的實驗時才換新版。
+       */
+      let hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!hadController) { hadController = true; return; }
+        updatePending = true;
+        showUpdateNotice();
+      });
     }
     initOfflineCard();
+  }
+
+  /* 新版上線提示：右下角一條，不擋操作；手機版貼底、左右留 16px */
+  function showUpdateNotice() {
+    if (document.querySelector(".update-toast")) return;
+    const box = el("div", "update-toast", document.body);
+    box.setAttribute("role", "status");
+    const msg = el("span", "update-toast-msg", box);
+    msg.textContent = "網站已更新到新版本，重新整理後套用（換到新的實驗時也會自動套用）。";
+    const go = el("button", "update-toast-btn primary", box);
+    go.type = "button"; go.textContent = "重新整理";
+    go.addEventListener("click", () => location.reload());
+    const later = el("button", "update-toast-btn", box);
+    later.type = "button"; later.textContent = "稍後";
+    later.addEventListener("click", () => box.remove());
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startApp);

@@ -2944,3 +2944,26 @@ body.stage-only .stage-chart-overlay .sim-chart .cap { display: block !important
 .sim-record-table tbody tr:last-child td { border-bottom: 0; }
 @container lab (min-width: 760px) { .lab-sim > .sim-record { margin: 0; } }
 @media print { .sim-record-actions, .sim-record-hint { display: none; } .sim-record-table { max-height: none; overflow: visible; } }
+
+/* ---------------------------------------------------------------------------
+   新版上線提示（app.js showUpdateNotice）：Service Worker 換新版接管分頁時出現
+   --------------------------------------------------------------------------- */
+.update-toast {
+  position: fixed; right: 20px; bottom: 20px; z-index: 95; display: flex; align-items: center; gap: 10px;
+  max-width: min(520px, calc(100vw - 40px)); padding: 10px 12px 10px 16px;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--panel-solid, var(--panel)); color: var(--text);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18); font-size: 13.5px; font-weight: 700;
+}
+.update-toast-msg { flex: 1; line-height: 1.55; }
+.update-toast-btn {
+  flex: none; min-height: 36px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--tint-1); color: var(--text); font: inherit; font-size: 13px; cursor: pointer;
+}
+.update-toast-btn.primary { border-color: var(--accent); background: var(--accent); color: #fff; }
+.update-toast-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 600px) {
+  .update-toast { left: 16px; right: 16px; bottom: 16px; max-width: none; flex-wrap: wrap; }
+  .update-toast-msg { flex-basis: 100%; }
+  .update-toast-btn { min-height: 44px; flex: 1; }
+}
+@media print { .update-toast { display: none; } }
