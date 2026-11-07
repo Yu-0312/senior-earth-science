@@ -2188,7 +2188,16 @@
 
   /* ------------------------------- 章節檢核 ------------------------------- */
   function showChapterCheckpoint(mod, nextMod) {
-    const questions = MODULE_CHECKPOINTS[mod.id];
+    /*
+     * 章節檢核的選項也要洗牌。
+     * 題目資料為了撰寫方便常把正解放在第一個（生物、地科版 36 題全部是 A），
+     * 直接照順序顯示，學生很快就會發現「檢核一律選 A」，三題等於白考。
+     * 與練習題共用同一套「裝置 + 日期」種子：同一天重開順序不變，方便檢討；隔天換一種排列。
+     */
+    const questions = (MODULE_CHECKPOINTS[mod.id] || []).map((q, i) => {
+      const mixed = shuffleAuthoredQuestion({ options: q.choices, correct: q.correct }, "checkpoint:" + mod.id + "#" + i);
+      return Object.assign({}, q, { choices: mixed.options, correct: mixed.correct });
+    });
     if (!questions || !questions.length) { openExp(pendingChapterTarget); return; }
     checkpointState = { mod, nextMod, questions, index: 0, answers: [], completed: false };
     const root = $("#chapter-checkpoint");
