@@ -347,8 +347,10 @@
     const btn = $("#theme-toggle");
     if (btn) {
       btn.innerHTML = theme === "light" ? moonIcon + "<span>深色</span>" : sunIcon + "<span>淺色</span>";
-      btn.setAttribute("aria-pressed", String(theme === "light"));
       btn.title = theme === "light" ? "切換為深色主題" : "切換為淺色主題";
+      // 名稱要包含按鈕上看得到的「深色／淺色」（WCAG 2.5.3）；名稱已經說明動作，不再另加 aria-pressed
+      btn.setAttribute("aria-label", btn.title);
+      btn.removeAttribute("aria-pressed");
     }
     // 行動裝置的網址列顏色也要跟著換，否則淺色頁面上方會頂著一條深色。
     document.querySelectorAll('meta[name="theme-color"]').forEach(meta => meta.remove());
@@ -460,7 +462,6 @@
     const labelEl = el("span", "exp-path-label", step); labelEl.textContent = label;
     const titleEl = el("strong", "exp-path-title", step); titleEl.textContent = target.exp.title;
     if (!current) {
-      step.setAttribute("aria-label", "前往" + label + "：" + target.exp.title);
       step.addEventListener("click", () => location.hash = "#" + target.exp.id);
     }
   }
@@ -553,7 +554,11 @@
       card.dataset.mod = m.id;
       card.setAttribute("role", "link");
       card.setAttribute("tabindex", "0");
-      card.setAttribute("aria-label", "模組 " + m.no + "：" + m.title + "，" + m.experiments.length + " 個實驗");
+      /*
+       * 不另設 aria-label，名稱直接取卡片上看得到的字（序號、課綱、標題、說明、進度）。
+       * 以前是「模組 1：…，8 個實驗」，和畫面上的「01 …」對不起來（WCAG 2.5.3 Label in Name）：
+       * 語音控制的使用者照著畫面念，叫不到這張卡。
+       */
       const top = el("div", "mcard-top", card);
       const no = el("div", "mcard-no", top); no.textContent = String(index + 1).padStart(2, "0");
       const tr = el("div", "mcard-track", top); tr.textContent = m.track;
@@ -1088,7 +1093,6 @@
         const option = el("button", "practice-option", choices); option.type = "button";
         option.setAttribute("role", "radio");
         option.setAttribute("aria-checked", String(selectedAnswer === choiceIndex));
-        option.setAttribute("aria-label", String.fromCharCode(65 + choiceIndex) + "：" + choice);
         if (solved) {
           option.disabled = true;
           if (choiceIndex === q.correct) option.classList.add("is-correct");
