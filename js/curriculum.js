@@ -482,3 +482,79 @@
     totalInteractive: interactiveCount
   };
 })();
+
+/*
+ * 銜接學習路徑
+ *
+ * 課程不是把不同學段的內容堆在一起，而是讓同一個核心概念逐步加深：
+ * 國中看得到的現象 → 高中用模型與量測說清楚 → 選修把模型推到定量與證據。
+ * app.js 讀這份資料建立首頁的「銜接學習路徑」與每個實驗頁的「前一步／下一步」導覽。
+ * 第三段是 108 課綱選修地科（kind: "elective"），不是大學課程，頁面上標「選修延伸」。
+ * tools/tests/learning-path-test.js 檢查每個 id 都存在、不重複、三段齊全。
+ */
+(function () {
+  const C = window.PhysicsLabCurriculum;
+  if (!C) return;
+  C.learningPaths = [
+    {
+      id: "plates",
+      title: "地球內部與板塊",
+      description: "從地球分層與大陸拼圖，走到地函對流，再用地震波與古地磁找證據。",
+      stages: [
+        { level: "國中打底", kind: "junior", note: "先認識地球的分層、大陸漂移的線索，以及地震波有哪幾種。", ids: ["earth-layers-intro", "plate-evidence", "earthquake-waves"] },
+        { level: "高中建模", kind: "senior", note: "用地函對流解釋板塊運動，比較三種板塊邊界，再回到台灣的位置。", ids: ["moho-crust", "mantle-convection", "plate-boundaries", "taiwan-tectonics"] },
+        { level: "選修延伸", kind: "elective", note: "用地震波的折射、海底的古地磁條帶與熱點島鏈，當作板塊學說的定量證據。", ids: ["seismic-waves-layers", "paleomagnetism", "hotspot"] }
+      ]
+    },
+    {
+      id: "rocks-time",
+      title: "岩石與地史",
+      description: "從礦物與岩石循環，走到地層判讀，再用放射性定年算出絕對年代。",
+      stages: [
+        { level: "國中打底", kind: "junior", note: "先用硬度、條痕認識礦物，再看三大岩類怎麼互相轉換。", ids: ["mineral-properties", "rock-cycle"] },
+        { level: "高中建模", kind: "senior", note: "從冷卻速率與沉積環境讀岩石，再用疊積法則與指準化石排出地層先後。", ids: ["igneous-rocks", "sedimentary-rocks", "relative-dating", "index-fossils"] },
+        { level: "選修延伸", kind: "elective", note: "用半衰期把「誰比較老」變成「幾年前」，並練習判讀衰變曲線。", ids: ["half-life", "decay-curve"] }
+      ]
+    },
+    {
+      id: "atmosphere-ocean",
+      title: "大氣與海洋",
+      description: "從雲與潮汐的觀察，走到氣壓、科氏力與洋流，再到深海環流與聖嬰。",
+      stages: [
+        { level: "國中打底", kind: "junior", note: "先認識大氣分層、各種雲代表的天氣，以及每天兩次的潮汐。", ids: ["atmosphere-layers", "cloud-types", "tides"] },
+        { level: "高中建模", kind: "senior", note: "用絕熱冷卻解釋雲的形成，用氣壓梯度與科氏力解釋風、鋒面與表層洋流。", ids: ["cloud-formation", "wind-coriolis", "fronts-weather", "surface-currents"] },
+        { level: "選修延伸", kind: "elective", note: "把海洋與大氣接起來：溫鹽環流怎麼運送熱量，聖嬰又怎麼改變全球天氣。", ids: ["thermohaline", "enso"] }
+      ]
+    },
+    {
+      id: "climate",
+      title: "氣候與變遷",
+      description: "從溫室效應與暖化的觀測，走到碳循環與冰期，再用天文週期與代用資料重建過去。",
+      stages: [
+        { level: "國中打底", kind: "junior", note: "先理解溫室效應怎麼保溫，以及全球暖化有哪些觀測證據。", ids: ["greenhouse-effect", "global-warming"] },
+        { level: "高中建模", kind: "senior", note: "追蹤碳在大氣與海洋之間的流動，從冰芯讀出冰期，再拆解海水面上升的來源。", ids: ["carbon-cycle-climate", "ice-ages", "sea-level-rise"] },
+        { level: "選修延伸", kind: "elective", note: "用米蘭柯維奇循環與古氣候代用資料，檢驗氣候變化的原因與時間尺度。", ids: ["milankovitch", "proxy-data", "earth-system-science"] }
+      ]
+    },
+    {
+      id: "surface-hazards",
+      title: "地表與災害",
+      description: "從侵蝕堆積與斷層，走到河流、山崩與液化，再評估火山與天然災害的風險。",
+      stages: [
+        { level: "國中打底", kind: "junior", note: "先看水怎麼侵蝕、搬運與堆積，認識台灣的地形與斷層類型。", ids: ["erosion-deposition", "taiwan-landforms", "fault-types"] },
+        { level: "高中建模", kind: "senior", note: "從風化與河流地形，連到山崩、土石流與土壤液化的成因。", ids: ["weathering", "river-valley", "mass-wasting", "soil-liquefaction"] },
+        { level: "選修延伸", kind: "elective", note: "比較不同噴發樣式的危害，再用風險＝危害×暴露×脆弱度評估天然災害。", ids: ["eruption-style", "natural-hazards"] }
+      ]
+    },
+    {
+      id: "sky",
+      title: "天文與宇宙",
+      description: "從星空、季節與月相，走到望遠鏡與恆星演化，再到克卜勒定律、視差與大霹靂。",
+      stages: [
+        { level: "國中打底", kind: "junior", note: "先認識天球與星座、季節成因，以及月相為什麼會變。", ids: ["celestial-sphere", "seasons", "moon-phases"] },
+        { level: "高中建模", kind: "senior", note: "追蹤太陽軌跡、了解望遠鏡的性能，再從光譜讀出恆星的溫度與一生。", ids: ["solar-path", "telescope", "stellar-spectra", "star-lifecycle"] },
+        { level: "選修延伸", kind: "elective", note: "用克卜勒定律與視差量出距離，用赫羅圖分類恆星，最後看宇宙怎麼膨脹。", ids: ["kepler-laws", "parallax", "hr-diagram", "big-bang"] }
+      ]
+    }
+  ];
+})();

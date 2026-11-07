@@ -426,7 +426,7 @@ button.review-focus-item:hover { border-color: var(--m-color, var(--accent)); }
 }
 .path-stage.path-junior { --path-color: #57c9de; }
 .path-stage.path-senior { --path-color: #5ed88e; }
-.path-stage.path-university { --path-color: #c795ff; }
+.path-stage.path-university, .path-stage.path-elective { --path-color: #c795ff; }
 .path-stage:not(:last-child)::after {
   content: "→"; position: absolute; z-index: 1; right: -21px; top: 22px; width: 28px; height: 28px; display: grid; place-items: center;
   color: var(--path-ink, var(--path-color)); background: var(--bg); font-size: 17px; font-weight: 800;

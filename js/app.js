@@ -29,12 +29,14 @@
     let universityNote = "";
     let seniorNote = "";
     let juniorNote = "";
+    let electiveNote = "";
     LEARNING_PATHS.forEach(path => {
       (path.stages || []).forEach(stage => {
         if (!(stage.ids || []).includes(id)) return;
         if (stage.kind === "university") universityNote = stage.note || "大學地科先修直覺";
         if (stage.kind === "senior") seniorNote = stage.note || "高中課綱核心";
         if (stage.kind === "junior") juniorNote = stage.note || "國中打底";
+        if (stage.kind === "elective") electiveNote = stage.note || "";
       });
     });
     if (universityNote) {
@@ -45,14 +47,16 @@
           (universityNote ? " " + universityNote : "")
       };
     }
-    if (isAdvanced) {
-      return {
-        kind: "university",
-        label: "選修延伸",
-        hint: "對應 108 課綱選修的加深加廣。先修完必修的板塊、大氣與天文再回來看，會順很多；不要求先修大學課程。" +
-          (seniorNote || "")
-      };
-    }
+    /*
+     * 選修延伸：路徑把它放在第三段（kind: "elective"），或整個模組屬於選修、或課程資料標成 advanced。
+     * 路徑明確放在國中／高中段的，以路徑為準（例如選修模組裡的入門實驗）。
+     */
+    const electiveInfo = note => ({
+      kind: "university",
+      label: "選修延伸",
+      hint: "對應 108 課綱選修的加深加廣。先修完必修的板塊、大氣與天文再回來看，會順很多；不要求先修大學課程。" + (note || "")
+    });
+    if (electiveNote) return electiveInfo(electiveNote);
     if (seniorNote || juniorNote) {
       return {
         kind: "senior",
@@ -60,6 +64,7 @@
         hint: "對應 108 課綱高中地科。" + (seniorNote || juniorNote)
       };
     }
+    if (isAdvanced || (entry && entry.exp.level === "advanced")) return electiveInfo();
     return {
       kind: "senior",
       label: "高中課綱",
