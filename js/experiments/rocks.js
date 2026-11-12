@@ -77,7 +77,7 @@
         { value: "streak", label: "條痕測試（瓷板）" }, { value: "luster", label: "光澤觀察" }, { value: "sg", label: "比重（天平＋排水法）" }] });
       const minSel = PL.ui.select(ui.L.controls, { label: "礦物樣本", value: "pyrite", options: Object.keys(MINERALS).map(k => ({ value: k, label: MINERALS[k].name })) });
       const edgeS = PL.ui.slider(ui.L.controls, { label: "樣本邊長", min: 0.5, max: 4, step: 0.1, value: 2, unit: "cm", digits: 1 });
-      PL.ui.note(ui.L.controls, "顏色最會騙人：黃鐵礦長得像金，但條痕（粉末顏色）綠黑、比重約 5.0，一測便知。比重不隨樣本大小改變——拉大樣本，質量與體積跟著變，比重讀數不動。");
+      PL.ui.note(ui.L.controls, "顏色最會騙人：黃鐵礦長得像金，但條痕（粉末顏色）綠黑、比重約 5.0，一測便知。比重不隨樣本大小改變：拉大樣本，質量與體積跟著變，比重讀數不動。");
       PL.ui.procedure(ui.L.controls, {
         title: "鑑定一份「金礦」",
         steps: [
@@ -85,7 +85,7 @@
           "在瓷板上劃條痕：<b>綠黑色</b> → 不是金（金的條痕是金黃色）。",
           "用排水法量比重：約 5.0，遠小於金的 19.3。",
           "換「自然金」對照：條痕金黃、比重 19.3，一測便分。"],
-        rule: "條痕色比表面色穩定——表面氧化或沾污都騙不過條痕；鑑定靠多項性質綜合判斷，不是單看顏色。"
+        rule: "條痕色比表面顏色穩定，表面氧化或弄髒都不影響條痕；鑑定靠多項性質綜合判斷，不是單看顏色。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "愚人金陷阱", apply: () => { minSel.set("pyrite"); testSel.set("streak"); } },
@@ -137,7 +137,7 @@
           CK.badge(ctx, sx + sw / 2, H * 0.44, can ? tool.name + "（" + tool.h + "）刻得動 → 留痕" : tool.name + "（" + tool.h + "）較軟 → 刻不動", can ? "#5c9e6f" : "#c0603f");
           // 資料卡
           CK.panel(ctx, W * 0.62, H * 0.12, W * 0.33, H * 0.74, "摩氏硬度怎麼用");
-          const rows = [["本質", "相對順序，非等距"], ["法則", "能刻動誰，就比誰硬"], ["指甲", "2.5"], ["銅幣", "3.5"], ["小刀／玻璃", "5.5"], ["石英", "7 → 可刻玻璃"], ["金剛石", "10；與石墨同為碳"]];
+          const rows = [["原理", "相對順序，非等距"], ["法則", "能刻動誰，就比誰硬"], ["指甲", "2.5"], ["銅幣", "3.5"], ["小刀／玻璃", "5.5"], ["石英", "7 → 可刻玻璃"], ["金剛石", "10；與石墨同為碳"]];
           rows.forEach(([k, v], i) => {
             D.text(ctx, k, W * 0.65, H * 0.22 + i * 30, { color: PL.col("text-dim"), size: 10.5 });
             D.text(ctx, v, W * 0.92, H * 0.22 + i * 30, { color: PL.col("text"), size: 10.5, align: "right" });
@@ -148,14 +148,14 @@
       });
       const minS = PL.ui.slider(ui.L.controls, { label: "受測礦物（摩氏 1–10）", min: 1, max: 10, step: 1, value: 3, digits: 0 });
       const toolSel = PL.ui.select(ui.L.controls, { label: "測試工具", value: "2", options: TOOLS.map((t2, i) => ({ value: String(i), label: t2.name + "（" + t2.h + "）" })) });
-      PL.ui.note(ui.L.controls, "摩氏硬度以「能刻動誰」定序：互刻時硬度大者留痕。指甲 2.5、銅幣 3.5、小刀 5.5、玻璃 5.5 是隨手可得的測試工具——石英 7 能刻玻璃，方解石 3 會被小刀刻動。");
+      PL.ui.note(ui.L.controls, "摩氏硬度以「能刻動誰」定序：互刻時硬度大者留痕。指甲 2.5、銅幣 3.5、小刀 5.5、玻璃 5.5 是隨手拿得到的測試工具。石英 7 能刻玻璃，方解石 3 會被小刀刻動。");
       PL.ui.procedure(ui.L.controls, {
         title: "做一次刻痕測試",
         steps: [
           "選礦物「方解石」，用「小刀（5.5）」測：刻得動 → 硬度小於 5.5。",
           "改用「指甲（2.5）」：刻不動 → 硬度大於 2.5。再用「銅幣（3.5）」夾一次，縮到 2.5 < H < 5.5。",
           "滑動滑桿把十種標準礦物排一遍，記住三個錨點：3、5.5、7。"],
-        rule: "硬度是相對順序不是等距——摩氏 9 與 10 之間的絕對硬度差，遠大於 1 與 2 之間的差。"
+        rule: "硬度是相對順序，不是等距的。摩氏 9 與 10 之間的絕對硬度差，遠大於 1 與 2 之間的差。"
       });
       const vZen = PL.ui.verdict(ui.L.controls, { label: "刻痕判定" });
       const rMin = PL.ui.readout(ui.L.readouts, { label: "受測礦物" }), rMH = PL.ui.readout(ui.L.readouts, { label: "礦物硬度" });
@@ -216,7 +216,7 @@
           "從岩漿出發：冷卻凝固 → 火成岩。",
           "切到表生路徑：風化搬運成沉積物，再壓密膠結成沉積岩。",
           "切到深部路徑：深埋變質成變質岩，最後熔融回岩漿。拉動進度滑桿逐段讀作用與環境。"],
-        rule: "任何岩石都可以轉成另外兩類，但「變質」與「沉積」都不經過熔融——只有熔融才會回到岩漿重新開始。"
+        rule: "任何岩石都可以轉成另外兩類，但「變質」與「沉積」都不經過熔融，只有熔融才會回到岩漿重新開始。"
       });
       const rState = PL.ui.readout(ui.L.readouts, { label: "正在變成" }), rProc = PL.ui.readout(ui.L.readouts, { label: "進行中的作用" });
       const rEnv = PL.ui.readout(ui.L.readouts, { label: "所處環境" });
@@ -288,7 +288,7 @@
           "把速率指標拉到最左：深成岩漿庫，晶粒粗 → 花崗岩。",
           "拉到中間偏右：噴出地表，晶粒變細、出現氣孔；拉到最右：驟冷 → 玻璃質。",
           "勾選「兩段冷卻」：斑晶＋細基質 = 先慢冷、後快冷，不是「中等的冷卻速率」。"],
-        rule: "斑狀組織代表兩段冷卻——地下先慢冷長出斑晶，再噴出驟冷成細基質；這是考題最愛考的陷阱。"
+        rule: "斑狀組織表示經過兩段冷卻：先在地下慢慢冷卻長出斑晶，再噴出地表快速冷卻成細的基質。這是考題很常考的地方。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "深成花崗岩", apply: () => { coolS.set(1); compSel.set("granite"); porphChk.set(false); } },
@@ -549,7 +549,7 @@
         steps: [
           "挑「頁岩」：薄頁理 → Q1 就停：沉積岩。挑「片岩」：無層理但葉理發達 → Q2：變質岩。",
           "挑「花崗岩」：兩者皆無 → Q3 用粗粒結晶定名：火成岩。挑「大理岩」滴稀鹽酸：冒泡 → 變質岩。"],
-        rule: "先分三大類再細分：組織（顆粒、層理、葉理）反映成因，礦物組成才是定名的最後一步——順序顛倒常把大理岩誤判成石英岩。"
+        rule: "先分三大類再細分：組織（顆粒、層理、葉理）反映成因，礦物組成是定名的最後一步。順序反過來，常會把大理岩誤判成石英岩。"
       });
       const vZen = PL.ui.verdict(ui.L.controls, { label: "鑑定結果" });
       const rCls = PL.ui.readout(ui.L.readouts, { label: "三大類判定" }), rFeat = PL.ui.readout(ui.L.readouts, { label: "觀察特徵" });
@@ -563,7 +563,7 @@
     build(root) {
       const ZONES = {
         west: { name: "西部麓山帶", rocks: "砂岩、頁岩、泥岩、礫岩", role: "歐亞板塊前緣的沉積蓋層", color: "#d9b36c" },
-        central: { name: "中央山脈變質帶", rocks: "板岩、片岩、大理岩、片麻岩", role: "造山帶變質核心（大南澳帶）", color: "#7a8a96" },
+        central: { name: "中央山脈變質帶", rocks: "板岩、片岩、大理岩、片麻岩", role: "造山帶的變質岩區（大南澳帶）", color: "#7a8a96" },
         valley: { name: "花東縱谷", rocks: "沖積礫石層", role: "歐亞—菲律賓海板塊縫合帶", color: "#8fae6f" }, coast: { name: "海岸山脈", rocks: "安山岩集塊岩、利吉混同層", role: "呂宋島弧（菲律賓海板塊）", color: "#4a4f57" }
       };
       const MARKS = {
@@ -623,12 +623,12 @@
           D.text(ctx, "（剖面為示意，垂直誇大）", (x0 + x1) / 2, H * 0.97, { color: PL.col("text-faint"), size: 9, align: "center" });
           const count = 4 + 3 + (eastOK ? 1 : 0) + (lat >= 24.8 ? 1 : 0);
           rZone.set(z.name); rRock.set(z.rocks); rRole.set(z.role); rCount.set(count, 0);
-          vZen.set(zk === "west" && lat < 23.2 ? "西南部厚層泥岩：遇水軟弱、易崩——邊坡與橋基注意" : zk === "coast" ? "海岸山脈＝呂宋島弧前緣，約 200–300 萬年前撞上歐亞板塊" : zk === "central" ? "大南澳變質帶：台灣最老岩石所在，大理岩產於花蓮" : "西部沉積蓋層：造山帶前陸的砂岩頁岩互層", zk === "west" && lat < 23.2 ? "warn" : zk === "central" ? "ok" : "info");
+          vZen.set(zk === "west" && lat < 23.2 ? "西南部厚層泥岩：遇水軟弱、容易崩，要注意邊坡和橋基" : zk === "coast" ? "海岸山脈＝呂宋島弧前緣，約 200–300 萬年前撞上歐亞板塊" : zk === "central" ? "大南澳變質帶：台灣最老岩石所在，大理岩產於花蓮" : "西部沉積蓋層：造山帶前陸的砂岩頁岩互層", zk === "west" && lat < 23.2 ? "warn" : zk === "central" ? "ok" : "info");
         }
       });
       const zoneSel = PL.ui.select(ui.L.controls, { label: "焦點地質區", value: "west", options: Object.keys(ZONES).map(k => ({ value: k, label: ZONES[k].name })) });
       const latS = PL.ui.slider(ui.L.controls, { label: "剖面緯度", min: 22.0, max: 25.2, step: 0.1, value: 23.8, unit: "°N", digits: 1 });
-      PL.ui.note(ui.L.controls, "台灣的岩石分布是一部造山史：西部是歐亞板塊的沉積蓋層，中央山脈東翼露出變質核心，東部海岸山脈則是撞進來的呂宋島弧。南北移動剖面線，看岩石如何變化。");
+      PL.ui.note(ui.L.controls, "台灣的岩石分布記錄了造山的過程：西部是歐亞板塊的沉積蓋層，中央山脈東翼露出變質核心，東部海岸山脈則是撞進來的呂宋島弧。南北移動剖面線，看岩石如何變化。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀一張地體構造圖",
         steps: [

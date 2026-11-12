@@ -47,7 +47,7 @@
         }
       });
       const ghgS = PL.ui.slider(ui.L.controls, { label: "溫室氣體吸收率", min: 0, max: 0.92, step: 0.02, value: 0.78, digits: 2 });
-      PL.ui.note(ui.L.controls, "溫室效應本身是恩賜：把吸收率歸零，地表均溫掉到 −18 °C、海洋結凍。CO₂ 等溫室氣體吸收地表長波、再向下輻射，等於給地表蓋了層被子——過量才是危機。");
+      PL.ui.note(ui.L.controls, "溫室效應本身是必要的：把吸收率歸零，地表均溫掉到 −18 °C、海洋結凍。CO₂ 等溫室氣體吸收地表長波、再向下輻射，等於給地表蓋了一層被子，太多才是問題。");
       PL.ui.procedure(ui.L.controls, {
         title: "拆解輻射平衡",
         steps: [
@@ -55,7 +55,7 @@
           "拉回 0.78(約今日)：向下再輻射箭頭變粗變多，均溫回到 15 °C 附近。",
           "對照右卡：溫室增溫 = 地表均溫 − 有效溫度 −18 °C。"
         ],
-        rule: "溫室氣體「選擇性」吸收長波、幾乎不擋短波——短波進得來、長波出不去，才是機制的重點，不是籠統的「像玻璃罩住熱」。"
+        rule: "溫室氣體會吸收長波，但幾乎不擋短波。短波進得來、長波出不去，這才是溫室效應的機制，不只是「像玻璃罩住熱」。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "無溫室效應", apply: () => { ghgS.set(0); ui.redraw(); } },
@@ -126,15 +126,15 @@
       });
       const emisS = PL.ui.slider(ui.L.controls, { label: "人為碳排放", min: 0, max: 15, step: 0.5, value: 11, unit: "GtC/年", digits: 1 });
       const yearS = PL.ui.slider(ui.L.controls, { label: "模擬經過", min: 0, max: 80, step: 1, value: 60, unit: "年", digits: 0 });
-      PL.ui.note(ui.L.controls, "自然碳循環是平衡的：火山釋放 ≈ 風化與沉積吸碳，光合與呼吸互相抵消。人類一年注入上百億噸碳，把天平壓向大氣——濃度才會從 280 ppm 升到 420 ppm 以上。");
+      PL.ui.note(ui.L.controls, "自然碳循環是平衡的：火山釋放 ≈ 風化與沉積吸碳，光合與呼吸互相抵消。人類一年注入上百億噸碳，讓碳往大氣這邊累積，濃度才會從 280 ppm 升到 420 ppm 以上。");
       PL.ui.procedure(ui.L.controls, {
         title: "追碳的去向",
         steps: [
           "排放歸零：紅色箭頭消失，濃度停在 280 ppm 不再上升。",
-          "排放 11 GtC/年、模擬 60 年：濃度爬到約 420 ppm，正是現今實測。",
+          "排放 11 GtC/年、模擬 60 年：濃度升到約 420 ppm，跟現在實際測到的一樣。",
           "看紅色徽章的年增幅約 2.3 ppm/年，與基林曲線一致。"
         ],
-        rule: "碳不會消失，只是換庫：海洋吸收約 1/4，代價是海水變酸；岩石風化吸碳要十萬年尺度——化石碳燒掉後，人類時間尺度內收不回來。"
+        rule: "碳不會消失，只是換了地方：海洋吸收約 1/4，代價是海水變酸；岩石風化吸碳要十萬年等級的時間，化石燃料燒掉以後，在人類的時間尺度內收不回來。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "工業前（無排放）", apply: () => { emisS.set(0); yearS.set(0); ui.redraw(); } },
@@ -202,13 +202,13 @@
       const eccS = PL.ui.slider(ui.L.controls, { label: "軌道離心率", min: 0, max: 0.058, step: 0.002, value: 0.017, digits: 3 });
       const tiltS = PL.ui.slider(ui.L.controls, { label: "轉軸傾角", min: 22.1, max: 24.5, step: 0.1, value: 23.44, unit: "°", digits: 1 });
       const precS = PL.ui.slider(ui.L.controls, { label: "歲差相位", min: 0, max: 1, step: 0.05, value: 0, digits: 2 });
-      PL.ui.note(ui.L.controls, "三個軌道週期疊加，改變「65°N 夏季日照」：夏天不夠熱、冬雪融不完，冰蓋就逐年擴張成冰期——高緯夏季日照是冰期旋回的開關。");
+      PL.ui.note(ui.L.controls, "三個軌道週期疊加，改變「65°N 夏季日照」：夏天不夠熱、冬雪融不完，冰蓋就一年年擴大，進入冰期。高緯度的夏季日照決定冰期會不會來。");
       PL.ui.procedure(ui.L.controls, {
         title: "找冰期的開關",
         steps: [
           "把傾角拉到 22.1°、歲差 0(冬至近日點)：日照異常深負，判定為冰期條件。",
           "把傾角拉到 24.5°、歲差 0.5(夏至近日點)：異常轉正，利於冰蓋退縮。",
-          "看圖表：只動歲差，曲線就上下擺盪——三個週期疊加才決定長期趨勢。"
+          "看圖表：只動歲差，曲線就上下擺盪，三個週期疊加起來才決定長期趨勢。"
         ],
         rule: "軌道因子改變的是「日照分布」，不是太陽總輸出；它能解釋冰期旋回的節奏，解釋不了近百年的人為快速暖化。"
       });
@@ -282,7 +282,7 @@
         }
       });
       const depthS = PL.ui.slider(ui.L.controls, { label: "取樣深度", min: 0, max: 3200, step: 10, value: 200, unit: "m", digits: 0 });
-      PL.ui.note(ui.L.controls, "冰芯是古氣候的膠囊：氣泡封存當年大氣、水分子同位素記錄當年氣溫。往深處讀，80 萬年的冰期—間冰期旋回一目了然——而表層的 420 ppm 遠遠跳出這個範圍。");
+      PL.ui.note(ui.L.controls, "冰芯保存了古代的氣候紀錄：氣泡封存當年大氣、水分子同位素記錄當年氣溫。往深處讀，可以看到 80 萬年來冰期—間冰期的循環，而表層的 420 ppm 遠遠超出這個範圍。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀一管冰",
         steps: [
@@ -299,7 +299,7 @@
       const rAge = PL.ui.readout(ui.L.readouts, { label: "層位年齡", unit: "千年" }), rCO2 = PL.ui.readout(ui.L.readouts, { label: "封存 CO₂", unit: "ppm" });
       const rT = PL.ui.readout(ui.L.readouts, { label: "溫度異常", unit: "°C" }), rD18 = PL.ui.readout(ui.L.readouts, { label: "δ¹⁸O", unit: "‰" });
       const vI = PL.ui.verdict(ui.L.controls, { label: "—" });
-      const chart = ui.chart("80 萬年 CO₂ 紀錄", "綠虛線=間冰期 280、藍虛線=冰期 180 ppm；紅虛線=現今 420——遠高於自然變化範圍，且上升速率前所未見。");
+      const chart = ui.chart("80 萬年 CO₂ 紀錄", "綠虛線=間冰期 280、藍虛線=冰期 180 ppm；紅虛線=現今 420，遠高於自然變化的範圍，上升速度也比過去快得多。");
       const drawChart = () => {
         const k = depthS.get() / 4;
         CK.plot(chart, {
@@ -379,13 +379,13 @@
         { value: "tree", label: "樹輪" }, { value: "stal", label: "石筍" }, { value: "sed", label: "沉積物岩芯" }] });
       const tS = PL.ui.slider(ui.L.controls, { label: "近年溫度異常", min: -3, max: 3, step: 0.1, value: 0.5, unit: "°C", digits: 1 });
       const pS = PL.ui.slider(ui.L.controls, { label: "近年降水變化", min: -50, max: 50, step: 5, value: 0, unit: "%", digits: 0 });
-      PL.ui.note(ui.L.controls, "最近 6 圈（層）由你的情境控制：動滑桿，紀錄立刻跟著變——反過來讀，就是由紀錄反推古氣候；每種代用資料的解析度與可回溯時間不同。");
+      PL.ui.note(ui.L.controls, "最近 6 圈（層）由你的情境控制：動滑桿，紀錄馬上跟著變。反過來讀，就是用紀錄推回古氣候；每種代用資料的解析度與可回溯時間不同。");
       PL.ui.procedure(ui.L.controls, {
         title: "由紀錄反推氣候",
         steps: [
-          "選樹輪，把溫度異常拉到 +3：最外 6 圈明顯變寬——「圈寬=生長季好」。",
+          "選樹輪，把溫度異常拉到 +3：最外 6 圈明顯變寬，圈越寬表示那年生長季越好。",
           "切到石筍、沉積物：同一個氣候情境，三種紀錄長得不一樣。",
-          "看圖表：解析度越粗（沉積物），快速起伏被抹平——所以要多源交叉驗證。"
+          "看圖表：解析度越粗（沉積物），快速的起伏被抹平，所以要用多種資料互相驗證。"
         ],
         rule: "每種代用資料都有解析度極限：樹輪看年、石筍看數年、沉積物看百年；宣稱「某一年」如何如何的，只能來自樹輪或冰芯等年級紀錄。"
       });
@@ -396,7 +396,7 @@
       const rT = PL.ui.readout(ui.L.readouts, { label: "推估溫度異常", unit: "°C" }), rP = PL.ui.readout(ui.L.readouts, { label: "推估降水變化", unit: "%" });
       const rRes = PL.ui.readout(ui.L.readouts, { label: "解析度" }), rSpan = PL.ui.readout(ui.L.readouts, { label: "可回溯" });
       const vX = PL.ui.verdict(ui.L.controls, { label: "—" });
-      const chart = ui.chart("重建 vs 實際", "粗色線=代用重建、灰虛線=「實際」氣候：樹輪追得最緊；沉積物（每 4 年一筆）把快速起伏抹平——解析度決定看得到什麼。");
+      const chart = ui.chart("重建 vs 實際", "粗色線=代用重建、灰虛線=「實際」氣候：樹輪追得最緊；沉積物（每 4 年一筆）把快速的起伏抹平，解析度決定看得到什麼。");
       const drawChart = () => {
         const mode = proxSel.get(), dT = tS.get(), dP = pS.get();
         /*
@@ -479,7 +479,7 @@
       });
       const yS = PL.ui.slider(ui.L.controls, { label: "年份", min: Y0, max: Y1, step: 1, value: 2025, digits: 0 });
       const regSel = PL.ui.select(ui.L.controls, { label: "區域", value: "globe", options: REG.map(r => ({ value: r.key, label: r.name })) });
-      PL.ui.note(ui.L.controls, "每一格是一年的全球均溫異常：1945–1975 的平台（氣溶膠冷卻）之後，1975 年起陡升——近十年是有紀錄以來最暖。切換區域看放大效應：陸地快於海洋，北極最快。");
+      PL.ui.note(ui.L.controls, "每一格是一年的全球均溫異常：1945–1975 的平台（氣溶膠冷卻）之後，1975 年起快速上升，最近十年是有紀錄以來最暖的。切換區域看放大效應：陸地快於海洋，北極最快。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀趨勢，不要讀單年",
         steps: [
@@ -487,7 +487,7 @@
           "逐年掃到 2025：藍→紅的轉變集中在最後 50 年。",
           "切換「北極」：同一年的異常被放大約 2.8 倍，海冰跟著縮。"
         ],
-        rule: "某一年偏冷不代表暖化停止——看 5 年均與趨勢線；1998、2016 的聖嬰高峰只是年際起伏，改變不了長期方向。"
+        rule: "某一年偏冷不代表暖化停止，要看 5 年平均和趨勢線；1998、2016 的聖嬰高峰只是年際起伏，改變不了長期方向。"
       });
       PL.ui.presets(ui.L.controls, { label: "跳到", options: [
         { label: "1900 年代初", apply: () => { yS.set(1905); ui.redraw(); } },
@@ -496,7 +496,7 @@
       const rY = PL.ui.readout(ui.L.readouts, { label: "年異常（所選區域）", unit: "°C" }), r5 = PL.ui.readout(ui.L.readouts, { label: "五年均異常", unit: "°C" });
       const rPre = PL.ui.readout(ui.L.readouts, { label: "相對工業前（全球）", unit: "°C" }), rIce = PL.ui.readout(ui.L.readouts, { label: "海冰殘存", unit: "%" });
       const vW = PL.ui.verdict(ui.L.controls, { label: "—" });
-      const chart = ui.chart("全球均溫異常（相對工業前）", "黑虛線=1.5 °C 門檻。注意 1945–1975 的平台與 1975 後的陡升——趨勢轉折比年際起伏更該看；切換區域會整條縮放。");
+      const chart = ui.chart("全球均溫異常（相對工業前）", "黑虛線=1.5 °C 門檻。注意 1945–1975 的平台與 1975 後的快速上升，趨勢的轉折比每年的起伏更重要；切換區域會整條縮放。");
       const drawChart = () => {
         const f = (REG.find(r => r.key === regSel.get()) || REG[0]).f, yr = Math.round(yS.get());
         const pts = [], run = [];
@@ -571,11 +571,11 @@
       });
       const dTS = PL.ui.slider(ui.L.controls, { label: "全球升溫", min: 0.5, max: 4, step: 0.1, value: 1.2, unit: "°C", digits: 1 });
       const iceS = PL.ui.slider(ui.L.controls, { label: "陸冰損耗", min: 200, max: 1600, step: 50, value: 1050, unit: "Gt/年", digits: 0 });
-      PL.ui.note(ui.L.controls, "海水受熱體積變大（熱膨脹）、陸地冰融化直接加水，兩者各占約一半。衛星測高顯示 1993 年起每年約 3 mm，近年已接近 4.5 mm——速率還在加快。");
+      PL.ui.note(ui.L.controls, "海水受熱體積變大（熱膨脹）、陸地冰融化直接加水，兩者各占約一半。衛星測高顯示 1993 年起每年約 3 mm，近年已經接近 4.5 mm，而且還在變快。");
       PL.ui.procedure(ui.L.controls, {
         title: "分離兩個來源",
         steps: [
-          "只拉「全球升溫」：熱膨脹層增厚、占比條右移——看不見但量很大。",
+          "只拉「全球升溫」：熱膨脹層增厚、占比條右移，看不到，但量很大。",
           "只拉「陸冰損耗」：冰河縮小、融水箭頭變粗，水面直接抬升。",
           "讀累計：維持現今速率到 2100，約再上升 30–35 cm。"
         ],
@@ -648,7 +648,7 @@
             ctx.beginPath(); ctx.moveTo(hx - W * 0.006, gy - H * 0.14); ctx.lineTo(hx + W * 0.03, gy - H * 0.19); ctx.lineTo(hx + W * 0.066, gy - H * 0.14);
             ctx.closePath(); ctx.fill(); ctx.restore();
           });
-          if (waterTop < gy - H * 0.055 && wallH < gy - waterTop - H * 0.055) CK.badge(ctx, W * 0.76, H * 0.56, "低窪區淹水！", "#c0392b");
+          if (waterTop < gy - H * 0.055 && wallH < gy - waterTop - H * 0.055) CK.badge(ctx, W * 0.76, H * 0.56, "低窪區淹水", "#c0392b");
           rT.set(dT, 1); rSL.set(sl, 0); rR.set(risk, 0); rE.set(m * 100, 0);
           vA.set(risk < 20 ? "風險可控：減緩止住根、調適守住底" : risk < 50 ? "仍有明顯風險：調適要跟上暖化腳步" : "高風險：減緩不足，調適也補不回來",
             risk < 20 ? "ok" : risk < 50 ? "warn" : "bad");
@@ -661,10 +661,10 @@
         title: "配一組政策",
         steps: [
           "兩個滑桿都歸零（無作為）：升溫 4.3 °C、風險 100%。",
-          "只拉滿調適：風險降一半，但升溫不變——傷害變小、根源沒解。",
+          "只拉滿調適：風險降一半，但升溫不變，傷害變小了，根本原因還在。",
           "拉高減緩再補調適：剩餘風險才能壓到 20% 以下。"
         ],
-        rule: "減緩有幾十年的氣候延遲，調適立即見效——「越早減緩、越省調適」。風險公式裡，暴露與脆弱度是人為可控的兩個因子。"
+        rule: "減緩有幾十年的氣候延遲，調適馬上有效果；越早減緩，之後需要的調適就越少。風險公式裡，暴露與脆弱度是人為可控的兩個因子。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "無作為", apply: () => { mitS.set(0); adS.set(0); ui.redraw(); } },
@@ -674,7 +674,7 @@
       const rT = PL.ui.readout(ui.L.readouts, { label: "2100 升溫", unit: "°C" }), rSL = PL.ui.readout(ui.L.readouts, { label: "海面上升", unit: "cm" });
       const rR = PL.ui.readout(ui.L.readouts, { label: "剩餘風險", unit: "%" }), rE = PL.ui.readout(ui.L.readouts, { label: "排放削減", unit: "%" });
       const vA = PL.ui.verdict(ui.L.controls, { label: "—" });
-      const chart = ui.chart("2100 升溫路徑", "依目前減緩力道外推的升溫路徑；黃虛線=巴黎協定 1.5 °C、紅虛線=2.0 °C——減緩拉得越高，路徑終點越低。");
+      const chart = ui.chart("2100 升溫路徑", "依目前減緩力道外推的升溫路徑；黃虛線=巴黎協定 1.5 °C、紅虛線=2.0 °C。減緩拉得越高，路徑最後的升溫越低。");
       const drawChart = () => {
         const dT = dTof(mitS.get() / 100);
         CK.plot(chart, {

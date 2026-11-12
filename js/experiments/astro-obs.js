@@ -60,7 +60,7 @@
       });
       const latS = PL.ui.slider(ui.L.controls, { label: "觀測緯度", min: 0, max: 90, step: 1, value: 25, unit: "°", digits: 0 });
       const timeS = PL.ui.slider(ui.L.controls, { label: "恆星時", min: 0, max: 24, step: 0.5, value: 21, unit: "h", digits: 1 });
-      PL.ui.note(ui.L.controls, "把天球想成一個罩住地球的大球：天北極的高度正好等於你的緯度——在台北看北極星仰角 25°，在北極看它就在頭頂。");
+      PL.ui.note(ui.L.controls, "把天球想成一個罩住地球的大球：天北極的高度剛好等於你所在的緯度：在台北看北極星仰角 25°，在北極看它就在頭頂。");
       PL.ui.procedure(ui.L.controls, {
         title: "星座盤的使用",
         steps: [
@@ -69,7 +69,7 @@
           "拉動緯度滑桿：在北極(90°)只看得到北天極附近的天區。",
           "轉動恆星時：星星繞極逆時針轉（俯視北天）。"
         ],
-        rule: "北極星的仰角就是緯度——這是野外導航與星座盤定標的共同原理。"
+        rule: "北極星的仰角就是緯度，野外導航和星座盤校正都是用這個原理。"
       });
       PL.ui.presets(ui.L.controls, { label: "觀測地", options: [
         { label: "台北 25°N", apply: () => latS.set(25) },
@@ -131,7 +131,7 @@
       });
       const hourS = PL.ui.slider(ui.L.controls, { label: "今晚時刻", min: 18, max: 30, step: 0.25, value: 21, unit: "時", digits: 2 });
       const dayS = PL.ui.slider(ui.L.controls, { label: "連續觀測", min: 0, max: 10, step: 1, value: 3, unit: "天", digits: 0 });
-      PL.ui.note(ui.L.controls, "同一顆星每晚提前約 4 分鐘升到同一位置——因為地球繞太陽前進，要多轉一點才對回同一顆星。一個月累積 2 小時，季節星座因此輪替。");
+      PL.ui.note(ui.L.controls, "同一顆星每晚提前約 4 分鐘升到同一位置，因為地球繞太陽前進，要多轉一點才會對回同一顆星。一個月累積 2 小時，季節星座因此輪替。");
       PL.ui.procedure(ui.L.controls, {
         title: "看見周日運動",
         steps: [
@@ -211,7 +211,7 @@
           "六月（夏至）：直射 +23.5°，台灣正晝最長、影子最短。",
           "九月（秋分）：直射赤道，晝夜等長。",
           "十二月（冬至）：直射 −23.5°，正午影子全年最長。",
-          "注意：一月地球其實在「近日點」——離太陽近卻是北半球的冬天。"
+          "注意：一月地球其實在近日點，離太陽近，北半球卻是冬天。"
         ],
         rule: "「離太陽遠=冬天」是最常見的誤解：北半球冬季時地球反而比夏季靠近太陽約 3%。"
       });
@@ -306,7 +306,7 @@
           "夏至正午：太陽幾乎在頭頂（台灣），影子極短。",
           "冬至正午：高度只剩 41.5°，影子是夏至的兩倍以上。",
           "拖動時刻：看太陽沿軌跡移動與影子的方向變化。",
-          "日出方位跟著季節偏北/偏南——只有春秋分是正東。"
+          "日出方位跟著季節偏北或偏南，只有春分、秋分是正東。"
         ],
         rule: "建築採光、太陽能板與遮陽設計都依「冬至最低軌跡」與「夏至最高軌跡」兩條線畫界。"
       });
@@ -384,7 +384,7 @@
           D.text(ctx, mag + "×", vx, vy + vr * 0.62, { color: "#fff", size: 13, align: "center", weight: "700" });
           D.text(ctx, sep < resLimit ? "已解析雙星" : "倍率不足/口徑不夠：兩星糊在一起", vx, vy + vr + 16,
             { color: sep < resLimit ? "#66bb6a" : PL.col("warn"), size: 10.5, align: "center" });
-          CK.panel(ctx, W * 0.60, H * 0.64, W * 0.34, H * 0.28, "口徑是第一關鍵");
+          CK.panel(ctx, W * 0.60, H * 0.64, W * 0.34, H * 0.28, "口徑最重要");
           const rows = [
             ["集光力", "肉眼 ×" + PL.fmt(gain, 1)],
             ["極限星等", PL.fmt(lm, 1) + " 等"],
@@ -399,13 +399,13 @@
       });
       const diaS = PL.ui.slider(ui.L.controls, { label: "口徑", min: 5, max: 30, step: 1, value: 10, unit: "cm", digits: 0 });
       const magS = PL.ui.slider(ui.L.controls, { label: "倍率", min: 10, max: 300, step: 10, value: 60, unit: "×", digits: 0 });
-      PL.ui.note(ui.L.controls, "集光力與口徑平方成正比、解析度與口徑成正比；倍率只是把像放大——口徑不夠時放大只會得到更大的糊斑。");
+      PL.ui.note(ui.L.controls, "集光力與口徑平方成正比、解析度與口徑成正比；倍率只是把像放大，口徑不夠時，放大只會得到更大的一團模糊。");
       PL.ui.procedure(ui.L.controls, {
         title: "為什麼口徑優先於倍率",
         steps: [
           "口徑 5 → 20 cm：集光力變 16 倍，極限星等前進 3 等。",
           "倍率 60 → 240：雙星視距變大，但解析極限沒變。",
-          "同時拉高口徑與倍率：視野裡真正分開了。"
+          "同時拉高口徑與倍率：視野裡兩顆星分開了。"
         ],
         rule: "市售「600 倍望遠鏡」是行銷話術：超過口徑 2D 倍率（如 10 cm → 200×）後影像只會更暗更糊。"
       });
@@ -479,13 +479,13 @@
       });
       const lightS = PL.ui.slider(ui.L.controls, { label: "光害程度", min: 0, max: 1, step: 0.05, value: 0.7, digits: 2 });
       const moonS = PL.ui.slider(ui.L.controls, { label: "月相（朔→滿）", min: 0, max: 1, step: 0.05, value: 0, digits: 2 });
-      PL.ui.note(ui.L.controls, "同樣的夜空，市中心只能看到約 100 顆星、暗夜有數千顆。光害不是「燈太亮」這麼簡單——是光被空氣散射進視線；月亮則是暫時版的同樣效應。");
+      PL.ui.note(ui.L.controls, "同樣的夜空，市中心只能看到約 100 顆星、暗夜有數千顆。光害不只是燈太亮，是光被空氣散射進我們的視線；月光也有一樣的效果，只是暫時的。");
       PL.ui.procedure(ui.L.controls, {
         title: "規劃一次觀測",
         steps: [
           "先看月相：深空目標（星雲、星系）要選朔前後。",
           "再選地點：拉低光害，極限星等前進、星數暴增。",
-          "兩者都差時：只能看行星與月亮——它們不怕光害。"
+          "兩者都差時：只能看行星和月亮，它們比較不受光害影響。"
         ],
         rule: "星等差 5 等亮度差 100 倍；極限星等從 6.5 掉到 3，等於星空的 99% 直接消失。"
       });
@@ -576,11 +576,11 @@
       PL.ui.procedure(ui.L.controls, {
         title: "對比兩種食",
         steps: [
-          "日食：拖動過程，看本影帶橫掃地表——只在帶內可見全食。",
+          "日食：拖動過程，看本影帶掃過地表，只有在帶內才看得到全食。",
           "月食：看月球進入地影變成血月，半個地球一起看。",
           "想想：為什麼日全食比月全食罕見得多？"
         ],
-        rule: "觀測日食必須用專用濾鏡；全食階段才可肉眼直視——這是天文觀測唯一的安全鐵律。"
+        rule: "觀測日食必須用專用濾鏡；只有全食那段時間才可以用肉眼直接看。這是觀測日食一定要遵守的安全規則。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "全食中", apply: () => progS.set(0.5) },
@@ -639,14 +639,14 @@
         }
       });
       const yearS = PL.ui.slider(ui.L.controls, { label: "西元年", min: -3000, max: 15000, step: 100, value: 2000, digits: 0 });
-      PL.ui.note(ui.L.controls, "地軸像傾斜的陀螺：自轉軸以約 2.6 萬年畫一圈。「北極星」只是暫時的頭銜——古埃及人用天龍座 α 定北，未來會換織女星。");
+      PL.ui.note(ui.L.controls, "地軸像傾斜的陀螺：自轉軸以約 2.6 萬年畫一圈。北極星只是暫時的稱號，古埃及人用天龍座 α 定北，以後會換成織女星。");
       PL.ui.procedure(ui.L.controls, {
         title: "看北極換人",
         steps: [
           "回到西元前 3,000 年：軸指向天龍座 α（金字塔時代）。",
           "拉到 2,000 年：現在的北極星（小熊座 α）。",
           "推到 14,000 年：織女星將成為北極星。",
-          "注意傾角 23.5° 不變——變的是指向，不是傾斜量。"
+          "注意傾角 23.5° 不變，變的是指向，不是傾斜的角度。"
         ],
         rule: "歲差改變「軸指向哪顆星」與「季節起點在軌道上的位置」，但不改變黃赤交角本身。"
       });

@@ -52,8 +52,8 @@
       const yrS = PL.ui.slider(ui.L.controls, { label: "風化時間", min: 0, max: 1000, step: 20, value: 300, unit: "年", digits: 0 });
       PL.ui.note(ui.L.controls, "物理風化把石頭裂成小塊、化學風化把礦物分解成新礦物：裂隙讓水與空氣鑽進岩體，兩者接力才能把岩石變成土壤。");
       PL.ui.procedure(ui.L.controls, { title: "看見兩種風化",
-        steps: ["只拉「年凍融循環數」：岩塊裂成更多小塊、粒徑下降，但顏色幾乎不變——成分沒變。", "只拉「化學風化強度」：岩塊出現鏽色、土壤變厚——成分改變了。",
-          "兩個都拉高：小塊的化學風化遠快於整塊岩石——這就是互相加速。"],
+        steps: ["只拉「年凍融循環數」：岩塊裂成更多小塊、粒徑下降，但顏色幾乎不變，成分沒有改變。", "只拉「化學風化強度」：岩塊出現鏽色、土壤變厚，成分改變了。",
+          "兩個都拉高：小塊岩石的化學風化比整塊快得多，兩種風化會互相加速。"],
         rule: "裂隙是風化的入侵口：物理崩解翻出新表面，化學作用才進得去；石灰岩幾乎只被化學溶蝕，因為方解石直接溶於弱酸。" });
       const chart = ui.chart("凍融循環 → 岩塊粒徑", "循環越密集、粒徑崩得越快（指數下降）：同樣 300 年，高頻凍融的岩塊比低頻小數十倍。紅點是目前狀態。");
       const drawChart = () => CK.plot(chart, {
@@ -129,10 +129,10 @@
       });
       const vS = PL.ui.slider(ui.L.controls, { label: "流速 / 風速", min: 5, max: 300, step: 5, value: 120, unit: "cm/s", digits: 0 });
       const forceSel = PL.ui.select(ui.L.controls, { label: "搬運營力", value: "river", options: [{ value: "river", label: "河流" }, { value: "wind", label: "風" }, { value: "ice", label: "冰河" }] });
-      PL.ui.note(ui.L.controls, "營力的能量決定它能搬動的顆粒：流速一減，粗的先落、細的後落，沉積物就出現「由粗到細」的分選；冰河例外——大小通吃、混雜堆積。");
+      PL.ui.note(ui.L.controls, "營力的能量決定它能搬動的顆粒：流速一減，粗的先落、細的後落，沉積物就會由粗到細分選；冰河例外，大大小小混在一起堆積。");
       PL.ui.procedure(ui.L.controls, { title: "讀出分選",
-        steps: ["把流速拉到 250：連礫石都被挾帶（紅點在曲線右上方）。", "慢慢降速：礫最先落下、砂其次、泥最後——畫面上的沉積堆由粗到細排開。",
-          "切成「冰河」：同樣的顆粒全擠在同一堆裡——冰磧沒有分選。"],
+        steps: ["把流速拉到 250：連礫石都被挾帶（紅點在曲線右上方）。", "慢慢降速：礫最先落下、砂其次、泥最後，畫面上的沉積物由粗到細排開。",
+          "切成「冰河」：同樣的顆粒全擠在同一堆裡，冰磧沒有分選。"],
         rule: "v 變 2 倍、能搬的粒徑變 4 倍（v ∝ √d 的倒關係）：所以洪水能把巨礫滾下山，退水時同一地點先收礫、再收砂。" });
       const chart = ui.chart("臨界流速 vs 粒徑（河流）", "粒徑越大、搬動它需要的流速越高（√d 曲線）：紅點是目前流速對應的可搬上限，落在哪一區就搬得動哪一級。");
       const drawChart = () => CK.plot(chart, {
@@ -204,11 +204,11 @@
       });
       const posS = PL.ui.slider(ui.L.controls, { label: "觀察位置（0 上游 → 100 出海口）", min: 0, max: 100, step: 1, value: 18, unit: "%", digits: 0 });
       const baseS = PL.ui.slider(ui.L.controls, { label: "侵蝕基準面升降", min: -60, max: 60, step: 5, value: 0, unit: "m", digits: 0 });
-      PL.ui.note(ui.L.controls, "同一條河，上游在切、下游在堆：坡陡能量大就下切成 V 型谷，入海能量歸零就堆出平原與三角洲——基準面一動，整條河重新調整。");
+      PL.ui.note(ui.L.controls, "同一條河，上游在切、下游在堆：坡陡能量大就下切成 V 型谷，入海後能量歸零，就堆出平原和三角洲。基準面一變，整條河都會重新調整。");
       PL.ui.procedure(ui.L.controls, { title: "沿河走一趟",
         steps: ["把觀察位置從 0 拉到 100：谷型由深窄 V 型 → 開展寬谷 → 堆積平原，坡度讀數一路下降。", "把基準面拉到 −60 m：河川回春下切，兩側留下階梯狀的舊河床（河階）。",
-          "把基準面拉到 +60 m：河床淤高、能量歸零——河口會變成堆積與溺谷的世界。"],
-        rule: "侵蝕基準面（海平面）決定河能下切多深：「峽谷深不深」問的不是水量，而是基準面與地盤抬升的賽跑。" });
+          "把基準面拉到 +60 m：河床淤高、能量歸零，河口變成以堆積和溺谷為主。"],
+        rule: "侵蝕基準面（海平面）決定河能下切多深：峽谷深不深，主要看的不是水量，是基準面和地盤抬升哪個快。" });
       const chart = ui.chart("河川縱剖面（凹形）", "縱剖面是上陡下緩的凹曲線:x 軸 0 為源頭、100 為出海口；上游坡陡故侵蝕，下游趨緩轉為搬運與堆積。紅點是目前觀察位置。");
       const drawChart = () => CK.plot(chart, {
         x0: 0, x1: 100, y0: 0, y1: 3400, xlabel: "距源頭(%)", ylabel: "河床高(m)",
@@ -273,19 +273,19 @@
             ctx.beginPath(); ctx.ellipse(ax, ay, hw * 1.75, hw * 1.15, 0, 0, TAU); ctx.fill(); ctx.stroke(); ctx.restore();
             D.text(ctx, "牛軛湖（舊河道）", ax, ay + hw * 2.6, { color: "#7fa8d9", size: 10.5, align: "center", weight: "700" });
           }
-          CK.badge(ctx, W * 0.72, H * 0.20, cut ? "大洪水漫過彎頸：截彎取直！" : flood > 0.55 ? "洪水氾濫中" : "平水期", cut ? "#e57373" : flood > 0.55 ? "#7fa8d9" : PL.col("accent"));
+          CK.badge(ctx, W * 0.72, H * 0.20, cut ? "大洪水漫過彎頸：截彎取直" : flood > 0.55 ? "洪水氾濫中" : "平水期", cut ? "#e57373" : flood > 0.55 ? "#7fa8d9" : PL.col("accent"));
           rBend.set(bend, 2); rBelt.set(Math.round(bend * 1200), 0); rEro.set(bend * flood * 3.0, 2); rState.set(cut ? "已截彎 → 牛軛湖" : bend > 0.6 ? "彎道加劇中" : "緩彎成長中");
-          vZen.set(cut ? "舊河道被沉積物封口成牛軛湖——它見證了河曾經走過的路" : bend > 0.72 ? "彎度已達門檻，只差一場洪水就截彎" : "凹岸侵蝕 + 凸岸堆積，彎道越滾越彎", cut ? "info" : bend > 0.72 ? "warn" : "ok");
+          vZen.set(cut ? "舊河道被沉積物封住，變成牛軛湖，留下河以前流過的痕跡" : bend > 0.72 ? "彎度已達門檻，只差一場洪水就截彎" : "凹岸侵蝕 + 凸岸堆積，彎道越滾越彎", cut ? "info" : bend > 0.72 ? "warn" : "ok");
         }
       });
       const bendS = PL.ui.slider(ui.L.controls, { label: "彎度指數", min: 0.1, max: 0.95, step: 0.05, value: 0.4, digits: 2 });
       const floodS = PL.ui.slider(ui.L.controls, { label: "洪水量", min: 0, max: 1, step: 0.05, value: 0.4, digits: 2 });
       const yrS = PL.ui.slider(ui.L.controls, { label: "演育時間", min: 0, max: 500, step: 10, value: 120, unit: "年", digits: 0 });
-      PL.ui.note(ui.L.controls, "河道一彎，外側快而蝕、內側慢而積，彎就越滾越彎；洪水漫過彎頸直接抄直路，舊彎被泥沙封口——那就是牛軛湖的由來。");
+      PL.ui.note(ui.L.controls, "河道一彎，外側快而蝕、內側慢而積，彎就越滾越彎；洪水漫過彎頸直接抄直路，舊彎被泥沙封住，就成了牛軛湖。");
       PL.ui.procedure(ui.L.controls, { title: "催生一個牛軛湖",
         steps: ["彎度拉到 0.8：紅色刻線（凹岸）與沙色弧（凸岸）成對出現，彎道加劇。", "洪水量再拉過 0.55：洪水漫過彎頸，藍色直道把彎截掉。",
-          "讀畫面：被拋棄的舊彎道變成一彎靜水——牛軛湖，幾十年後會被填滿成沼澤地。"],
-        rule: "牛軛湖不是「湖自己長出來」，而是被截彎拋棄的舊河道；曲流帶越寬代表曾經的流量越大，兩件事要用讀數分開看。" });
+          "讀畫面：被拋棄的舊彎道變成一彎靜水，也就是牛軛湖，幾十年後會被填滿成沼澤地。"],
+        rule: "牛軛湖不是自己長出來的湖，是截彎取直後留下的舊河道；曲流帶越寬代表曾經的流量越大，兩件事要用讀數分開看。" });
       const chart = ui.chart("彎度演育 vs 時間", "彎度隨時間上升（侵蝕+堆積持續作用），超過 0.72 的門檻後一場洪水就會截彎；洪水越大、爬升越快。紅點是目前時間的彎度。");
       const drawChart = () => {
         const rate = y => Math.min(0.95, 0.10 + 0.0035 * (0.4 + floodS.get()) * y);
@@ -356,7 +356,7 @@
           CK.badge(ctx, W * 0.68, H * 0.14, wave > 0.6 ? "侵蝕型海岸" : cur > 0.5 && wave < 0.5 ? "堆積型海岸" : "過渡型海岸",
             wave > 0.6 ? "#e57373" : cur > 0.5 && wave < 0.5 ? "#66bb6a" : PL.col("accent"));
           rRate.set(rate, 2); rPlat.set(plat, 0); rSpit.set(len2 > 10 ? Math.round(len2 * 2) : 0, 0); rType.set(wave > 0.6 ? "侵蝕型（海蝕崖・平台）" : cur > 0.5 && wave < 0.5 ? "堆積型（沙灘・沙洲）" : "過渡型");
-          vZen.set(wave > 0.6 ? "波能強：海崖退縮 " + PL.fmt(rate, 2) + " m/年，平台越寬侵蝕越慢" : cur > 0.5 ? "沿岸流強：沙嘴延伸、潟湖發育——海岸在長大" : "能量中等：侵蝕與堆積並存", wave > 0.6 ? "warn" : "ok");
+          vZen.set(wave > 0.6 ? "波能強：海崖退縮 " + PL.fmt(rate, 2) + " m/年，平台越寬侵蝕越慢" : cur > 0.5 ? "沿岸流強：沙嘴延伸、潟湖發育，海岸在變大" : "能量中等：侵蝕與堆積並存", wave > 0.6 ? "warn" : "ok");
         }
       });
       const waveS = PL.ui.slider(ui.L.controls, { label: "波浪能量", min: 0.05, max: 1, step: 0.05, value: 0.6, digits: 2 });
@@ -364,10 +364,10 @@
       const yrS = PL.ui.slider(ui.L.controls, { label: "作用時間", min: 0, max: 200, step: 10, value: 80, unit: "年", digits: 0 });
       PL.ui.note(ui.L.controls, "同一片海，迎浪的岬角被切成海蝕崖與平台，波影較弱的灣內堆出沙灘與沙嘴：岩性與波能決定海岸長什麼樣，沿岸流決定沙往哪裡去。");
       PL.ui.procedure(ui.L.controls, { title: "對照兩種海岸",
-        steps: ["波浪能量拉到 0.9：海蝕崖後退、海蝕平台變寬——注意退縮速率讀數反而變慢。", "沿岸流拉高、波能降低：沙嘴與離岸沙洲開始生長，沙洲後面出現潟湖。",
-          "對照台灣：北海岸是侵蝕型、西濱是堆積型——就是這兩支滑桿的差別。"],
+        steps: ["波浪能量拉到 0.9：海蝕崖後退、海蝕平台變寬，注意退縮速率讀數反而變慢。", "沿岸流拉高、波能降低：沙嘴與離岸沙洲開始生長，沙洲後面出現潟湖。",
+          "對照台灣：北海岸是侵蝕型、西部海岸是堆積型，差別就在這兩支滑桿。"],
         rule: "海蝕平台是海岸線不斷後退留下的足跡；平台變寬會先磨掉波能，所以「退縮越來越慢」是負回饋，不是侵蝕停止。" });
-      const chart = ui.chart("海崖退縮速率 vs 平台寬度", "平台越寬、抵達崖腳的波能越少：退縮速率沿曲線下滑——海岸自己會「剎車」。紅點是目前狀態。");
+      const chart = ui.chart("海崖退縮速率 vs 平台寬度", "平台越寬、抵達崖腳的波能越少：退縮速率沿曲線下降，海岸會自己慢下來。紅點是目前狀態。");
       const drawChart = () => {
         const platNow = yrS.get() * 1.5 * waveS.get() / (1 + yrS.get() * 1.5 * waveS.get() / 50);
         CK.plot(chart, {
@@ -424,7 +424,7 @@
             ctx.fill(); ctx.restore();
             if (i === 1 && caveH > 0.8 && slen > 6) D.text(ctx, "鐘乳石↓ 石筍↑", cx, cy2 - ry - 12, { color: "#e8e2d0", size: 9.5, align: "center" });
           });
-          if (column) { D.rect(ctx, cx - 3, cy2 - ry, 6, ry * 2, { fill: "#e8e2d0" }); CK.badge(ctx, cx, cy2, "石柱：上下相接！", "#c9a227"); }
+          if (column) { D.rect(ctx, cx - 3, cy2 - ry, 6, ry * 2, { fill: "#e8e2d0" }); CK.badge(ctx, cx, cy2, "石柱：上下相接", "#c9a227"); }
           if (drip > 0.1 && caveH > 0.8) for (let i = 0; i < 3; i++) {   // 洞內滴水
             const fy = cy2 - ry + ((t * 55 + i * 45) % (ry * 2)); D.disc(ctx, cx + (i - 1) * rx * 0.45, Math.min(fy, cy2 + ry), 1.8, { fill: "rgba(140,190,240,0.8)" });
           }
@@ -445,10 +445,10 @@
       const co2S = PL.ui.slider(ui.L.controls, { label: "雨水中 CO₂(溶蝕力)", min: 0.05, max: 1, step: 0.05, value: 0.5, digits: 2 });
       const yrS = PL.ui.slider(ui.L.controls, { label: "溶蝕時間", min: 0, max: 100, step: 5, value: 40, unit: "萬年", digits: 0 });
       const dripS = PL.ui.slider(ui.L.controls, { label: "洞頂滴水速率", min: 0, max: 1, step: 0.05, value: 0.35, digits: 2 });
-      PL.ui.note(ui.L.controls, "雨水溶入 CO₂ 變弱酸，沿節理把石灰岩一點點帶走，地下才長得出洞；洞頂滴下的水失壓脫氣，反而把 CaCO₃ 放回來——造洞與填洞方向相反。");
+      PL.ui.note(ui.L.controls, "雨水溶入 CO₂ 變弱酸，沿節理把石灰岩一點點帶走，地下才長得出洞；洞頂滴下的水失壓脫氣，反而把 CaCO₃ 沉澱回來，造洞和填洞是相反的反應。");
       PL.ui.procedure(ui.L.controls, { title: "看洞怎麼長",
-        steps: ["拉高 CO₂：節理變寬、洞穴變大——溶蝕速率讀數同步上升。", "拉高滴水速率：鐘乳石與石筍開始上下生長（讀數 cm）。",
-          "時間與滴水都拉滿：兩者相接變成石柱——洞開始被自己的沉澱物填回來。"],
+        steps: ["拉高 CO₂：節理變寬、洞穴變大，溶蝕速率讀數也跟著上升。", "拉高滴水速率：鐘乳石與石筍開始上下生長（讀數 cm）。",
+          "時間與滴水都拉滿：兩者相接變成石柱，洞開始被自己的沉澱物填回去。"],
         rule: "溶蝕（向下造洞）與沉澱（洞內堆積）是同一條化學的兩個方向:CaCO₃ 溶進去是造洞、滴出來是堆積；鐘乳石百年只長數公分。" });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "濕熱多雨", apply: () => { co2S.set(0.95); dripS.set(0.85); yrS.set(80); ui.redraw(); } },
@@ -499,10 +499,10 @@
             ctx.lineTo(tx + W * 0.16, ty + 16); ctx.lineTo(tx - 20, ty + 14); ctx.closePath(); ctx.fill(); ctx.restore();
             for (let i = 0; i < 6; i++) D.disc(ctx, tx + 14 + i * 9, ty + 6 + (i % 3) * 4, 3.2, { fill: "#5d5045" }); D.text(ctx, "土石流（陡坡+鬆散土石+大量水）", tx + W * 0.10, ty + 30, { color: "#c98a5a", size: 10.5, align: "center", weight: "700" });
           }
-          CK.badge(ctx, W * 0.24, H * 0.10, slide ? "剪應力 > 抗剪：滑動！" : FS < 1.25 ? "接近臨界" : "坡地穩定", slide ? "#e57373" : FS < 1.25 ? "#e8b13c" : "#66bb6a");
+          CK.badge(ctx, W * 0.24, H * 0.10, slide ? "剪應力 > 抗剪：滑動" : FS < 1.25 ? "接近臨界" : "坡地穩定", slide ? "#e57373" : FS < 1.25 ? "#e8b13c" : "#66bb6a");
           rFS.set(FS, 2); rSat.set(sat * 100, 0); rState.set(slide ? "滑動中" : FS < 1.25 ? "臨界（接近極限平衡）" : "穩定");
           rCause.set(sat > 0.6 ? "降雨入滲（孔隙水壓↑）" : th > 40 ? "坡度過陡" : veg < 0.3 ? "植被不足" : "目前無明顯誘因");
-          vZen.set(slide ? "FS = " + PL.fmt(FS, 2) + " < 1：坡地物質開始下移——先排水、再固坡" : "FS = " + PL.fmt(FS, 2) + (FS < 1.25 ? ":一場豪雨就可能翻過 1.0" : ":抗剪仍有餘裕"), slide ? "bad" : FS < 1.25 ? "warn" : "ok");
+          vZen.set(slide ? "FS = " + PL.fmt(FS, 2) + " < 1：坡地物質開始往下移，先排水、再固坡" : "FS = " + PL.fmt(FS, 2) + (FS < 1.25 ? ":一場豪雨就可能翻過 1.0" : ":抗剪仍有餘裕"), slide ? "bad" : FS < 1.25 ? "warn" : "ok");
         }
       });
       const thS = PL.ui.slider(ui.L.controls, { label: "坡度", min: 15, max: 60, step: 1, value: 30, unit: "°", digits: 0 });
@@ -510,9 +510,9 @@
       const vegS = PL.ui.slider(ui.L.controls, { label: "植被覆蓋", min: 0, max: 1, step: 0.05, value: 0.6, digits: 2 });
       PL.ui.note(ui.L.controls, "坡地安不安全，是「剪應力 vs 抗剪強度」的拔河：雨灌進土裡，孔隙水壓把抗剪頂掉,FS 掉破 1.0 就是山崩；水再加碎石就是土石流。");
       PL.ui.procedure(ui.L.controls, { title: "把坡推過極限",
-        steps: ["固定雨量 200，把坡度從 15° 拉到 45°:FS 一路下滑，紅點跨過 1.0 線。", "坡度固定 35°，雨量拉到 550：藍色水位帶升到地表,FS 破 1——豪雨是最常見的誘因。",
-          "把植被從 0 拉回 0.95：根系固土,FS 抬升——同樣的雨就滑不動了。"],
-        rule: "土石流三要素：陡坡+鬆散土石+大量水，缺一不可；台灣的災例幾乎都是颱風豪雨踩線——治理先做排水與護坡，不是等崩了再清。" });
+        steps: ["固定雨量 200，把坡度從 15° 拉到 45°:FS 一路下滑，紅點跨過 1.0 線。", "坡度固定 35°，雨量拉到 550：藍色水位帶升到地表，FS 跌破 1，豪雨是最常見的誘因。",
+          "把植被從 0 拉回 0.95：根系固土，FS 回升，同樣的雨就滑不動了。"],
+        rule: "土石流三要素：陡坡+鬆散土石+大量水，缺一不可；台灣的案例幾乎都是颱風豪雨引起的。防治要先做排水和護坡，不是等崩了再清。" });
       const chart = ui.chart("安全係數 FS vs 坡度", "坡度越陡 FS 越低；雨量越大（水位越高）整條曲線越往下壓。跨過 FS = 1 的橫線就是滑動。紅點是目前狀態。");
       const drawChart = () => {
         const fsAt = (a, s) => (1 + vegS.get() * 0.35 - s * 0.55) * Math.tan(34 * Math.PI / 180) / Math.tan(a * Math.PI / 180);
@@ -590,18 +590,18 @@
           });
           rH.set(hMax, 0); rNet.set((net >= 0 ? "+" : "−") + PL.fmt(Math.abs(net), 1)); rEro.set(er, 1);
           rState.set(net > 0.5 ? "持續長高" : net < -0.5 ? "侵蝕削低" : "動態平衡");
-          vZen.set(net > 0.5 ? "板塊擠壓 > 侵蝕：山還在長高——而侵蝕速率已是全球前列" : net < -0.5 ? "造山減弱：侵蝕把高原一寸寸削低" : "抬升 ≈ 侵蝕：山高停在平衡點——地形年輕又多變的原因", net > 0.5 ? "ok" : net < -0.5 ? "warn" : "info");
+          vZen.set(net > 0.5 ? "板塊擠壓 > 侵蝕：山還在長高，而侵蝕速率已經是全球數一數二" : net < -0.5 ? "造山減弱：侵蝕把高原一寸寸削低" : "抬升 ≈ 侵蝕：山高停在平衡點，所以地形年輕又多變", net > 0.5 ? "ok" : net < -0.5 ? "warn" : "info");
         }
       });
       const upS = PL.ui.slider(ui.L.controls, { label: "板塊抬升速率", min: 0.5, max: 10, step: 0.5, value: 5, unit: "mm/年", digits: 1 });
       const erS = PL.ui.slider(ui.L.controls, { label: "侵蝕速率", min: 0.5, max: 10, step: 0.5, value: 4, unit: "mm/年", digits: 1 });
       const rivChk = PL.ui.checkbox(ui.L.controls, { label: "顯示短急河川", checked: true });
-      PL.ui.note(ui.L.controls, "台灣的地形是造山與侵蝕的賽跑：板塊以約 5 mm/年把地殼頂起，侵蝕又以相近速率削它——山高停在兩者的平衡點上，河川短急、平原狹小都是擠壓的後果。");
+      PL.ui.note(ui.L.controls, "台灣的地形是造山與侵蝕的賽跑：板塊以約 5 mm/年把地殼頂起，侵蝕又以差不多的速率把它削低，山高就停在兩者的平衡點上；河川短而急、平原狹小，都是擠壓造成的。");
       PL.ui.procedure(ui.L.controls, { title: "解出山的高度",
-        steps: ["抬升 8、侵蝕 2：淨變化 +6，平衡山高逼近玉山——快速造山期。", "兩支都拉到 5：淨變化趨零，山高凍結在平衡值——山不是靜止，而是動態平衡。",
-          "抬升 1、侵蝕 6：造山熄火，剖面被削低——數百萬年後台灣會變矮。"],
+        steps: ["抬升 8、侵蝕 2：淨變化 +6，平衡山高接近玉山，這是快速造山期。", "兩支都拉到 5：淨變化趨零，山高停在平衡值。山不是不動，是處在動態平衡。",
+          "抬升 1、侵蝕 6：造山熄火，剖面被削低，幾百萬年後台灣會變矮。"],
         rule: "山的高度由「抬升 − 侵蝕」決定，不是抬升越高就越高：台灣侵蝕速率全球前列，卻仍長出東亞最高峰，正因為抬升贏得更多。" });
-      const chart = ui.chart("平衡山高 vs 抬升速率", "抬升越快、山越高，但報酬遞減（分母是抬升+侵蝕）：紅色虛線是玉山 3952 m——今日台灣就在這條曲線的高位段。");
+      const chart = ui.chart("平衡山高 vs 抬升速率", "抬升越快、山越高，但報酬遞減（分母是抬升+侵蝕）：紅色虛線是玉山 3952 m，現在的台灣在這條曲線的高段。");
       const drawChart = () => CK.plot(chart, {
         x0: 0.5, x1: 10, y0: 0, y1: 4600, xlabel: "抬升速率（mm/年）", ylabel: "平衡山高(m)",
         series: [

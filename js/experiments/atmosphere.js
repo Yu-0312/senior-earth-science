@@ -63,7 +63,7 @@
       const altS = PL.ui.slider(ui.L.controls, { label: "觀測高度", min: 0, max: 100, step: 0.5, value: 8, unit: "km", digits: 1 });
       const curveChk = PL.ui.checkbox(ui.L.controls, { label: "顯示溫度曲線", checked: true });
       const featChk = PL.ui.checkbox(ui.L.controls, { label: "標示各層特色", checked: true });
-      PL.ui.note(ui.L.controls, "溫度曲線先降、再升、再降、再升——每個轉折就是一條層界：對流層頂、平流層頂、中間層頂。天氣只發生在最底下那層。");
+      PL.ui.note(ui.L.controls, "溫度曲線先降、再升、再降、再升，每個轉折就是一條層界：對流層頂、平流層頂、中間層頂。天氣只發生在最底下那層。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀出分層的依據",
         steps: [
@@ -71,7 +71,7 @@
           "0–12 km 遞減（對流層）；12–50 km 因臭氧吸紫外線而遞增。",
           "對照氣壓讀數：高度越高氣壓越低，與溫度趨勢無關。"
         ],
-        rule: "「愈高愈冷」只適用對流層與中間層；平流層反而愈高愈熱——分層看的是溫度趨勢的轉折，不是單純冷暖。"
+        rule: "「愈高愈冷」只適用在對流層和中間層，平流層反而愈高愈熱。分層看的是溫度變化方向的轉折，不是冷或熱。"
       });
       PL.ui.presets(ui.L.controls, { label: "跳到", options: [
         { label: "對流層頂", apply: () => { altS.set(11); ui.redraw(); } },
@@ -143,7 +143,7 @@
         title: "驗證半數規則",
         steps: [
           "把高度拉到 5.5 km：氣壓剩海平面的一半。",
-          "再拉到 11 km：剩四分之一——每 5.5 km 折半一次。",
+          "再拉到 11 km：剩四分之一，每 5.5 km 減半一次。",
           "切換海平面氣壓：天氣只讓曲線上下平移一點，形狀不變。"
         ],
         rule: "氣壓隨高度是「指數」遞減，不是線性：5.5 km 剩一半、11 km 剩一半的一半（25%），永遠壓不到 0。"
@@ -154,7 +154,7 @@
         { label: "客機巡航", apply: () => { altS.set(11); ui.redraw(); } }] });
       const rP = PL.ui.readout(ui.L.readouts, { label: "氣壓", unit: "hPa" }), rFrac = PL.ui.readout(ui.L.readouts, { label: "相對海平面", unit: "%" });
       const rBoil = PL.ui.readout(ui.L.readouts, { label: "沸點約", unit: "°C" }), rAlt = PL.ui.readout(ui.L.readouts, { label: "高度", unit: "km" });
-      const chart = ui.chart("氣壓–高度曲線", "指數遞減：每爬 5.5 km 約剩一半——曲線一直下降卻永遠壓不到 0。");
+      const chart = ui.chart("氣壓–高度曲線", "指數遞減：每升高 5.5 km 約剩一半，曲線一直下降，但不會降到 0。");
       const drawChart = () => {
         const p0 = (BASES.find(b => b.key === baseSel.get()) || BASES[0]).p0, h = altS.get();
         CK.plot(chart, {
@@ -203,7 +203,7 @@
               const fy = cy - ch / 2 + 12 + (i * 13.7) % (ch - 20);
               D.disc(ctx, fx, fy, 2.4, { fill: "#4fa8d8" });
             }
-            D.text(ctx, "結露了！", cx, cy - ch / 2 - 10, { color: "#2e6da8", size: 11.5, align: "center", weight: "700" });
+            D.text(ctx, "結露了", cx, cy - ch / 2 - 10, { color: "#2e6da8", size: 11.5, align: "center", weight: "700" });
           } else if (near) {
             D.text(ctx, "快到露點……", cx, cy - ch / 2 - 10, { color: "#b98a2c", size: 11, align: "center", weight: "700" });
           }
@@ -217,13 +217,13 @@
       const tS = PL.ui.slider(ui.L.controls, { label: "氣溫", min: 0, max: 40, step: 0.5, value: 30, unit: "°C", digits: 1 });
       const dS = PL.ui.slider(ui.L.controls, { label: "露點", min: 0, max: 40, step: 0.5, value: 24, unit: "°C", digits: 1 });
       const coolS = PL.ui.slider(ui.L.controls, { label: "夜間降溫幅度", min: 0, max: 15, step: 0.5, value: 0, unit: "°C", digits: 1 });
-      PL.ui.note(ui.L.controls, "露點只看空氣裡有多少水汽：把氣溫降到露點，濕度 100%，多餘水汽只能凝結——清晨露珠、冷杯壁的水都是這樣來的。");
+      PL.ui.note(ui.L.controls, "露點只看空氣裡有多少水汽：把氣溫降到露點，濕度 100%，多出來的水汽只能凝結，清晨的露珠、冰杯外面的水都是這樣來的。");
       PL.ui.procedure(ui.L.controls, {
         title: "把空氣降到露點",
         steps: [
           "固定氣溫與露點，拉「夜間降溫幅度」：相對濕度一路往上爬。",
           "降到露點那一刻：濕度 100%，杯壁冒出水珠。",
-          "拉高露點（水汽更多）：露點與氣溫的差變小——這就是悶。"
+          "拉高露點（水汽更多）：露點和氣溫的差變小，感覺就會很悶。"
         ],
         rule: "潮濕看「氣溫−露點」的差：差 2 °C 悶濕、差 15 °C 乾燥。相對濕度會隨溫度變，露點不會。"
       });
@@ -305,7 +305,7 @@
           rT.set(tp, 1); rLcl.set(Math.round(lcl * 1000), 0);
           rState.set(z > lcl ? "成雲：雲底以上再升 " + (z - lcl).toFixed(1) + " km" : "未成雲：還差 " + (lcl - z).toFixed(2) + " km");
           rRate.set(z > lcl ? "濕絕熱 ≈ 6 °C/km" : "乾絕熱 ≈ 10 °C/km");
-          vCloud.set(z > lcl ? "凝結釋放潛熱——雲越長越高" : "尚未飽和：乾空氣每公里降 10 °C", z > lcl ? "ok" : "info");
+          vCloud.set(z > lcl ? "凝結放出潛熱，雲越長越高" : "尚未飽和：乾空氣每公里降 10 °C", z > lcl ? "ok" : "info");
         }
       });
       const tS = PL.ui.slider(ui.L.controls, { label: "地表氣溫", min: 12, max: 34, step: 0.5, value: 30, unit: "°C", digits: 1 });
@@ -317,9 +317,9 @@
         steps: [
           "拉「抬升高度」慢慢爬：先走陡的乾絕熱 10 °C/km。",
           "越過雲底虛線：雲出現，曲線轉彎改走 6 °C/km。",
-          "把露點拉高：雲底變低——潮濕天氣的雲又低又厚。"
+          "把露點拉高：雲底變低，潮濕天氣的雲又低又厚。"
         ],
-        rule: "乾、濕絕熱的差別就是潛熱：每凝結 1 g 水汽放約 2,260 J——雷雨和颱風的能量都是這裡來的。"
+        rule: "乾、濕絕熱的差別就是潛熱：每凝結 1 g 水汽放出約 2,260 J，雷雨和颱風的能量都是從這裡來的。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "午後雷雨", apply: () => { tS.set(32); dS.set(26); zS.set(5.5); ui.redraw(); } },
@@ -328,7 +328,7 @@
       const rT = PL.ui.readout(ui.L.readouts, { label: "氣塊溫度", unit: "°C" }), rLcl = PL.ui.readout(ui.L.readouts, { label: "雲底高度", unit: "m" });
       const rState = PL.ui.readout(ui.L.readouts, { label: "雲況" }), rRate = PL.ui.readout(ui.L.readouts, { label: "降溫率" });
       const vCloud = PL.ui.verdict(ui.L.controls, { label: "—" });
-      const chart = ui.chart("氣塊溫度 vs 環境", "黃線（氣塊）過雲底前斜率 10、之後轉 6；灰虛線是環境遞減率 6.5——轉彎就是潛熱接手的證據。");
+      const chart = ui.chart("氣塊溫度 vs 環境", "黃線（氣塊）過雲底前斜率 10、之後轉 6；灰虛線是環境遞減率 6.5。斜率轉彎，就表示潛熱開始釋放了。");
       const drawChart = () => {
         const T0 = tS.get(), Td0 = Math.min(dS.get(), T0), z = zS.get();
         const lcl = 0.125 * (T0 - Td0);
@@ -352,12 +352,12 @@
     build(root) {
       const CLOUDS = [
         { key: "cirrus", name: "卷雲", band: "高雲族", alt: "7–12 km", comp: "冰晶", type: "cirrus", h: 9.5, w: 150, hh: 26, sign: "白色纖維狀；增厚變卷層雲＝鋒面快要到了" },
-        { key: "cirrostratus", name: "卷層雲", band: "高雲族", alt: "6–12 km", comp: "冰晶", type: "cirrus", h: 8, w: 230, hh: 14, sign: "薄幕蓋天、日月出現光暈——鋒面 12–24 小時內到的預告" },
+        { key: "cirrostratus", name: "卷層雲", band: "高雲族", alt: "6–12 km", comp: "冰晶", type: "cirrus", h: 8, w: 230, hh: 14, sign: "薄幕蓋天、日月出現光暈，表示鋒面 12–24 小時內會到" },
         { key: "altocumulus", name: "高積雲", band: "中雲族", alt: "2–6 km", comp: "水滴", type: "cumulus", h: 4, w: 110, hh: 30, sign: "成群棉球排排站；傍晚還在增厚，隔天可能變天" },
-        { key: "altostratus", name: "高層雲", band: "中雲族", alt: "2–6 km", comp: "水滴＋冰晶", type: "stratus", h: 3.5, w: 240, hh: 26, sign: "灰藍幕簾滿天、太陽像隔毛玻璃——雨要來了" },
+        { key: "altostratus", name: "高層雲", band: "中雲族", alt: "2–6 km", comp: "水滴＋冰晶", type: "stratus", h: 3.5, w: 240, hh: 26, sign: "灰藍幕簾滿天、太陽像隔著毛玻璃，快下雨了" },
         { key: "stratus", name: "層雲", band: "低雲族", alt: "0–2 km", comp: "水滴", type: "stratus", h: 1.1, w: 260, hh: 20, sign: "灰白均勻一片，頂多毛毛雨；貼地就是霧" },
         { key: "cumulus", name: "積雲", band: "低雲族", alt: "雲底約 0.5–2 km", comp: "水滴", type: "cumulus", h: 1.6, w: 100, hh: 52, sign: "平底大棉花；中午一直長厚長高就要警戒對流" },
-        { key: "cumulonimbus", name: "積雨雲", band: "低雲族（垂直發展）", alt: "雲底約 1 km、雲頂可達 12 km", comp: "下層水滴、上層冰晶", type: "cumulonimbus", h: 4.8, w: 130, hh: 190, sign: "高聳鐵砧——雷陣雨、瞬間大雨、冰雹、閃電" }
+        { key: "cumulonimbus", name: "積雨雲", band: "低雲族（垂直發展）", alt: "雲底約 1 km、雲頂可達 12 km", comp: "下層水滴、上層冰晶", type: "cumulonimbus", h: 4.8, w: 130, hh: 190, sign: "高聳的鐵砧狀：雷陣雨、瞬間大雨、冰雹、閃電" }
       ];
       const ui = CK.scaffold(root, {
         aspect: 0.58,
@@ -409,9 +409,9 @@
         steps: [
           "切到卷層雲：看見光暈＝鋒面在路上，帶傘出門。",
           "切到積雨雲：雲底在低層、雲頂直上對流層頂。",
-          "拉高雲量：雲多白天不熱、夜裡不冷——日溫差變小。"
+          "拉高雲量：雲多白天不熱、夜裡不冷，日溫差變小。"
         ],
-        rule: "積雨雲不能只按雲底高度歸成低雲：它垂直發展貫穿三族——看雲要連「厚度」一起看。"
+        rule: "積雨雲不能只按雲底高度歸成低雲：它垂直發展、跨過三族，看雲要連厚度一起看。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "鋒面前兆", apply: () => { cloudSel.set("cirrostratus"); ui.redraw(); } },
@@ -466,7 +466,7 @@
       const gS = PL.ui.slider(ui.L.controls, { label: "氣壓梯度（等壓線密度）", min: 0, max: 1, step: 0.05, value: 0.6, digits: 2 });
       const envSel = PL.ui.select(ui.L.controls, { label: "高度環境", value: "aloft", options: [
         { value: "aloft", label: "高空（無摩擦）" }, { value: "surface", label: "近地面（有摩擦）" }] });
-      PL.ui.note(ui.L.controls, "氣壓梯度力把空氣從高壓推向低壓，科氏力讓北半球的運動一路右偏——偏到與梯度力抗衡為止，這就是風斜穿或平行等壓線的原因。");
+      PL.ui.note(ui.L.controls, "氣壓梯度力把空氣從高壓推向低壓，科氏力讓北半球的運動一路往右偏，偏到和梯度力抵銷為止，所以風會斜穿或平行等壓線。");
       PL.ui.procedure(ui.L.controls, {
         title: "三力拉鋸出風向",
         steps: [
@@ -482,7 +482,7 @@
         { label: "冬季地面風", apply: () => { latS.set(40); envSel.set("surface"); ui.redraw(); } }] });
       const rF = PL.ui.readout(ui.L.readouts, { label: "科氏參數 f", unit: "×10⁻⁴ s⁻¹" }), rDef = PL.ui.readout(ui.L.readouts, { label: "風與等壓線夾角", unit: "°" });
       const rV = PL.ui.readout(ui.L.readouts, { label: "風速", unit: "m/s" }), rEnv = PL.ui.readout(ui.L.readouts, { label: "環境" });
-      const chart = ui.chart("科氏參數隨緯度", "f = 2Ω sin φ：赤道為 0、極地最大——颱風不在赤道上生成，就是這個原因。");
+      const chart = ui.chart("科氏參數隨緯度", "f = 2Ω sin φ：赤道為 0、極地最大，所以颱風不會在赤道上生成。");
       const drawChart = () => {
         CK.plot(chart, {
           x0: 0, x1: 90, y0: 0, y1: 1.6, xlabel: "緯度 (°)", ylabel: "f (×10⁻⁴ s⁻¹)",
@@ -550,7 +550,7 @@
           D.text(ctx, "台灣冬春季的鋒面常與東北季風共構，北部陰雨綿綿。", W * 0.82, H * 0.70, { color: PL.col("text-faint"), size: 10, align: "center" });
           rName.set(f.name); rGrad.set(f.grad); rRain.set(f.rain);
           rT.set(f.tB + " → " + f.tA + " °C"); rW.set(f.shift);
-          vF.set(key === "stat" ? "滯留鋒：雨帶不走——梅雨的主角" : key === "cold" ? "冷鋒：來得快、去得快、雨得急" : "暖鋒：慢慢推、雨先到、過境回暖", key === "stat" ? "warn" : "info");
+          vF.set(key === "stat" ? "滯留鋒：雨帶停著不走，梅雨就是這樣" : key === "cold" ? "冷鋒：來得快、去得快、雨得急" : "暖鋒：慢慢推、雨先到、過境回暖", key === "stat" ? "warn" : "info");
         }
       });
       const fSel = PL.ui.select(ui.L.controls, { label: "鋒面類型", value: "cold", options: [
@@ -563,9 +563,9 @@
         steps: [
           "選冷鋒、拉推進：雨帶掃過測站，溫度與風向瞬間改變。",
           "選暖鋒：先看到高雲、再層雲連綿，測站溫度緩慢上升。",
-          "選滯留鋒：鋒面卡住，雨帶跟著擺盪——這就是梅雨。"
+          "選滯留鋒：鋒面卡住，雨帶跟著來回擺動，這就是梅雨。"
         ],
-        rule: "冷鋒過境「雨後」才轉晴降溫，暖鋒「雨先下、暖後到」——降水與降溫的先後順序是判別鋒型的關鍵。"
+        rule: "冷鋒過境「雨後」才轉晴降溫，暖鋒則是雨先下、暖後到。看降水和溫度變化的先後順序，就能分辨鋒面種類。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "冬季冷鋒", apply: () => { fSel.set("cold"); progS.set(0.5); ui.redraw(); } },
@@ -575,7 +575,7 @@
       const rRain = PL.ui.readout(ui.L.readouts, { label: "降水特性" }), rT = PL.ui.readout(ui.L.readouts, { label: "過境溫度" });
       const rW = PL.ui.readout(ui.L.readouts, { label: "風向變化" });
       const vF = PL.ui.verdict(ui.L.controls, { label: "—" });
-      const chart = ui.chart("測站氣溫隨過境時間", "冷鋒斷崖式降溫、暖鋒緩慢爬升、滯留鋒持平但雨下不停——鋒面過境在天氣紀錄上就長這樣。");
+      const chart = ui.chart("測站氣溫隨過境時間", "冷鋒一下子降溫、暖鋒慢慢升溫、滯留鋒溫度持平但雨下不停，這是鋒面過境在天氣紀錄上的樣子。");
       const drawChart = () => {
         const f = FRONTS[fSel.get()], prog = progS.get();
         CK.plot(chart, {
@@ -646,7 +646,7 @@
         title: "讀颱風的結構",
         steps: [
           "拉強度滑桿：越強、眼越小越清晰，中心氣壓越低。",
-          "把海溫拉到 26.5 °C 以下：螺旋雲系散掉——暖心低壓斷糧。",
+          "把海溫拉到 26.5 °C 以下：螺旋雲系散掉，暖心低壓沒有能量來源了。",
           "勾「登陸台灣」：地形摩擦加上水汽中斷，強度一路減弱。"
         ],
         rule: "颱風的能量來自暖海水蒸發的潛熱，不是冷空氣；所以它登陸或走到冷水上一定減弱，不會「被山擋爆」。"

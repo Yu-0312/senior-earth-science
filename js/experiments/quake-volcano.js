@@ -80,12 +80,12 @@
       }
       waveCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart);
-      PL.ui.note(ui.L.controls, "P 波上下擠壓前進、最快最先到;S 波左右搖晃、較慢；表面波沿地表跑、振幅最大破壞最強。三種波的速度差，正是定位震央的鑰匙。");
+      PL.ui.note(ui.L.controls, "P 波以擠壓的方式前進，最快、最先到；S 波左右搖晃，比較慢；表面波沿地表跑，振幅最大、破壞最強。三種波的速度差，就是用來定位震央的依據。");
       PL.ui.procedure(ui.L.controls, {
         title: "看懂三種波",
         steps: ["拉「地震經過時間」：藍環(P)永遠跑在紅環(S)前面。", "把經過時間拉到 10 s 以上：黃色表面波掃過測站。",
           "勾選岩漿庫：射線穿過液體時,S 波消失、P 波照傳。", "改變震源深度：到達時間讀數跟著變。"],
-        rule: "S 波無法通過液體——「外核為液態」正是靠這條鐵律推出來的；順序別背反:P 先到、S 後到、表面波最後且最強。"
+        rule: "S 波無法通過液體，外核是液態就是這樣推出來的。順序不要背反：P 先到、S 後到，表面波最後到、也最強。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "淺層強震", apply: () => { timeS.set(6); depS.set(8); liqChk.set(false); ui.redraw(); drawChart(); } },
@@ -160,7 +160,7 @@
         title: "當一回定位員",
         steps: ["選一個地震情境：三站時差自動填入正確值，三圈交會於一點。", "把「台中 S–P 時差」加 2 秒：距離圈變大，交會點跑掉。",
           "把時差全改成 3 秒亂猜：三圈完全無法共點。", "結論：時差讀得越準，震央鎖得越緊。"],
-        rule: "兩站兩圈會交在兩個點、仍然有兩解；考題常考「為什麼至少需要三個測站」——第三圈消除雙解。"
+        rule: "兩站兩圈會交在兩個點、仍然有兩解；考題常問「為什麼至少要三個測站」：第三個圈可以排除其中一個解。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "自動對時（正確）", apply: () => applyScen(scenSel.get()) },
@@ -200,12 +200,12 @@
           D.text(ctx, "你的測站", stx, cy - 16, { color: PL.col("text-dim"), size: 10, align: "center" });
           CK.badge(ctx, stx, cy + 22, "震度 " + iLab(ic), CK.tempColor(ic / 7));
           if (soft) D.text(ctx, "軟弱沖積層：震度放大（場址效應）", stx, cy + 40, { color: PL.col("warn"), size: 9.5, align: "center" });
-          CK.panel(ctx, W * 0.62, H * 0.14, W * 0.32, H * 0.52, "規模 → 釋放能量（對數！）");
+          CK.panel(ctx, W * 0.62, H * 0.14, W * 0.32, H * 0.52, "規模 → 釋放能量（對數尺度）");
           [["M4(基準)", "1×"], ["M5", "32×"], ["M6", "約 1000×"], ["M7", "約 3.2 萬×"], ["M8", "約 105 萬×"]].forEach((r, i) => {
             D.text(ctx, r[0], W * 0.65, H * 0.22 + i * 26, { color: PL.col("text-dim"), size: 11 });
             D.text(ctx, r[1], W * 0.91, H * 0.22 + i * 26, { color: i ? PL.col("accent") : PL.col("text"), size: 11.5, align: "right" });
           });
-          D.text(ctx, "規模差 1、能量差 32 倍——不是 2 倍。", W * 0.78, H * 0.62, { color: PL.col("text-faint"), size: 10, align: "center" });
+          D.text(ctx, "規模差 1，能量差 32 倍，不是 2 倍。", W * 0.78, H * 0.62, { color: PL.col("text-faint"), size: 10, align: "center" });
           rI.set("震度 " + iLab(ic)); rE.set(Math.pow(32, M - 4), 0); rR4.set(Math.round(Math.pow(10, (1.15 * M + 2.0 + adj - 4) / 3)), 0);
           vd.set(ic >= 6 ? "劇烈搖晃：注意落物與建築損壞" : ic >= 4 ? "明顯搖晃：多數人驚醒恐慌" : "輕微：多數人無感或微搖", ic >= 6 ? "bad" : ic >= 4 ? "warn" : "ok");
         }
@@ -226,12 +226,12 @@
       magCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart);
       root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "規模衡量地震釋放的能量總量，一次地震只有一個值，且是對數尺度；震度描述各地搖晃程度，隨距離與地質而變——台灣震度分 10 級（5、6 各分弱強）。");
+      PL.ui.note(ui.L.controls, "規模衡量地震釋放的能量總量，一次地震只有一個值，且是對數尺度；震度描述各地搖晃程度，隨距離與地質而變；台灣震度分 10 級（5、6 各分弱強）。");
       PL.ui.procedure(ui.L.controls, {
         title: "規模 vs 震度",
         steps: ["固定規模，把距離從 10 km 拉到 300 km：震度讀數一路下降。", "規模從 6.0 加到 7.0：能量讀數變 32 倍，震度只升 1 級左右。",
           "切到軟弱沖積層：同一距離震度被放大，這就是場址效應。"],
-        rule: "新聞常說錯：「規模 5 的地震在我家是 3 級」——規模屬於震源、震度屬於地點，兩者不能混用。"
+        rule: "常見的錯誤說法：「規模 5 的地震在我家是 3 級」。規模屬於震源，震度屬於地點，兩者不能混用。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "921 集集(M7.3)", apply: () => { mS.set(7.3); dS.set(30); siteSel.set("soft"); ui.redraw(); drawChart(); } },
@@ -311,7 +311,7 @@
       PL.ui.note(ui.L.controls, "地震儀靠慣性擺錘記錄地面振動：地面動、擺錘因慣性幾乎不動，兩者的相對運動就是波形。波形上可直接讀出 P 到時、S 到時與振幅。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀一張地震圖",
-        steps: ["在波形圖找到藍色 P 線與紅色 S 線：中間就是 S–P 時差。", "拉大「S–P 時差」：兩線分開，換算震距變大——站得越遠時差越大。",
+        steps: ["在波形圖找到藍色 P 線與紅色 S 線：中間就是 S–P 時差。", "拉大「S–P 時差」：兩線分開，換算震距變大，測站越遠，時差越大。",
           "拉大振幅倍率並切到軟弱沖積層：波形變胖變高。", "用 d ≈ 8Δt 自己算一次，對照讀數。"],
         rule: "同一地震，離得越遠 S–P 時差越大、振幅越小；「時差大」與「振幅大」不會同時出現。"
       });
@@ -397,7 +397,7 @@
         title: "應力 → 錯動",
         steps: ["預設是逆斷層：拉「應力累積」，看上盤如何上衝、地層如何錯開。", "切到正斷層：張力箭頭向外，上盤反而下滑。",
           "切到平移斷層：畫面變成平面圖，馬路被水平錯斷。", "傾角滑桿改變斷層面斜度：越緩的上衝時水平位移越大。"],
-        rule: "斷層面不是「裂開的洞」，而是兩盤相對滑動的面；上盤永遠指斷層面上方那側，與斷層面傾斜方向有關。"
+        rule: "斷層面不是裂開的洞，是兩盤相對滑動的面；上盤永遠指斷層面上方那側，與斷層面傾斜方向有關。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "921 車籠埔", apply: () => { typeSel.set("reverse"); stS.set(100); dipS.set(30); ui.redraw(); } },
@@ -471,7 +471,7 @@
         title: "把火山養大",
         steps: ["SiO₂ 維持 50%：熔岩流長長一條，這是盾狀火山的寧靜世界。", "把 SiO₂ 拉到 60%：山變陡、熔岩變短，開始間歇噴灰。",
           "再拉高氣體到 5%：爆發指數衝高，灰柱沖天。", "對照右表：台灣大屯火山群落在哪一區？"],
-        rule: "不是「火山越大越猛」——渣錐最矮小卻可能很爆；脾氣由 SiO₂(黏度)與揮發分（氣體）決定，與體積無關。"
+        rule: "不是火山越大就越猛，渣錐很矮小卻可能很容易爆發。噴發的劇烈程度看 SiO₂（黏度）和揮發分（氣體），跟體積無關。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "夏威夷基勞亞", apply: () => { sio2S.set(50); gasS.set(0.5); ui.redraw(); drawChart(); } },
@@ -556,12 +556,12 @@
       erCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart);
       root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "黏稠岩漿堵塞火山口後壓力累積，爆發時把氣體與碎屑高速噴出：灰柱可達平流層、碎屑流（熱雲）時速數百公里。矽含量與揮發分是噴發樣式的兩大關鍵。");
+      PL.ui.note(ui.L.controls, "黏稠岩漿堵塞火山口後壓力累積，爆發時把氣體與碎屑高速噴出：灰柱可達平流層、碎屑流（熱雲）時速數百公里。矽含量和揮發分決定噴發的樣子。");
       PL.ui.procedure(ui.L.controls, {
         title: "比較三種脾氣",
         steps: ["夏威夷式：初速低、灰柱矮，災害表以熔岩流為主。", "切到斯特龍博利式：間歇噴發，灰與渣彈跳上升。",
           "切到普林尼式並拉高初速：灰柱衝過 12 km 平流層底，出現碎屑流。", "對照圖表：初速從 300 加到 600，灰柱高幾倍？"],
-        rule: "熔岩流流速慢、較易避難；真正奪命的是碎屑流與泥流——它們沿河谷長距離奔流，躲都躲不掉。"
+        rule: "熔岩流流速慢、較易避難；最致命的是碎屑流和泥流，它們沿著河谷流得又遠又快，很難躲。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "基勞亞（現今）", apply: () => { styleSel.set("hawaiian"); vS.set(120); ui.redraw(); drawChart(); } },
@@ -652,7 +652,7 @@
         title: "找出危險組合",
         steps: ["預設（PGA 240、水位 2 m、密度 0.35）：三條件全亮綠，液化發生。", "把地下水位拉到 5 m：飽和度降,CSR 下降、脫離危險。",
           "把相對密度拉到 0.7:CRR 抬高，即使強震也安全。", "對照兩棟房子：改良樁那棟幾乎不傾斜。"],
-        rule: "液化三條件缺一不可：疏砂 + 飽和 + 震動；密實砂層或深地下水位都能讓它不成立——這正是地盤改良的原理。"
+        rule: "液化三條件缺一不可：疏砂 + 飽和 + 震動；密實砂層或深地下水位都能讓它不發生，地盤改良就是用這個原理。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "0206 台南（高危）", apply: () => { pgaS.set(260); wtS.set(1.5); drS.set(0.3); ui.redraw(); drawChart(); } },

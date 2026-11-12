@@ -83,7 +83,7 @@
         { value: "p", label: "直達 P 波" }, { value: "s", label: "直達 S 波" }, { value: "pkp", label: "穿核 P 波(PKP)" }] });
       const timeS = PL.ui.slider(ui.L.controls, { label: "地震經過時間", min: 0, max: 1800, step: 20, value: 480, unit: "s", digits: 0 });
       const fanChk = PL.ui.checkbox(ui.L.controls, { label: "顯示射線束", checked: true });
-      const velCv = ui.chart("波速怎麼隨深度變化", "S 波在外核歸零（液態擋下）;P 波在核函界線驟降、進內核又回升——每個轉折都是一個不連續面。");
+      const velCv = ui.chart("波速怎麼隨深度變化", "S 波在外核歸零（被液態擋下）；P 波在地函與地核的交界驟降，進內核又回升，每個轉折都是一個不連續面。");
       function drawChart() {
         if (velCv.W < 60) return;
         const DEP = [0, 35, 400, 2891, 2891, 5150, 5150, 6371];
@@ -99,8 +99,8 @@
       PL.ui.procedure(ui.L.controls, {
         title: "讀出液態外核",
         steps: ["拉「地震經過時間」，跟蹤直達 S 波：紅點一路順暢到 100°。", "把射線束打開：對準外核的 S 波全部止步於核函界線。",
-          "改跟蹤穿核 P 波：它在液核變慢、折射，從 143° 以外重新冒出。", "對照下圖:S 波速度在外核歸零——這就是「液態」的觀測證據。"],
-        rule: "「外核液態」不是假設，是 S 波陰影帶的直接推論；但別把「地函可流動」也當成液態——地函是固體,S 波照樣通過。"
+          "改跟蹤穿核 P 波：它在液核變慢、折射，從 143° 以外重新冒出。", "對照下圖：S 波速度在外核歸零，這就是外核是液態的觀測證據。"],
+        rule: "外核是液態不是假設，是從 S 波陰影帶直接推出來的；但不要把「地函會流動」也當成液態，地函是固體，S 波照樣能通過。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "S 波受阻", apply: () => { phSel.set("s"); timeS.set(900); fanChk.set(true); ui.redraw(); drawChart(); } },
@@ -175,12 +175,12 @@
       }
       velCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "莫氏面在全世界的深度不一樣：大陸 30–70 km、海洋只有 5–10 km——地殼厚薄與密度差，正是板塊浮沉的基礎。");
+      PL.ui.note(ui.L.controls, "莫氏面在全世界的深度不一樣：大陸 30–70 km、海洋只有 5–10 km，地殼的厚薄和密度差決定板塊浮得多高。");
       PL.ui.procedure(ui.L.controls, {
         title: "看懂地殼均衡",
         steps: ["把「山地高度」歸零：莫氏面回到約 35 km 的標準深度。", "拉高到 6 km：山根同步下探，地殼總厚逼近 60 km。",
-          "讀山根深度：大約是山高的 4.5 倍——這就是 Airy 均衡。", "對照右柱：海洋地殼又薄又重(3.0)，所以海底低於陸地。"],
-        rule: "「山有多高、根有多深」：冰期冰蓋熔掉後，斯堪地那維亞至今仍在回彈——地殼像浮在地函上的木筏，載重變了吃水就跟著變。"
+          "讀山根深度：大約是山高的 4.5 倍，這就是 Airy 均衡。", "對照右柱：海洋地殼又薄又重(3.0)，所以海底低於陸地。"],
+        rule: "「山有多高、根有多深」：冰期冰蓋熔掉後，斯堪地那維亞到現在還在回彈。地殼像浮在地函上的木筏，載重變了，吃水深度就跟著變。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "喜馬拉雅", apply: () => { mtnS.set(6); seaS.set(0); ui.redraw(); drawChart(); } },
@@ -251,7 +251,7 @@
       PL.ui.note(ui.L.controls, "地函幾乎全是固態（S 波通過就是證據），但在千萬年尺度下像極黏的瀝青會流動：熱的上升、冷的下沉，板塊就騎在這條輸送帶上。");
       PL.ui.procedure(ui.L.controls, {
         title: "對流與板塊怎麼合作",
-        steps: ["拉高「對流強度」：對流胞變大、光點加速，板塊速率讀數跟著上升。", "調高「黏度」：同樣熱差，流動變慢——速率 = 推力 ÷ 阻力。",
+        steps: ["拉高「對流強度」：對流胞變大、光點加速，板塊速率讀數跟著上升。", "調高「黏度」：同樣熱差，流動變慢，速率 = 推力 ÷ 阻力。",
           "看洋脊與海溝：上升處張裂生成新殼，下沉處把舊殼拖回地函。", "對照右表：實測板塊速率都在每年數公分，和模型量級一致。"],
         rule: "板塊不是被「地函滾水」推著走的浮船：隱沒板片的下拉力才是主力，對流與板塊運動互為因果，不是單向誰推誰。"
       });
@@ -323,12 +323,12 @@
       }
       depCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "張裂生成新海洋地殼、聚合把舊地殼消滅回地函、錯動不生不滅只滑移——全球板塊表面積守恆，靠這三種邊界分配。");
+      PL.ui.note(ui.L.controls, "張裂生成新海洋地殼、聚合把舊地殼消滅回地函、錯動邊界不產生也不消滅，只是滑移。全球板塊的總面積不變，就是靠這三種邊界平衡。");
       PL.ui.procedure(ui.L.controls, {
         title: "一張圖判邊界",
         steps: ["切四種邊界：看箭頭方向與地殼剖面有什麼不同。", "拉速率與地質時間：8 cm/年跑 1,000 萬年 = 800 km 的位移。",
           "切到聚合·隱沒，速率拉過 7：火山開始猛烈噴發。", "對照下圖：為什麼深源地震只出現在隱沒帶？冷板片下插到 700 km 還是脆的。"],
-        rule: "錯動邊界地震淺而強、幾乎沒有火山；別把「地震多」直接等同「有火山」——兩者由不同的機制決定。"
+        rule: "錯動邊界地震淺而強、幾乎沒有火山；不要把地震多直接當成有火山，兩者是不同的機制。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "東非裂谷", apply: () => { typeSel.set("divergent"); rateS.set(0.6 * 10); timeS.set(5); ui.redraw(); drawChart(); } },
@@ -402,12 +402,12 @@
       }
       hypCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "海底不是一個平盤：棚、坡、隆堆、平原、洋脊、海溝各有深度與年齡的規律——這些地形就是板塊生成與隱沒的紀錄。");
+      PL.ui.note(ui.L.controls, "海底不是一個平盤：棚、坡、隆堆、平原、洋脊、海溝各有深度和年齡的規律，這些地形記錄了板塊的生成和隱沒。");
       PL.ui.procedure(ui.L.controls, {
         title: "為什麼地圖上的海看起來很平",
-        steps: ["誇大 5×：剖面幾乎是平線——真實比例下 11 km 的起伏根本看不見。", "拉到 40×：大陸棚、洋脊的細節浮出來，海溝卻切出畫面下緣。",
-          "切到活動邊緣：海溝出現，深度直逼 11 km。", "拉沉積物滑桿：靠陸側厚、近洋脊薄——離脊越遠地殼越老、沉積越久。"],
-        rule: "大陸棚水深小於 200 m、寬可達上百公里；別把「海岸線」當成「大陸邊緣的盡頭」——真正的邊界在大陸坡腳。"
+        steps: ["誇大 5×：剖面幾乎是平的。照真實比例，11 km 的起伏根本看不出來。", "拉到 40×：大陸棚、洋脊的細節浮出來，海溝卻切出畫面下緣。",
+          "切到活動邊緣：海溝出現，深度直逼 11 km。", "拉沉積物滑桿：靠陸地那側厚、靠洋脊薄，離脊越遠，地殼越老，沉積時間也越久。"],
+        rule: "大陸棚水深小於 200 m、寬可達上百公里；不要把海岸線當成大陸的邊緣，大陸真正的邊界在大陸坡腳。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "大西洋型", apply: () => { actSel.set("passive"); exagS.set(12); ui.redraw(); drawChart(); } },
@@ -493,10 +493,10 @@
       }
       ageCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "熔岩冷卻時，磁性礦物像小磁針一樣定格當時的地磁方向；地磁不定期反轉，於是洋脊兩側留下一圈圈對稱的磁條帶——海底擴張的錄音帶。");
+      PL.ui.note(ui.L.controls, "熔岩冷卻時，磁性礦物像小磁針一樣定格當時的地磁方向；地磁不定期反轉，於是洋脊兩側留下一圈圈對稱的磁條帶，像錄音帶一樣記下海底擴張的過程。");
       PL.ui.procedure(ui.L.controls, {
         title: "用量尺驗證擴張",
-        steps: ["拉「聚焦條帶年代」：黃色亮帶永遠同時出現在脊的兩側。", "把速率調到 10：所有條帶變寬——同樣年代擠出更長的距離。",
+        steps: ["拉「聚焦條帶年代」：黃色亮帶永遠同時出現在脊的兩側。", "把速率調到 10：所有條帶變寬，同樣的時間擴張出更長的距離。",
           "讀「距脊 100 km 的年齡」：速率越快，同距離越年輕。", "對照下圖兩條直線：斜率就是擴張快慢。"],
         rule: "v = 條帶距離 ÷ 反轉年齡；對稱性是海底擴張的指紋，不是畫圖時「畫漂亮」的巧合。"
       });
@@ -574,12 +574,12 @@
       }
       ageCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "熱點是板塊內部的固定噴口：板塊像輸送帶把火山一個個帶走，新島在熱點上誕生——島鏈年齡沿鏈遞增，方向就是板塊運動方向。");
+      PL.ui.note(ui.L.controls, "熱點是板塊內部的固定噴口：板塊像輸送帶把火山一個個帶走，新島在熱點上形成。島鏈的年齡沿著鏈越來越老，方向就是板塊運動方向。");
       PL.ui.procedure(ui.L.controls, {
         title: "用島鏈解出速度向量",
         steps: ["拉「島鏈總時間」：島變多、鏈變長，老島在鏈的末端。", "拉「板塊速率」：島距變寬，右圖斜率變陡。",
-          "拉「移動方向」：整條鏈跟著轉——鏈的方向與運動方向平行、相反於運動前方。", "勾轉折：40 Ma 前板塊向北，島鏈折出天皇海嶺的 L 形。"],
-        rule: "島被帶走的方向 = 板塊運動方向；熱點不受邊界限制，所以島鏈可以橫切海底地形與磁條帶——別把方向畫反。"
+          "拉「移動方向」：整條鏈跟著轉。鏈的方向跟運動方向平行，越老的島在越前面。", "勾轉折：40 Ma 前板塊向北，島鏈折出天皇海嶺的 L 形。"],
+        rule: "島被帶走的方向 = 板塊運動方向；熱點不受邊界限制，所以島鏈可以橫切海底地形和磁條帶，方向不要畫反。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "夏威夷鏈", apply: () => { rateS.set(10); dirS.set(285); spanS.set(40); bendChk.set(false); ui.redraw(); drawChart(); } },
@@ -647,7 +647,7 @@
       const rateS = PL.ui.slider(ui.L.controls, { label: "聚合速率", min: 4, max: 12, step: 0.5, value: 8, unit: "cm/年", digits: 1 });
       const tmS = PL.ui.slider(ui.L.controls, { label: "回溯地質時間", min: 0, max: 5, step: 0.1, value: 1, unit: "百萬年", digits: 1 });
       const arcChk = PL.ui.checkbox(ui.L.controls, { label: "顯示呂宋島弧", checked: true });
-      const accCv = ui.chart("聚合量怎麼隨時間累積", "每年 8 公分 = 每百萬年 80 公里；台灣約 600 萬年的聚合造山，縮短量數百公里——一部分變高山、一部分隱沒消化。");
+      const accCv = ui.chart("聚合量怎麼隨時間累積", "每年 8 公分 = 每百萬年 80 公里；台灣約 600 萬年的聚合造山，縮短了好幾百公里，一部分變成高山，一部分隱沒下去。");
       function drawChart() {
         if (accCv.W < 60) return;
         const rate = rateS.get(), tmr = tmS.get();
@@ -658,12 +658,12 @@
       }
       accCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "台灣站在兩個板塊的撞擊點上：呂宋島弧隨菲律賓海板塊以每年約 8 公分向西北撞進大陸邊緣，沉積層被擠壓成中央山脈——造山現在進行式。");
+      PL.ui.note(ui.L.controls, "台灣站在兩個板塊的撞擊點上：呂宋島弧隨菲律賓海板塊以每年約 8 公分向西北撞進大陸邊緣，沉積層被擠成中央山脈，造山運動到現在還在進行。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀出台灣的地質位址",
         steps: ["看紅色箭頭：菲律賓海板塊往西北推，速率讀數 8 cm/年。", "拉「回溯地質時間」：半透明老位置在東南方，台灣整體被推向西北。",
           "拉高聚合速率：每百萬年縮短量與累積曲線斜率同步變大。", "找到紅線（花東縱谷）：它以東屬菲律賓海板塊、以西屬歐亞板塊。"],
-        rule: "花東縱谷是兩板塊的縫合線，不是普通河谷；台灣的地震因此集中在東部縱谷一帶與西南活動斷層區——位址決定災害分布。"
+        rule: "花東縱谷是兩板塊的縫合線，不是普通河谷；台灣的地震因此集中在東部縱谷一帶與西南部的活動斷層區，所在位置決定了災害分布。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "現在", apply: () => { rateS.set(8); tmS.set(0); ui.redraw(); drawChart(); } },

@@ -43,7 +43,7 @@
             D.text(ctx, k, W * 0.63, H * 0.26 + i * 28, { color: PL.col("text-dim"), size: 11 });
             D.text(ctx, v, W * 0.90, H * 0.26 + i * 28, { color: i >= 2 ? PL.col("accent") : PL.col("text"), size: 11.5, align: "right" });
           });
-          D.text(ctx, "地表最高與最深相對半徑都小於 0.2%——地球比撞球還圓。", W * 0.77, H * 0.70, { color: PL.col("text-dim"), size: 10, align: "center" });
+          D.text(ctx, "地表最高與最深相對半徑都小於 0.2%，地球比撞球還圓。", W * 0.77, H * 0.70, { color: PL.col("text-dim"), size: 10, align: "center" });
           rA.set(6378, 0); rB.set(6357, 0); rDiff.set(diff, 0); rEx.set(exag, 0);
         }
       });
@@ -54,7 +54,7 @@
         steps: [
           "在 1× 下觀察：地球看起來是完美的圓。",
           "把誇大拉到 50×、100×：赤道才明顯凸出。",
-          "比較右側半徑差 21 km——只占地表半徑的 0.33%。"
+          "比較右側半徑差 21 km，只占地球半徑的 0.33%。"
         ],
         rule: "自轉的離心力讓赤道略凸，但量級極小；任何「地球儀能看出的凹凸」都是誇大，不是真實比例。"
       });
@@ -132,7 +132,7 @@
               acc += segW;
             });
             D.text(ctx, "各層厚度以半徑 6371 km 為比例", x0 + w0 / 2, y0 - 14, { color: PL.col("text-faint"), size: 10, align: "center" });
-            D.text(ctx, "地殼只占最左邊一小段——把它放大才能看見。", x0 + w0 / 2, y0 + 84, { color: PL.col("text-dim"), size: 11, align: "center" });
+            D.text(ctx, "地殼只占最左邊一小段，要放大才看得到。", x0 + w0 / 2, y0 + 84, { color: PL.col("text-dim"), size: 11, align: "center" });
           }
           // 資料卡
           const sel = LAYERS.find(l => l.key === layerSel.get());
@@ -157,7 +157,7 @@
           "切回剖面，逐層點選資料卡：密度怎麼變？",
           "觀察外核：液態鐵鎳的流動產生地磁。"
         ],
-        rule: "「液態外核」不是推測出來的形容，而是 S 波進不去的直接觀測結果。"
+        rule: "外核是液態不是猜的，是從 S 波進不去這個觀測直接推出來的。"
       });
       const rLayer = PL.ui.readout(ui.L.readouts, { label: "聚焦分層" });
       const rDens = PL.ui.readout(ui.L.readouts, { label: "密度範圍" });
@@ -237,7 +237,7 @@
           "從水圈（海洋）蒸發 → 進入大氣圈。",
           "凝結成雨落下 → 降回岩石圈地表。",
           "地表逕流攜帶礦物養分 → 餵養生物圈。",
-          "生物再以蒸散把水送回大氣——循環閉合。"
+          "生物再用蒸散把水送回大氣，循環就接起來了。"
         ],
         rule: "考題常問「某事件影響哪些圈層」：火山（岩石圈→大氣）、颱風（大氣→水圈）、森林大火（生物圈→大氣）。"
       });
@@ -459,11 +459,11 @@
       });
       const compressS = PL.ui.slider(ui.L.controls, { label: "近世壓縮", min: 0, max: 1, step: 0.1, value: 0, digits: 1 });
       const highlightS = PL.ui.slider(ui.L.controls, { label: "聚焦事件", min: 0, max: 7, step: 1, value: 6, digits: 0 });
-      PL.ui.note(ui.L.controls, "把 46 億年壓成一天：生命在清晨出現、恐龍在 11 點滅絕、人類在最後幾秒——這就是地質時間的尺度感。");
+      PL.ui.note(ui.L.controls, "把 46 億年壓成一天：生命在清晨出現、恐龍在 11 點滅絕、人類在最後幾秒才出現，這就是地質時間有多長。");
       PL.ui.procedure(ui.L.controls, {
         title: "兩種看時間的方法",
         steps: [
-          "線性軸：公平但殘忍——寒武紀以後全擠在右端 12%。",
+          "線性軸：比例正確，但寒武紀以後全擠在最右邊的 12%。",
           "拉高壓縮：近 5 億年被放大，生物演化的事件才看得清。",
           "聚焦「智人出現」：0.03% 的地球史，卻改變了整個行星表面。"
         ],
@@ -529,16 +529,16 @@
         }
       });
       const heatS = PL.ui.slider(ui.L.controls, { label: "早期地球溫度", min: 0, max: 1, step: 0.05, value: 0.3, digits: 2 });
-      PL.ui.note(ui.L.controls, "溫度夠高，整顆行星熔成「岩漿海」，重物質才能下沉——分層是重力排序的結果，不是一開始就長這樣。");
+      PL.ui.note(ui.L.controls, "溫度夠高，整顆行星熔成「岩漿海」，重物質才能下沉。分層是重力分選出來的，不是一開始就這樣。");
       PL.ui.procedure(ui.L.controls, {
         title: "重演分化",
         steps: [
           "低溫時：各種物質均勻混在球體裡。",
           "拉高溫度：黃色鐵鎳小球開始向中心下沉。",
-          "完成後：由內到外是核、函、殼——今日地球的原型。",
+          "完成後：由內到外是地核、地函、地殼，也就是現在地球的樣子。",
           "注意右側密度排序：與分層完全對應。"
         ],
-        rule: "分化的能量來自撞擊與放射性衰變；重物質下沉還會釋放重力能，讓地球更熱——正回饋。"
+        rule: "分化的能量來自撞擊與放射性衰變；重物質下沉還會釋放重力能，讓地球更熱，這是正回饋。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "冷卻前", apply: () => heatS.set(1) },
@@ -616,7 +616,7 @@
       });
       const evSel = PL.ui.select(ui.L.controls, { label: "證據類型", value: "fit", options: EVIDENCE.map(e => ({ value: e.key, label: e.name })) });
       const gapS = PL.ui.slider(ui.L.controls, { label: "大陸分離距離", min: 0, max: 1, step: 0.05, value: 0.7, digits: 2 });
-      PL.ui.note(ui.L.controls, "魏格納 1912 年提出漂移說時有四類證據，但因為缺動力機制被冷落半世紀——直到 1960 年代海底擴張出現。");
+      PL.ui.note(ui.L.controls, "魏格納 1912 年提出漂移說時有四類證據，但因為缺動力機制被冷落了半個世紀，一直到 1960 年代發現海底擴張才被接受。");
       PL.ui.procedure(ui.L.controls, {
         title: "拼回盤古大陸",
         steps: [

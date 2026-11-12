@@ -36,9 +36,9 @@
             CK.meter(ctx, W * 0.615, y - 5, W * 0.22, 9, ion.p / 55, { color: ion.c });
             D.text(ctx, ion.p.toFixed(1) + "%", W * 0.945, y, { color: PL.col("text"), size: 10.5, align: "right" });
           });
-          D.text(ctx, "Cl⁻ : Na⁺ ≈ 1.8 : 1——不論紅海還是河口，主要離子比例都一樣（恆定比）", W * 0.74, H * 0.76, { color: PL.col("text-faint"), size: 9.5, align: "center" });
+          D.text(ctx, "Cl⁻ : Na⁺ ≈ 1.8 : 1，不論紅海還是河口，主要離子的比例都一樣（恆定比）", W * 0.74, H * 0.76, { color: PL.col("text-faint"), size: 9.5, align: "center" });
           rS.set(S, 1); rTf.set(-0.054 * S, 2); rD.set(1 + 0.00078 * S, 4); rBal.set(river - evap, 1);
-          vDrink.set(S >= 25 ? "鹽度 " + PL.fmt(S, 1) + "‰，遠超人體能負荷的濃度——不可飲用" : "淡鹽水（河口型）：仍不宜直接飲用", S >= 25 ? "bad" : "warn");
+          vDrink.set(S >= 25 ? "鹽度 " + PL.fmt(S, 1) + "‰，遠超過人體能承受的濃度，不能喝" : "淡鹽水（河口型）：仍不宜直接飲用", S >= 25 ? "bad" : "warn");
         }
       });
       const evapS = PL.ui.slider(ui.L.controls, { label: "蒸發量", min: 0, max: 8, step: 0.2, value: 2.4, unit: "mm/天", digits: 1 });
@@ -48,10 +48,10 @@
         title: "模擬紅海與河口",
         steps: [
           "蒸發與河水都設 2.4：收支平衡，鹽度停在 35‰。",
-          "蒸發拉滿、河水歸零：鹽度衝上 45‰——紅海這種副熱帶強蒸發、少注入的海域就是高鹽。",
+          "蒸發拉滿、河水歸零：鹽度衝上 45‰。紅海這種副熱帶、蒸發強、河水少的海域就是高鹽。",
           "反過來把河水拉滿：鹽度跌破 30‰，河口是明顯的淡鹽水環境。"
         ],
-        rule: "鹽度變化只改變鹽的「總量」；離子間的比例（恆定比）不跟著變——所以測出一種離子，就能按比例推算全部。"
+        rule: "鹽度變化只改變鹽的總量，離子之間的比例（恆定比）不會跟著變，所以測出一種離子，就能按比例推算全部。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "大洋平均", apply: () => { evapS.set(2.4); riverS.set(2.4); ui.redraw(); drawChart(); } },
@@ -61,7 +61,7 @@
       const rS = PL.ui.readout(ui.L.readouts, { label: "鹽度", unit: "‰" }), rTf = PL.ui.readout(ui.L.readouts, { label: "冰點", unit: "°C" });
       const rD = PL.ui.readout(ui.L.readouts, { label: "密度", unit: "g/cm³" }), rBal = PL.ui.readout(ui.L.readouts, { label: "淨水量收支", unit: "mm/天" });
       const vDrink = PL.ui.verdict(ui.L.readouts, { label: "可否飲用" });
-      const chart = ui.chart("冰點隨鹽度下降", "鹽度越高冰點越低：35‰ 的海水約 −1.9 °C 才結冰；結成的海冰幾乎不含鹽——鹽被排到下方的滷水裡，剩下的反而更鹹、更重。");
+      const chart = ui.chart("冰點隨鹽度下降", "鹽度越高冰點越低：35‰ 的海水約 −1.9 °C 才結冰；結成的海冰幾乎不含鹽，鹽被排到下方的海水裡，剩下的海水反而更鹹、更重。");
       function drawChart() {
         if (chart.W < 60) return;
         const S = 35 * 350 / (350 + (riverS.get() - evapS.get()) * 12);
@@ -128,11 +128,11 @@
       PL.ui.procedure(ui.L.controls, {
         title: "找到溫躍層",
         steps: [
-          "從副熱帶開始：表層 26 °C，往下在數百公尺內掉到個位數——那條橙色帶就是溫躍層。",
+          "從副熱帶開始：表層 26 °C，往下幾百公尺內掉到個位數，那條橙色帶就是溫躍層。",
           "把表層水溫拉高、再拉低：溫躍層的「溫差」跟著變，但位置由海域型態決定。",
-          "切到極區：表層已經很冷，溫躍層幾乎消失——這正是深水可以形成的條件。"
+          "切到極區：表層已經很冷，溫躍層幾乎消失，深層水就是在這種條件下形成的。"
         ],
-        rule: "冷不一定重：海水密度同時受溫度與鹽度控制；高緯表層「冷加上結冰排鹽變鹹」才是深水下沉的關鍵。"
+        rule: "冷不一定重：海水密度同時受溫度與鹽度控制；高緯度表層又冷、又因為結冰排鹽而變鹹，深層水才會下沉。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "熱帶", apply: () => { surfS.set(29); zoneSel.set("tropic"); ui.redraw(); drawChart(); } },
@@ -204,7 +204,7 @@
       const tradeS = PL.ui.slider(ui.L.controls, { label: "信風強度", min: 0, max: 10, step: 0.5, value: 6, digits: 1 });
       const hemiSel = PL.ui.select(ui.L.controls, { label: "示範環流", value: "north", options: [
         { value: "north", label: "北太平洋（順時針）" }, { value: "south", label: "南太平洋（逆時針）" }] });
-      PL.ui.note(ui.L.controls, "信風把表層水往西推、西風往東推，科氏力讓水偏轉堆進環流中心——北半球形成順時針副熱帶環流，西側被擠成強而窄的黑潮與灣流。");
+      PL.ui.note(ui.L.controls, "信風把表層水往西推、西風往東推，科氏力讓水偏轉、往環流中心堆，北半球就形成順時針的副熱帶環流，西側被擠成強而窄的黑潮與灣流。");
       PL.ui.procedure(ui.L.controls, {
         title: "看出西向強化",
         steps: [
@@ -270,7 +270,7 @@
       });
       const coolS = PL.ui.slider(ui.L.controls, { label: "高緯表層冷卻", min: 0, max: 10, step: 0.5, value: 7, digits: 1 });
       const freshS = PL.ui.slider(ui.L.controls, { label: "融冰淡水注入", min: 0, max: 10, step: 0.5, value: 1, digits: 1 });
-      PL.ui.note(ui.L.controls, "北大西洋表層水被冷卻、又因結冰排鹽而變鹹，變重下沉——這顆「深海馬達」推動溫鹽環流，千年繞地球一圈，把熱量與碳送進深層。");
+      PL.ui.note(ui.L.controls, "北大西洋表層水被冷卻、又因結冰排鹽而變鹹，變重下沉。這股下沉推動溫鹽環流，大約一千年繞地球一圈，把熱量和碳送進深海。");
       PL.ui.procedure(ui.L.controls, {
         title: "把輸送帶弄停",
         steps: [
@@ -288,7 +288,7 @@
       const rStr = PL.ui.readout(ui.L.readouts, { label: "環流強度", unit: "%" }), rCyc = PL.ui.readout(ui.L.readouts, { label: "一圈時間", unit: "年" });
       const rEu = PL.ui.readout(ui.L.readouts, { label: "西北歐冬季變化", unit: "°C" });
       const vAm = PL.ui.verdict(ui.L.readouts, { label: "輸送帶狀態" });
-      const chart = ui.chart("淡水注入 vs 環流強度", "橫軸是融冰淡水量：過了臨界點，表層太輕、深水停止形成，強度斷崖式掉到 0——氣候系統的「翻轉點」就長這樣。");
+      const chart = ui.chart("淡水注入 vs 環流強度", "橫軸是融冰淡水量：過了臨界點，表層太輕、深水停止形成，強度一下子掉到 0，氣候系統的臨界點就是這個樣子。");
       function drawChart() {
         if (chart.W < 60) return;
         const cool = coolS.get(), fresh = freshS.get();
@@ -345,21 +345,21 @@
           for (let i = 0; i < Math.round(fish / 12); i++) D.text(ctx, "▶", W * (0.22 + (i * 0.09) % 0.6), surf + 34 + (i % 2) * 10, { color: "#ffb74d", size: 11 });
           CK.legend(ctx, W * 0.05, H * 0.955, [{ color: "#a5d6a7", label: "營養鹽" }, { color: "#66bb6a", label: "浮游植物" }, { color: "#ffb74d", label: "魚群" }], 0);
           rUp.set(up, 1); rNut.set(nut, 1); rFish.set(Math.round(fish), 0);
-          vUp.set(!off ? "向岸風造成下沉流：表層堆聚、生產力低" : up < 1.2 ? "風停了——聖嬰年正是如此，漁獲銳減" : "湧升流全開：世界級漁場的條件", !off ? "info" : up < 1.2 ? "bad" : "ok");
+          vUp.set(!off ? "向岸風造成下沉流：表層堆聚、生產力低" : up < 1.2 ? "風停了，聖嬰年就是這樣，漁獲大減" : "湧升流全開：世界級漁場的條件", !off ? "info" : up < 1.2 ? "bad" : "ok");
         }
       });
       const windS = PL.ui.slider(ui.L.controls, { label: "風速", min: 0, max: 10, step: 0.5, value: 7, digits: 1 });
       const dirSel = PL.ui.select(ui.L.controls, { label: "風向型態", value: "off", options: [
         { value: "off", label: "沿岸風→表層離岸（祕魯、西北非）" }, { value: "on", label: "向岸風→下沉流" }] });
-      PL.ui.note(ui.L.controls, "風把表層水吹離海岸，深層水湧升補位，順手把沉在底部的營養鹽整箱搬上光照層——浮游植物開餐，整條食物鏈跟着爆量。湧升流區占洋面不到 1%，漁獲卻占大宗。");
+      PL.ui.note(ui.L.controls, "風把表層水吹離海岸，深層水湧升補位，順便把沉在底部的營養鹽帶上有光的表層，浮游植物大量生長，整條食物鏈跟著變多。湧升流區占洋面不到 1%，漁獲卻占大宗。");
       PL.ui.procedure(ui.L.controls, {
         title: "接起生產力的鏈條",
         steps: [
           "風速 7：藍色湧升箭頭把營養鹽粒送上表層，綠色浮游植物與魚群跟著增加。",
-          "把風速拉到 1：鏈條逐格熄滅——這就是聖嬰年祕魯漁荒的機制。",
+          "把風速拉到 1：食物鏈一格一格熄掉，聖嬰年祕魯漁獲大減就是這樣來的。",
           "切到向岸風：水往岸邊堆、往下沉，營養鹽留在了黑暗的深層。"
         ],
-        rule: "湧升流區的水溫比周圍低 3–5 °C：「冷水 = 漁場」不矛盾——冷的不是重點，冷背後的營養鹽補給才是。"
+        rule: "湧升流區的水溫比周圍低 3–5 °C：冷水的地方是漁場並不矛盾，重點不是冷，是冷水帶上來的營養鹽。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "祕魯正常", apply: () => { dirSel.set("off"); windS.set(7); ui.redraw(); } },
@@ -421,11 +421,11 @@
       PL.ui.procedure(ui.L.controls, {
         title: "半個月的潮汐節奏",
         steps: [
-          "從朔（0 日）開始：月球與太陽同側，兩個凸起最鼓——大潮。",
-          "拉到 7.4 日（上弦）：日月互相垂直，潮差縮到最小——小潮。",
+          "從朔（0 日）開始：月球與太陽同側，兩個凸起最鼓，這是大潮。",
+          "拉到 7.4 日（上弦）：日月互相垂直，潮差縮到最小，這是小潮。",
           "再拉到 14.8 日（望）：又回大潮；整個週期約 14.8 天，一個月兩輪。"
         ],
-        rule: "月球質量雖小，但潮汐力與 M/r³ 成正比：距離近三級壓過質量，月球潮汐力約是太陽的 2.2 倍——「太陽比較大」不等於「太陽潮比較強」。"
+        rule: "月球質量雖小，但潮汐力與 M/r³ 成正比：距離近的影響（三次方）比質量大，月球的潮汐力約是太陽的 2.2 倍。太陽比較大，不代表太陽造成的潮汐比較強。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "朔（大潮）", apply: () => { dayS.set(0); ui.redraw(); drawChart(); } },
@@ -435,7 +435,7 @@
       const rPhase = PL.ui.readout(ui.L.readouts, { label: "月相" }), rRange = PL.ui.readout(ui.L.readouts, { label: "潮差（西岸淺灘）", unit: "m" });
       const rType = PL.ui.readout(ui.L.readouts, { label: "潮汐類型" }), rInt = PL.ui.readout(ui.L.readouts, { label: "相鄰滿潮間隔" });
       const vTide = PL.ui.verdict(ui.L.readouts, { label: "判定" });
-      const chart = ui.chart("潮差隨月相變化", "曲線以半個月為週期起伏：朔與望兩座波峰是大潮，上弦與下弦的波谷是小潮——台灣西岸淺灘把這個潮差再放大到數公尺。");
+      const chart = ui.chart("潮差隨月相變化", "曲線以半個月為週期起伏：朔與望兩座波峰是大潮，上弦與下弦的波谷是小潮。台灣西岸的淺灘會把潮差再放大到好幾公尺。");
       function drawChart() {
         if (chart.W < 60) return;
         const day = dayS.get();
@@ -503,21 +503,21 @@
           });
           // 4000 km = 4×10⁸ cm，÷ 半速率(cm/年) → 年；以前寫成 200，算出來的年齡少一半
           rRate.set(rate, 0); rAge.set(Math.round(400 / rate), 0); rEx.set(exag, 0);
-          vSym.set("脊兩側的地形、年齡、磁條帶都對稱——這是海底擴張最直接的證據", "info");
+          vSym.set("脊兩側的地形、年齡、磁條帶都對稱，這是海底擴張最直接的證據", "info");
         }
       });
       const exagS = PL.ui.slider(ui.L.controls, { label: "垂直誇大倍數", min: 5, max: 40, step: 1, value: 15, unit: "×", digits: 0 });
       const rateS = PL.ui.slider(ui.L.controls, { label: "擴張半速率", min: 1, max: 10, step: 0.5, value: 5, unit: "cm/年", digits: 1 });
       const ventChk = PL.ui.checkbox(ui.L.controls, { label: "顯示熱液噴口與生態", checked: true });
-      PL.ui.note(ui.L.controls, "中洋脊沿全球海底延伸約 6 萬公里，脊頂是新海底出生的地方；往兩側地形對稱下降，直到海溝被隱沒回收——整張剖面就是板塊新生與消亡的紀錄。");
+      PL.ui.note(ui.L.controls, "中洋脊沿全球海底延伸約 6 萬公里，脊頂是新海底出生的地方；往兩側地形對稱下降，一直到海溝被隱沒回收，整張剖面記錄了板塊的產生和消失。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀出擴張的證據",
         steps: [
-          "誇大 5×：剖面近於平線——真實比例下 11 km 的起伏看不見，先承認畫面是誇大的。",
+          "誇大 5×：剖面幾乎是平的。照真實比例，11 km 的起伏根本看不出來，所以要記得畫面是誇大過的。",
           "拉到 30×：洋脊、海溝的形態浮出；注意脊兩側的深度幾乎鏡像對稱。",
           "把半速率從 1 拉到 10：對稱箭頭變長，離脊 4000 km 的海底年齡變年輕。"
         ],
-        rule: "深海平原的沉積物「脊上最薄、越遠越厚」，年齡與磁條帶也對稱分布——三組獨立證據都指向同一個結論：海底在中洋脊生成、向兩側擴張。"
+        rule: "深海平原的沉積物在脊上最薄、離越遠越厚，年齡和磁條帶也對稱分布。三組獨立的證據都指向同一個結論：海底在中洋脊生成、向兩側擴張。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "慢速擴張", apply: () => { rateS.set(2); exagS.set(20); ui.redraw(); drawChart(); } },
@@ -597,15 +597,15 @@
       });
       const tradeS = PL.ui.slider(ui.L.controls, { label: "信風強度（5 = 常年）", min: 0, max: 10, step: 0.5, value: 5, digits: 1 });
       const walkerChk = PL.ui.checkbox(ui.L.controls, { label: "顯示沃克環流", checked: true });
-      PL.ui.note(ui.L.controls, "正常時信風把暖水堆往西推，秘魯外海靠湧升流餵養漁場；聖嬰年信風減弱，暖水東移、溫躍層東端下沈、湧升流斷糧——海洋與大氣的振盪是一體兩面。");
+      PL.ui.note(ui.L.controls, "正常時信風把暖水堆往西推，秘魯外海靠湧升流餵養漁場；聖嬰年信風減弱，暖水東移、溫躍層東端下沉、湧升流變弱。海洋和大氣的振盪是同一件事的兩面。");
       PL.ui.procedure(ui.L.controls, {
         title: "翻轉太平洋",
         steps: [
           "信風 5(中性)：溫躍層西深東淺，湧升流把冷水與營養鹽送上秘魯外海。",
-          "把信風拉到 1：暖水堆滑向中太平洋，東端溫躍層下沈、湧升箭頭縮短——聖嬰成形。",
-          "再拉到 9：一切都是加強版——反聖嬰。注意 SOI 讀數與海溫距平正好反相。"
+          "把信風拉到 1：暖水堆滑向中太平洋，東端溫躍層下沉、湧升箭頭縮短，聖嬰就形成了。",
+          "再拉到 9：所有現象都變得更強，這是反聖嬰。注意 SOI 讀數與海溫距平正好反相。"
         ],
-        rule: "SOI(達爾文與大溪地的氣壓差)與東太平洋海溫距平反相：大氣「看見」的就是海洋做的——所以叫聖嬰「與」南方振盪。"
+        rule: "SOI（達爾文與大溪地的氣壓差）與東太平洋海溫距平反相：大氣的變化和海洋的變化是連在一起的，所以叫「聖嬰－南方振盪」。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "中性", apply: () => { tradeS.set(5); ui.redraw(); } },
