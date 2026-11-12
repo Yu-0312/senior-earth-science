@@ -60,14 +60,14 @@
       });
       const latS = PL.ui.slider(ui.L.controls, { label: "觀測緯度", min: 0, max: 90, step: 1, value: 25, unit: "°", digits: 0 });
       const timeS = PL.ui.slider(ui.L.controls, { label: "恆星時", min: 0, max: 24, step: 0.5, value: 21, unit: "h", digits: 1 });
-      PL.ui.note(ui.L.controls, "把天球想成一個罩住地球的大球：天北極的高度正好等於你的緯度——在台北看北極星仰角 25°,在北極看它就在頭頂。");
+      PL.ui.note(ui.L.controls, "把天球想成一個罩住地球的大球：天北極的高度正好等於你的緯度——在台北看北極星仰角 25°，在北極看它就在頭頂。");
       PL.ui.procedure(ui.L.controls, {
         title: "星座盤的使用",
         steps: [
           "把日期與時間對準轉盤刻度（這裡用恆星時簡化）。",
-          "確認天北極高度 = 當地緯度,先找北極星定位。",
-          "拉動緯度滑桿:在北極(90°)只看得到北天極附近的天區。",
-          "轉動恆星時:星星繞極逆時針轉(俯視北天)。"
+          "確認天北極高度 = 當地緯度，先找北極星定位。",
+          "拉動緯度滑桿：在北極(90°)只看得到北天極附近的天區。",
+          "轉動恆星時：星星繞極逆時針轉（俯視北天）。"
         ],
         rule: "北極星的仰角就是緯度——這是野外導航與星座盤定標的共同原理。"
       });
@@ -98,7 +98,7 @@
           const cx = W * 0.30, cy = H * 0.54, R = H * 0.34;
           const poleY = cy - R * (lat / 90) - 10;
           // 三顆星的軌跡弧(繞極)
-          const stars = [{ r: R * 0.92, name: "繞極星(不落)", hue: "#ffe082" }, { r: R * 0.66, name: "中天星", hue: "#b3e5fc" }, { r: R * 0.40, name: "近極星", hue: "#f8bbd0" }];
+          const stars = [{ r: R * 0.92, name: "繞極星（不落）", hue: "#ffe082" }, { r: R * 0.66, name: "中天星", hue: "#b3e5fc" }, { r: R * 0.40, name: "近極星", hue: "#f8bbd0" }];
           const ang0 = -Math.PI / 2;
           const sweep = (hour - 18) / 12 * Math.PI;
           stars.forEach((st, k) => {
@@ -109,7 +109,7 @@
             D.disc(ctx, cx + Math.cos(a2) * st.r, poleY + Math.sin(a2) * st.r * 0.92, 4, { fill: st.hue, glow: st.hue, glowSize: 8 });
           });
           D.disc(ctx, cx, poleY, 3.4, { fill: "#fff8c4", glow: "#ffe082", glowSize: 9 });
-          D.text(ctx, "天北極(北極星)", cx + 8, poleY - 8, { color: PL.col("text-dim"), size: 10 });
+          D.text(ctx, "天北極（北極星）", cx + 8, poleY - 8, { color: PL.col("text-dim"), size: 10 });
           // 地平線
           D.rect(ctx, 0, cy + R * 0.78, W, H - cy - R * 0.78 + 8, { fill: PL.theme.isLight() ? "rgba(120,150,110,0.5)" : "rgba(60,80,55,0.5)" });
           D.line(ctx, 0, cy + R * 0.78, W, cy + R * 0.78, PL.col("border"), 2);
@@ -131,15 +131,15 @@
       });
       const hourS = PL.ui.slider(ui.L.controls, { label: "今晚時刻", min: 18, max: 30, step: 0.25, value: 21, unit: "時", digits: 2 });
       const dayS = PL.ui.slider(ui.L.controls, { label: "連續觀測", min: 0, max: 10, step: 1, value: 3, unit: "天", digits: 0 });
-      PL.ui.note(ui.L.controls, "同一顆星每晚提前約 4 分鐘升到同一位置——因為地球繞太陽前進,要多轉一點才對回同一顆星。一個月累積 2 小時,季節星座因此輪替。");
+      PL.ui.note(ui.L.controls, "同一顆星每晚提前約 4 分鐘升到同一位置——因為地球繞太陽前進，要多轉一點才對回同一顆星。一個月累積 2 小時，季節星座因此輪替。");
       PL.ui.procedure(ui.L.controls, {
         title: "看見周日運動",
         steps: [
-          "推動「今晚時刻」:三顆星沿弧線西移(北極星不動)。",
-          "注意繞極星整晚不落,近極星畫小圈。",
-          "加「連續觀測」天數:對照右側累積提前量。"
+          "推動「今晚時刻」：三顆星沿弧線西移（北極星不動）。",
+          "注意繞極星整晚不落，近極星畫小圈。",
+          "加「連續觀測」天數：對照右側累積提前量。"
         ],
-        rule: "周日運動是地球自轉的鏡像;太陽日(24h)與恆星日(23h56m)的差,就是「繞太陽」要多轉的那一份。"
+        rule: "周日運動是地球自轉的鏡像；太陽日(24h)與恆星日(23h56m)的差，就是「繞太陽」要多轉的那一份。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "晚上 9 點", apply: () => hourS.set(21) },
@@ -203,22 +203,22 @@
           rDate.set(monthOf(dateM), 0); rDec.set(decl, 1); rSeason.set(season);
         }
       });
-      const dateS = PL.ui.slider(ui.L.controls, { label: "日期(月)", min: 0, max: 12, step: 0.25, value: 6, digits: 2 });
-      PL.ui.note(ui.L.controls, "地軸傾斜 23.5° 且指向固定:六月陽光直射北回歸線(北半球夏季)、十二月直射南回歸線。季節來自「直射點緯度」,不是日地距離。");
+      const dateS = PL.ui.slider(ui.L.controls, { label: "日期（月）", min: 0, max: 12, step: 0.25, value: 6, digits: 2 });
+      PL.ui.note(ui.L.controls, "地軸傾斜 23.5° 且指向固定：六月陽光直射北回歸線（北半球夏季）、十二月直射南回歸線。季節來自「直射點緯度」，不是日地距離。");
       PL.ui.procedure(ui.L.controls, {
         title: "追直射點一年",
         steps: [
-          "六月(夏至):直射 +23.5°,台灣正晝最長、影子最短。",
-          "九月(秋分):直射赤道,晝夜等長。",
-          "十二月(冬至):直射 −23.5°,正午影子全年最長。",
-          "注意:一月地球其實在「近日點」——離太陽近卻是北半球的冬天。"
+          "六月（夏至）：直射 +23.5°，台灣正晝最長、影子最短。",
+          "九月（秋分）：直射赤道，晝夜等長。",
+          "十二月（冬至）：直射 −23.5°，正午影子全年最長。",
+          "注意：一月地球其實在「近日點」——離太陽近卻是北半球的冬天。"
         ],
-        rule: "「離太陽遠=冬天」是最常見的誤解:北半球冬季時地球反而比夏季靠近太陽約 3%。"
+        rule: "「離太陽遠=冬天」是最常見的誤解：北半球冬季時地球反而比夏季靠近太陽約 3%。"
       });
       PL.ui.presets(ui.L.controls, { label: "節氣", options: [
-        { label: "夏至(6月)", apply: () => dateS.set(6) },
-        { label: "春分(3月)", apply: () => dateS.set(3) },
-        { label: "冬至(12月)", apply: () => dateS.set(12) }
+        { label: "夏至（6月）", apply: () => dateS.set(6) },
+        { label: "春分（3月）", apply: () => dateS.set(3) },
+        { label: "冬至（12月）", apply: () => dateS.set(12) }
       ] });
       const rDate = PL.ui.readout(ui.L.readouts, { label: "月份", unit: "月" });
       const rDec = PL.ui.readout(ui.L.readouts, { label: "直射緯度", unit: "°" });
@@ -259,7 +259,7 @@
             ctx.stroke();
             ctx.restore();
             if (s === season) {
-              D.text(ctx, { summer: "夏至軌跡(最高最長)", equinox: "春秋分(正東正西)", winter: "冬至軌跡(最低最短)" }[s], (x0 + x1) / 2, a.top - 10, { color: colors[s], size: 11, align: "center", weight: "700" });
+              D.text(ctx, { summer: "夏至軌跡（最高最長）", equinox: "春秋分（正東正西）", winter: "冬至軌跡（最低最短）" }[s], (x0 + x1) / 2, a.top - 10, { color: colors[s], size: 11, align: "center", weight: "700" });
             }
           });
           // 當前太陽位置
@@ -299,13 +299,13 @@
         { value: "summer", label: "夏至" }, { value: "equinox", label: "春秋分" }, { value: "winter", label: "冬至" }
       ] });
       const hourS = PL.ui.slider(ui.L.controls, { label: "時刻", min: 5, max: 19, step: 0.25, value: 12, unit: "時", digits: 2 });
-      PL.ui.note(ui.L.controls, "同一地點、三種季節、三條太陽軌跡:夏至最高最長、冬至最低最短,春秋分正東升起正西落下。影子長短與日照時數都跟著變。");
+      PL.ui.note(ui.L.controls, "同一地點、三種季節、三條太陽軌跡：夏至最高最長、冬至最低最短，春秋分正東升起正西落下。影子長短與日照時數都跟著變。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀太陽軌跡",
         steps: [
-          "夏至正午:太陽幾乎在頭頂(台灣),影子極短。",
-          "冬至正午:高度只剩 41.5°,影子是夏至的兩倍以上。",
-          "拖動時刻:看太陽沿軌跡移動與影子的方向變化。",
+          "夏至正午：太陽幾乎在頭頂（台灣），影子極短。",
+          "冬至正午：高度只剩 41.5°，影子是夏至的兩倍以上。",
+          "拖動時刻：看太陽沿軌跡移動與影子的方向變化。",
           "日出方位跟著季節偏北/偏南——只有春秋分是正東。"
         ],
         rule: "建築採光、太陽能板與遮陽設計都依「冬至最低軌跡」與「夏至最高軌跡」兩條線畫界。"
@@ -382,7 +382,7 @@
             D.disc(ctx, vx + s * sep / 2, vy - 6, 5 * (0.5 + bright * 0.7), { fill: c, glow: c, glowSize: 8 * bright });
           });
           D.text(ctx, mag + "×", vx, vy + vr * 0.62, { color: "#fff", size: 13, align: "center", weight: "700" });
-          D.text(ctx, sep < resLimit ? "已解析雙星" : "倍率不足/口徑不夠:兩星糊在一起", vx, vy + vr + 16,
+          D.text(ctx, sep < resLimit ? "已解析雙星" : "倍率不足/口徑不夠：兩星糊在一起", vx, vy + vr + 16,
             { color: sep < resLimit ? "#66bb6a" : PL.col("warn"), size: 10.5, align: "center" });
           CK.panel(ctx, W * 0.60, H * 0.64, W * 0.34, H * 0.28, "口徑是第一關鍵");
           const rows = [
@@ -399,15 +399,15 @@
       });
       const diaS = PL.ui.slider(ui.L.controls, { label: "口徑", min: 5, max: 30, step: 1, value: 10, unit: "cm", digits: 0 });
       const magS = PL.ui.slider(ui.L.controls, { label: "倍率", min: 10, max: 300, step: 10, value: 60, unit: "×", digits: 0 });
-      PL.ui.note(ui.L.controls, "集光力與口徑平方成正比、解析度與口徑成正比;倍率只是把像放大——口徑不夠時放大只會得到更大的糊斑。");
+      PL.ui.note(ui.L.controls, "集光力與口徑平方成正比、解析度與口徑成正比；倍率只是把像放大——口徑不夠時放大只會得到更大的糊斑。");
       PL.ui.procedure(ui.L.controls, {
         title: "為什麼口徑優先於倍率",
         steps: [
-          "口徑 5 → 20 cm:集光力變 16 倍,極限星等前進 3 等。",
-          "倍率 60 → 240:雙星視距變大,但解析極限沒變。",
-          "同時拉高口徑與倍率:視野裡真正分開了。"
+          "口徑 5 → 20 cm：集光力變 16 倍，極限星等前進 3 等。",
+          "倍率 60 → 240：雙星視距變大，但解析極限沒變。",
+          "同時拉高口徑與倍率：視野裡真正分開了。"
         ],
-        rule: "市售「600 倍望遠鏡」是行銷話術:超過口徑 2D 倍率(如 10 cm → 200×)後影像只會更暗更糊。"
+        rule: "市售「600 倍望遠鏡」是行銷話術：超過口徑 2D 倍率（如 10 cm → 200×）後影像只會更暗更糊。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "雙筒(5cm/10×)", apply: () => { diaS.set(5); magS.set(10); } },
@@ -448,7 +448,7 @@
           }
           // 月亮
           CK.moonPhase(ctx, W * 0.78, H * 0.18, 15, moon * 0.5, {});
-          if (moon > 0.6) D.text(ctx, "滿月前後:深空天體全部被蓋掉", W * 0.78, H * 0.30, { color: PL.col("text-faint"), size: 9.5, align: "center" });
+          if (moon > 0.6) D.text(ctx, "滿月前後：深空天體全部被蓋掉", W * 0.78, H * 0.30, { color: PL.col("text-faint"), size: 9.5, align: "center" });
           // 地景
           D.rect(ctx, 0, horizon, W, H - horizon, { fill: PL.theme.isLight() ? "rgba(96,118,86,0.95)" : "#141c18" });
           for (let i = 0; i < 5; i++) {
@@ -462,7 +462,7 @@
           // 極限星等對照
           const lm = 6.5 - light * 3.4 - moon * 0.9;
           const starCount = Math.round(3000 * Math.pow(10, (lm - 6.5) * 0.6));
-          CK.panel(ctx, W * 0.62, H * 0.10, W * 0.32, H * 0.56, "肉眼可見星數(全天)");
+          CK.panel(ctx, W * 0.62, H * 0.10, W * 0.32, H * 0.56, "肉眼可見星數（全天）");
           const rows = [
             ["環境", light < 0.2 ? "暗夜鄉間" : light < 0.5 ? "郊山" : light < 0.8 ? "市區近郊" : "市中心"],
             ["極限星等", PL.fmt(lm, 1) + " 等"],
@@ -473,21 +473,21 @@
             D.text(ctx, k, W * 0.65, H * (0.22 + i * 0.13), { color: PL.col("text-dim"), size: 11 });
             D.text(ctx, v, W * 0.92, H * (0.22 + i * 0.13), { color: i === 1 || i === 3 ? PL.col("accent") : PL.col("text"), size: 12, align: "right", weight: i === 3 ? "700" : "" });
           });
-          D.text(ctx, light > 0.5 ? "改善照明(遮光罩+暖色溫)就能還給城市星空" : "絕佳觀測夜:避開月光、遠離城市", W * 0.78, H * 0.60, { color: PL.col("text-faint"), size: 9.5, align: "center" });
+          D.text(ctx, light > 0.5 ? "改善照明（遮光罩+暖色溫）就能還給城市星空" : "絕佳觀測夜：避開月光、遠離城市", W * 0.78, H * 0.60, { color: PL.col("text-faint"), size: 9.5, align: "center" });
           rLight.set(light, 2); rLm.set(lm, 1); rCount.set(starCount, 0);
         }
       });
       const lightS = PL.ui.slider(ui.L.controls, { label: "光害程度", min: 0, max: 1, step: 0.05, value: 0.7, digits: 2 });
-      const moonS = PL.ui.slider(ui.L.controls, { label: "月相(朔→滿)", min: 0, max: 1, step: 0.05, value: 0, digits: 2 });
-      PL.ui.note(ui.L.controls, "同樣的夜空,市中心只能看到約 100 顆星、暗夜有數千顆。光害不是「燈太亮」這麼簡單——是光被空氣散射進視線;月亮則是暫時版的同樣效應。");
+      const moonS = PL.ui.slider(ui.L.controls, { label: "月相（朔→滿）", min: 0, max: 1, step: 0.05, value: 0, digits: 2 });
+      PL.ui.note(ui.L.controls, "同樣的夜空，市中心只能看到約 100 顆星、暗夜有數千顆。光害不是「燈太亮」這麼簡單——是光被空氣散射進視線；月亮則是暫時版的同樣效應。");
       PL.ui.procedure(ui.L.controls, {
         title: "規劃一次觀測",
         steps: [
-          "先看月相:深空目標(星雲、星系)要選朔前後。",
-          "再選地點:拉低光害,極限星等前進、星數暴增。",
-          "兩者都差時:只能看行星與月亮——它們不怕光害。"
+          "先看月相：深空目標（星雲、星系）要選朔前後。",
+          "再選地點：拉低光害，極限星等前進、星數暴增。",
+          "兩者都差時：只能看行星與月亮——它們不怕光害。"
         ],
-        rule: "星等差 5 等亮度差 100 倍;極限星等從 6.5 掉到 3,等於星空的 99% 直接消失。"
+        rule: "星等差 5 等亮度差 100 倍；極限星等從 6.5 掉到 3，等於星空的 99% 直接消失。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "合歡山暗夜", apply: () => { lightS.set(0.05); moonS.set(0.05); } },
@@ -531,11 +531,11 @@
             if (prog > 0.15 && prog < 0.85) {
               const bx = eX - 34 + (prog - 0.5) * 60;
               D.ring(ctx, bx, eY, 10, "rgba(255,138,101,0.95)", 2.4);
-              D.text(ctx, "本影帶(全食,寬約百餘公里)", bx, eY + 58, { color: "#ffab91", size: 10, align: "center" });
+              D.text(ctx, "本影帶（全食，寬約百餘公里）", bx, eY + 58, { color: "#ffab91", size: 10, align: "center" });
             }
             D.line(ctx, sx + 30, sy, eX, eY, "rgba(255,255,255,0.12)", 1.2, [4, 6]);
-            rWhat.set("朔日:月球影子落在地球");
-            rNote.set("本影帶僅數十至數百公里寬,全食持續數分鐘");
+            rWhat.set("朔日：月球影子落在地球");
+            rNote.set("本影帶僅數十至數百公里寬，全食持續數分鐘");
           } else {
             // 月食:地球影子吞月
             const eX = W * 0.16, eY = H * 0.34;
@@ -553,34 +553,34 @@
             if (inShadow && Math.abs(prog - 0.5) < 0.32) {
               // 血月
               D.disc(ctx, mx, eY + 6, moonR, { fill: "#b0503a", glow: "#8d3a26", glowSize: 12 });
-              D.text(ctx, "血月:地球大氣折射紅光照亮月面", mx, eY + 40, { color: "#ffab91", size: 10, align: "center" });
+              D.text(ctx, "血月：地球大氣折射紅光照亮月面", mx, eY + 40, { color: "#ffab91", size: 10, align: "center" });
             } else {
               CK.moonPhase(ctx, mx, eY + 6, moonR, 0.5, {});
             }
             D.text(ctx, "月球軌道", W * 0.72, H * 0.86, { color: PL.col("text-faint"), size: 10, align: "center" });
             D.line(ctx, W * 0.30, eY + 6, W * 0.94, eY + 6, "rgba(140,170,200,0.25)", 1.4, [4, 6]);
-            rWhat.set("望日:月球走進地球影子");
-            rNote.set("地影巨大,全食可持續一小時以上,半個地球同時可見");
+            rWhat.set("望日：月球走進地球影子");
+            rNote.set("地影巨大，全食可持續一小時以上，半個地球同時可見");
           }
           CK.panel(ctx, W * 0.62, H * 0.70, W * 0.32, H * 0.24, "為什麼不是每個月都有");
-          D.text(ctx, "月球軌道傾斜約 5°,多數時候影子錯開;只有朔/望落在交點附近才成食。", W * 0.78, H * 0.80, { color: PL.col("text-dim"), size: 10, align: "center" });
-          rKind.set(kind === "solar" ? "日食(農曆初一)" : "月食(農曆十五)");
+          D.text(ctx, "月球軌道傾斜約 5°，多數時候影子錯開；只有朔/望落在交點附近才成食。", W * 0.78, H * 0.80, { color: PL.col("text-dim"), size: 10, align: "center" });
+          rKind.set(kind === "solar" ? "日食（農曆初一）" : "月食（農曆十五）");
           rProg.set(Math.round(prog * 100), 0);
         }
       });
       const kindSel = PL.ui.select(ui.L.controls, { label: "食的種類", value: "solar", options: [
-        { value: "solar", label: "日食(朔)" }, { value: "lunar", label: "月食(望)" }
+        { value: "solar", label: "日食（朔）" }, { value: "lunar", label: "月食（望）" }
       ] });
       const progS = PL.ui.slider(ui.L.controls, { label: "食的過程", min: 0, max: 1, step: 0.02, value: 0.5, digits: 2 });
-      PL.ui.note(ui.L.controls, "日食是月影掃過地球(本影帶窄、全食短);月食是月球鑽進地影(影大、全食久)。兩者分別需要朔與望加上軌道交點的巧合。");
+      PL.ui.note(ui.L.controls, "日食是月影掃過地球（本影帶窄、全食短）；月食是月球鑽進地影（影大、全食久）。兩者分別需要朔與望加上軌道交點的巧合。");
       PL.ui.procedure(ui.L.controls, {
         title: "對比兩種食",
         steps: [
-          "日食:拖動過程,看本影帶橫掃地表——只在帶內可見全食。",
-          "月食:看月球進入地影變成血月,半個地球一起看。",
-          "想想:為什麼日全食比月全食罕見得多?"
+          "日食：拖動過程，看本影帶橫掃地表——只在帶內可見全食。",
+          "月食：看月球進入地影變成血月，半個地球一起看。",
+          "想想：為什麼日全食比月全食罕見得多？"
         ],
-        rule: "觀測日食必須用專用濾鏡;全食階段才可肉眼直視——這是天文觀測唯一的安全鐵律。"
+        rule: "觀測日食必須用專用濾鏡；全食階段才可肉眼直視——這是天文觀測唯一的安全鐵律。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "全食中", apply: () => progS.set(0.5) },
@@ -612,7 +612,7 @@
           CK.globe(ctx, cx, cy, H * 0.15, { tilt: 23.5, showAxis: true, seed: 6 });
           // 軸指向的星(依年代)
           const idx = clamp(Math.round((year + 3000) / 26000 * 8), 0, 8);
-          const POLE_STARS = ["天龍座 α(右樞)", "北極星(小熊座 α)", "少衛增八(仙王座 γ)", "織女星(西元 13,700 年)"];
+          const POLE_STARS = ["天龍座 α（右樞）", "北極星（小熊座 α）", "少衛增八（仙王座 γ）", "織女星（西元 13,700 年）"];
           const a = (year + 3000) / 26000 * TAU;
           const px = cx + Math.cos(a - Math.PI / 2) * coneR;
           const py = cy + Math.sin(a - Math.PI / 2) * coneR;
@@ -639,16 +639,16 @@
         }
       });
       const yearS = PL.ui.slider(ui.L.controls, { label: "西元年", min: -3000, max: 15000, step: 100, value: 2000, digits: 0 });
-      PL.ui.note(ui.L.controls, "地軸像傾斜的陀螺:自轉軸以約 2.6 萬年畫一圈。「北極星」只是暫時的頭銜——古埃及人用天龍座 α 定北,未來會換織女星。");
+      PL.ui.note(ui.L.controls, "地軸像傾斜的陀螺：自轉軸以約 2.6 萬年畫一圈。「北極星」只是暫時的頭銜——古埃及人用天龍座 α 定北，未來會換織女星。");
       PL.ui.procedure(ui.L.controls, {
         title: "看北極換人",
         steps: [
-          "回到西元前 3,000 年:軸指向天龍座 α(金字塔時代)。",
-          "拉到 2,000 年:現在的北極星(小熊座 α)。",
-          "推到 14,000 年:織女星將成為北極星。",
-          "注意傾角 23.5° 不變——變的是指向,不是傾斜量。"
+          "回到西元前 3,000 年：軸指向天龍座 α（金字塔時代）。",
+          "拉到 2,000 年：現在的北極星（小熊座 α）。",
+          "推到 14,000 年：織女星將成為北極星。",
+          "注意傾角 23.5° 不變——變的是指向，不是傾斜量。"
         ],
-        rule: "歲差改變「軸指向哪顆星」與「季節起點在軌道上的位置」,但不改變黃赤交角本身。"
+        rule: "歲差改變「軸指向哪顆星」與「季節起點在軌道上的位置」，但不改變黃赤交角本身。"
       });
       PL.ui.presets(ui.L.controls, { label: "年代", options: [
         { label: "金字塔時代", apply: () => yearS.set(-2800) },
