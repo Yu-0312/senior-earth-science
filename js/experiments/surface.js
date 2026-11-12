@@ -92,7 +92,7 @@
           const bx = W * 0.05, bw = W * 0.58, wy = horizon + 22, bed = wy + 26;
           D.rect(ctx, bx, wy, W * 0.88, bed - wy, { fill: "rgba(74,144,216,0.65)", r: 3 }); D.line(ctx, bx, bed, bx + W * 0.88, bed, "#8a7358", 3);
           D.text(ctx, (force === "wind" ? "風速 " : "流速 ") + v + " cm/s(左 → 右減速)", bx + 4, wy - 8, { color: PL.col("text-dim"), size: 10.5 });
-          // 各粒徑級的沉積位置:x = 1 − √(v臨界/v₀)
+          // 各粒徑級的沉積位置：x = 1 − √(v臨界/v₀)
           let deposited = 0;
           CLS.forEach((c, i) => {
             const xSet = force === "ice" ? 0.5 : clamp(1 - Math.sqrt(thr(c.rep) / Math.max(v, 1)), 0, 1.05);
@@ -114,7 +114,7 @@
             }
           });
           if (force !== "ice") D.text(ctx, deposited === 3 ? "沉積由粗到細 → 分選良好" : "能量還夠：較細的顆粒繼續往下游走", bx + bw / 2, bed + 52, { color: PL.col("text-dim"), size: 11, align: "center", weight: "700" });
-          const tip = { river: "流速決定一切,v ×2 → 可搬粒徑 ×4", wind: "只搬得動砂與塵，磨蝕力弱", ice: "大小通吃、毫無分選" }[force];
+          const tip = { river: "流速決定一切，v ×2 → 可搬粒徑 ×4", wind: "只搬得動砂與塵，磨蝕力弱", ice: "大小通吃、毫無分選" }[force];
           CK.panel(ctx, W * 0.66, H * 0.14, W * 0.30, H * 0.50, "營力對照");
           [["可搬最大粒徑", force === "ice" ? "全部（大小通吃）" : PL.fmt(dm, dm >= 1 ? 1 : 3) + " mm"],
            ["搬運方式", force === "ice" ? "冰河推運" : force === "wind" ? "躍移+懸浮" : v < 12 ? "推移（滾動）" : v < 45 ? "跳躍" : "懸浮"],
@@ -165,7 +165,7 @@
           const { surface } = CK.scene(ui.cv, { kind: "underground", horizon: 0.16 });
           const sg = surface + (H - surface) * 0.30, depth = lerp(0.52, 0.13, pos / 100) * (H - surface);
           const halfW = lerp(0.10, 0.34, pos / 100) * W, vx = W * 0.38, ry = sg + depth;
-          // 兩岸山體與谷:V 型谷 → 開展寬谷
+          // 兩岸山體與谷：V 型谷 → 開展寬谷
           ctx.save(); ctx.fillStyle = PL.theme.isLight() ? "#8fae6f" : "#3d4a35";
           ctx.beginPath(); ctx.moveTo(0, sg); ctx.lineTo(vx - halfW, sg);
           if (pos < 50) { ctx.lineTo(vx, ry); ctx.lineTo(vx + halfW, sg); }
@@ -209,7 +209,7 @@
         steps: ["把觀察位置從 0 拉到 100：谷型由深窄 V 型 → 開展寬谷 → 堆積平原，坡度讀數一路下降。", "把基準面拉到 −60 m：河川回春下切，兩側留下階梯狀的舊河床（河階）。",
           "把基準面拉到 +60 m：河床淤高、能量歸零，河口變成以堆積和溺谷為主。"],
         rule: "侵蝕基準面（海平面）決定河能下切多深：峽谷深不深，主要看的不是水量，是基準面和地盤抬升哪個快。" });
-      const chart = ui.chart("河川縱剖面（凹形）", "縱剖面是上陡下緩的凹曲線:x 軸 0 為源頭、100 為出海口；上游坡陡故侵蝕，下游趨緩轉為搬運與堆積。紅點是目前觀察位置。");
+      const chart = ui.chart("河川縱剖面（凹形）", "縱剖面是上陡下緩的凹曲線：x 軸 0 為源頭、100 為出海口；上游坡陡故侵蝕，下游趨緩轉為搬運與堆積。紅點是目前觀察位置。");
       const drawChart = () => CK.plot(chart, {
         x0: 0, x1: 100, y0: 0, y1: 3400, xlabel: "距源頭(%)", ylabel: "河床高(m)",
         series: [{ fn: x => 3200 * Math.pow(1 - x / 100, 1.6), color: PL.col("accent") }],
@@ -449,7 +449,7 @@
       PL.ui.procedure(ui.L.controls, { title: "看洞怎麼長",
         steps: ["拉高 CO₂：節理變寬、洞穴變大，溶蝕速率讀數也跟著上升。", "拉高滴水速率：鐘乳石與石筍開始上下生長（讀數 cm）。",
           "時間與滴水都拉滿：兩者相接變成石柱，洞開始被自己的沉澱物填回去。"],
-        rule: "溶蝕（向下造洞）與沉澱（洞內堆積）是同一條化學的兩個方向:CaCO₃ 溶進去是造洞、滴出來是堆積；鐘乳石百年只長數公分。" });
+        rule: "溶蝕（向下造洞）與沉澱（洞內堆積）是同一條化學的兩個方向：CaCO₃ 溶進去是造洞、滴出來是堆積；鐘乳石百年只長數公分。" });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "濕熱多雨", apply: () => { co2S.set(0.95); dripS.set(0.85); yrS.set(80); ui.redraw(); } },
         { label: "乾燥少雨", apply: () => { co2S.set(0.1); dripS.set(0.15); yrS.set(100); ui.redraw(); } }, { label: "墾丁石灰岩", apply: () => { co2S.set(0.6); dripS.set(0.55); yrS.set(60); ui.redraw(); } }] });
@@ -508,7 +508,7 @@
       const thS = PL.ui.slider(ui.L.controls, { label: "坡度", min: 15, max: 60, step: 1, value: 30, unit: "°", digits: 0 });
       const rainS = PL.ui.slider(ui.L.controls, { label: "累積降雨", min: 0, max: 600, step: 20, value: 200, unit: "mm/日", digits: 0 });
       const vegS = PL.ui.slider(ui.L.controls, { label: "植被覆蓋", min: 0, max: 1, step: 0.05, value: 0.6, digits: 2 });
-      PL.ui.note(ui.L.controls, "坡地安不安全，是「剪應力 vs 抗剪強度」的拔河：雨灌進土裡，孔隙水壓把抗剪頂掉,FS 掉破 1.0 就是山崩；水再加碎石就是土石流。");
+      PL.ui.note(ui.L.controls, "坡地安不安全，是「剪應力 vs 抗剪強度」的拔河：雨灌進土裡，孔隙水壓把抗剪頂掉，FS 掉破 1.0 就是山崩；水再加碎石就是土石流。");
       PL.ui.procedure(ui.L.controls, { title: "把坡推過極限",
         steps: ["固定雨量 200，把坡度從 15° 拉到 45°:FS 一路下滑，紅點跨過 1.0 線。", "坡度固定 35°，雨量拉到 550：藍色水位帶升到地表，FS 跌破 1，豪雨是最常見的誘因。",
           "把植被從 0 拉回 0.95：根系固土，FS 回升，同樣的雨就滑不動了。"],

@@ -11,7 +11,7 @@
     return Math.hypot(px - (x1 + dx * f), py - (y1 + dy * f));
   }
 
-  /* 地震波:P 波、S 波與表面波 */
+  /* 地震波：P 波、S 波與表面波 */
   PL.register("earthquake-waves", {
     build(root) {
       const ui = CK.scaffold(root, {
@@ -22,7 +22,7 @@
           const tt = timeS.get(), dep = depS.get(), liq = liqChk.get(), vP = 6.5, vS = 3.7;
           const pxKm = Math.min(W * 0.8 / 42, (H - surf - 18) / 26), ex = W * 0.16, sx = W * 0.86, ey = surf + dep * pxKm;
           CK.waveFronts(ctx, ex, ey, vP * tt * pxKm, vS * tt * pxKm, { gapP: 34, gapS: 24 }); // P 細藍環快、S 粗紅環慢
-          // 岩漿庫(液體):畫在波前之上,S 波被擋、P 波照穿
+          // 岩漿庫(液體):畫在波前之上，S 波被擋、P 波照穿
           const lx = W * 0.52, ly = surf + (H - surf) * 0.45, lr = H * 0.115;
           if (liq) {
             const g = ctx.createRadialGradient(lx - lr * 0.3, ly - lr * 0.3, lr * 0.2, lx, ly, lr);
@@ -84,7 +84,7 @@
       PL.ui.procedure(ui.L.controls, {
         title: "看懂三種波",
         steps: ["拉「地震經過時間」：藍環(P)永遠跑在紅環(S)前面。", "把經過時間拉到 10 s 以上：黃色表面波掃過測站。",
-          "勾選岩漿庫：射線穿過液體時,S 波消失、P 波照傳。", "改變震源深度：到達時間讀數跟著變。"],
+          "勾選岩漿庫：射線穿過液體時，S 波消失、P 波照傳。", "改變震源深度：到達時間讀數跟著變。"],
         rule: "S 波無法通過液體，外核是液態就是這樣推出來的。順序不要背反：P 先到、S 後到，表面波最後到、也最強。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -100,12 +100,12 @@
     }
   });
 
-  /* 震央定位:S–P 時差法 */
+  /* 震央定位：S–P 時差法 */
   PL.register("epicenter-locate", {
     build(root) {
       const ST = [{ name: "台中", lon: 120.68, lat: 24.15, color: "#5c91dc" }, { name: "花蓮", lon: 121.60, lat: 23.98, color: "#ef5350" }, { name: "高雄", lon: 120.31, lat: 22.62, color: "#66bb6a" }];
       const SCEN = [{ key: "921", name: "921 集集", lon: 120.83, lat: 23.86 }, { key: "chiayi", name: "嘉義陸上", lon: 120.55, lat: 23.52 }, { key: "tainan", name: "台南近海", lon: 120.22, lat: 23.05 }];
-      // 統一度量:1° 緯度 111 km、1° 經度 101 km(緯 24° 附近),與地圖縮尺一致
+      // 統一度量：1° 緯度 111 km、1° 經度 101 km(緯 24° 附近),與地圖縮尺一致
       const kmXY = p => [p.lon * 101, p.lat * 111], kmDist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
       const ui = CK.scaffold(root, {
         aspect: 0.58,
@@ -117,7 +117,7 @@
           const sp = ST.map(s => proj(s.lon, s.lat));
           ctx.save();
           ctx.beginPath(); ctx.rect(box.x - 14, box.y - 14, box.w + 28, box.h + 28); ctx.clip();
-          ST.forEach((s, i) => {   // 距離圈:d ≈ 8 × Δt
+          ST.forEach((s, i) => {   // 距離圈：d ≈ 8 × Δt
             const r = dts[i] * 8 * pxKm;
             ctx.beginPath(); ctx.arc(sp[i][0], sp[i][1], r, 0, TAU);
             ctx.strokeStyle = s.color; ctx.lineWidth = 2; ctx.setLineDash([7, 5]); ctx.stroke(); ctx.setLineDash([]);
@@ -137,7 +137,7 @@
           if (ok) CK.badge(ctx, best[0], best[1] - 20, "震央鎖定！", "#ff8a65");
           else D.text(ctx, "候選點(誤差 " + Math.round(bd) + " km)", best[0], best[1] - 18, { color: PL.col("text-faint"), size: 9.5, align: "center" });
           CK.panel(ctx, W * 0.52, H * 0.14, W * 0.42, H * 0.60, "定位四步驟");
-          ["1. 讀出各站的 S–P 時差 Δt", "2. 換成距離:d ≈ 8 × Δt (km)", "3. 以測站為圓心畫距離圈", "4. 三圈交會的唯一點 = 震央"].forEach((s, i) =>
+          ["1. 讀出各站的 S–P 時差 Δt", "2. 換成距離：d ≈ 8 × Δt (km)", "3. 以測站為圓心畫距離圈", "4. 三圈交會的唯一點 = 震央"].forEach((s, i) =>
             D.text(ctx, s, W * 0.55, H * 0.22 + i * 26, { color: PL.col("text-dim"), size: 11 }));
           D.text(ctx, "單站一圈、兩站兩解，三站才唯一。", W * 0.73, H * 0.55, { color: PL.col("text-faint"), size: 10, align: "center" });
           D.text(ctx, "地震預警：測站先收到 P 波的幾秒，就是搶來的避難時間。", W * 0.73, H * 0.63, { color: PL.col("accent"), size: 10, align: "center" });
@@ -155,7 +155,7 @@
         ui.redraw();
       };
       const scenSel = PL.ui.select(ui.L.controls, { label: "地震情境", value: "921", options: SCEN.map(s => ({ value: s.key, label: s.name })), onChange: applyScen });
-      PL.ui.note(ui.L.controls, "S 波與 P 波到達的時間差與距離成正比:d ≈ 8Δt。單站只能畫一圈，三圈交會才鎖定震央；地震預警也是靠快速讀 P 波搶時間。");
+      PL.ui.note(ui.L.controls, "S 波與 P 波到達的時間差與距離成正比：d ≈ 8Δt。單站只能畫一圈，三圈交會才鎖定震央；地震預警也是靠快速讀 P 波搶時間。");
       PL.ui.procedure(ui.L.controls, {
         title: "當一回定位員",
         steps: ["選一個地震情境：三站時差自動填入正確值，三圈交會於一點。", "把「台中 S–P 時差」加 2 秒：距離圈變大，交會點跑掉。",
@@ -230,7 +230,7 @@
       PL.ui.procedure(ui.L.controls, {
         title: "規模 vs 震度",
         steps: ["固定規模，把距離從 10 km 拉到 300 km：震度讀數一路下降。", "規模從 6.0 加到 7.0：能量讀數變 32 倍，震度只升 1 級左右。",
-          "切到軟弱沖積層：同一距離震度被放大，這就是場址效應。"],
+          "切到軟弱沖積層：同一距離震度被放大，這叫場址效應。"],
         rule: "常見的錯誤說法：「規模 5 的地震在我家是 3 級」。規模屬於震源，震度屬於地點，兩者不能混用。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -293,7 +293,7 @@
       const dtpS = PL.ui.slider(ui.L.controls, { label: "S–P 時差", min: 2, max: 15, step: 0.5, value: 6, unit: "s", digits: 1 });
       const ampS = PL.ui.slider(ui.L.controls, { label: "波形振幅倍率", min: 0.2, max: 1.5, step: 0.05, value: 0.7, unit: "×", digits: 2 });
       const siteSel = PL.ui.select(ui.L.controls, { label: "測站場址", value: "rock", options: [{ value: "rock", label: "堅硬岩盤" }, { value: "soft", label: "軟弱沖積層" }] });
-      const waveCv = ui.chart("地震儀記錄", "短桿亂顫是背景雜訊;P 到後中幅高頻、S 到後大幅搖擺、表面波最後收尾。");
+      const waveCv = ui.chart("地震儀記錄", "短桿亂顫是背景雜訊；P 到後中幅高頻、S 到後大幅搖擺、表面波最後收尾。");
       function drawChart() {
         if (waveCv.W < 60) return;
         const dtp = dtpS.get(), f = siteSel.get() === "soft" ? 2.6 : 1, T = 60, tP = 10, tS = tP + dtp;
@@ -650,7 +650,7 @@
       PL.ui.note(ui.L.controls, "疏鬆飽和的砂質土壤在震動下孔隙水壓急升，砂粒懸浮、失去承載力，建物下陷傾斜。液化好發於河海邊的填土與沖積砂層，可用地質改良與耐震設計減災。");
       PL.ui.procedure(ui.L.controls, {
         title: "找出危險組合",
-        steps: ["預設（PGA 240、水位 2 m、密度 0.35）：三條件全亮綠，液化發生。", "把地下水位拉到 5 m：飽和度降,CSR 下降、脫離危險。",
+        steps: ["預設（PGA 240、水位 2 m、密度 0.35）：三條件全亮綠，液化發生。", "把地下水位拉到 5 m：飽和度降，CSR 下降、脫離危險。",
           "把相對密度拉到 0.7:CRR 抬高，即使強震也安全。", "對照兩棟房子：改良樁那棟幾乎不傾斜。"],
         rule: "液化三條件缺一不可：疏砂 + 飽和 + 震動；密實砂層或深地下水位都能讓它不發生，地盤改良就是用這個原理。"
       });

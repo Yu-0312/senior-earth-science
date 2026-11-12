@@ -7,7 +7,7 @@
   // 羅盤角(0=北,順時針)→ 螢幕向量
   const dirV = a => [Math.sin(a * RAD), -Math.cos(a * RAD)];
 
-  /* 地震波與地球內部探測:S 波陰影帶照出液態外核 */
+  /* 地震波與地球內部探測：S 波陰影帶照出液態外核 */
   PL.register("seismic-waves-layers", {
     build(root) {
       const ui = CK.scaffold(root, {
@@ -63,7 +63,7 @@
             const f = clamp(dist / Lkm, 0, 1);
             dot = [E[0] + (a[0] - E[0]) * f, E[1] + (a[1] - E[1]) * f];
             vTxt = ph === "p" ? "地函中 ≈ 10.5 km/s" : "地函中 ≈ 6.2 km/s";
-            if (f >= 1) arrive = ph === "s" ? "已到達;S 波若對準外核：在此被擋" : "已到達 100° 測站";
+            if (f >= 1) arrive = ph === "s" ? "已到達；S 波若對準外核：在此被擋" : "已到達 100° 測站";
           }
           D.disc(ctx, dot[0], dot[1], 5, { fill: ph === "s" ? "#ef5350" : "#5c91dc", glow: "#ffd54f", glowSize: 9 });
           CK.panel(ctx, W * 0.64, H * 0.12, W * 0.33, H * 0.52, "地震波分層探測");
@@ -95,7 +95,7 @@
       }
       velCv.onResize(drawChart); drawChart();
       root.addEventListener("input", drawChart); root.addEventListener("change", drawChart);
-      PL.ui.note(ui.L.controls, "地震波是唯一能「照進」地球內部的手電筒：波速突變的深度就是不連續面;S 波在哪一層消失，那一層就是液態。");
+      PL.ui.note(ui.L.controls, "地震波是唯一能「照進」地球內部的手電筒：波速突變的深度就是不連續面；S 波在哪一層消失，那一層就是液態。");
       PL.ui.procedure(ui.L.controls, {
         title: "讀出液態外核",
         steps: ["拉「地震經過時間」，跟蹤直達 S 波：紅點一路順暢到 100°。", "把射線束打開：對準外核的 S 波全部止步於核函界線。",
@@ -179,7 +179,7 @@
       PL.ui.procedure(ui.L.controls, {
         title: "看懂地殼均衡",
         steps: ["把「山地高度」歸零：莫氏面回到約 35 km 的標準深度。", "拉高到 6 km：山根同步下探，地殼總厚逼近 60 km。",
-          "讀山根深度：大約是山高的 4.5 倍，這就是 Airy 均衡。", "對照右柱：海洋地殼又薄又重(3.0)，所以海底低於陸地。"],
+          "讀山根深度：大約是山高的 4.5 倍，這叫 Airy 均衡。", "對照右柱：海洋地殼又薄又重(3.0)，所以海底低於陸地。"],
         rule: "「山有多高、根有多深」：冰期冰蓋熔掉後，斯堪地那維亞到現在還在回彈。地殼像浮在地函上的木筏，載重變了，吃水深度就跟著變。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
@@ -283,7 +283,7 @@
           const bx = { x: W * 0.03, y: H * 0.14, w: W * 0.60, h: H * 0.66 };
           CK.plateBoundary(ctx, bx, type, { time: t, erupting: rate > 7, offset: 0 });
           if (ex) CK.badge(ctx, bx.x + bx.w * 0.5, bx.y + bx.h * 0.97, INFO[type].ex, PL.col("accent"));
-          // 累積位移尺:1 cm/年 = 10 km/百萬年
+          // 累積位移尺：1 cm/年 = 10 km/百萬年
           const dist = rate * 10 * tmr, rx = W * 0.05, rw = W * 0.56, ry = H * 0.90;
           D.rect(ctx, rx, ry, rw, 18, { fill: PL.theme.shade(0.45), stroke: PL.col("border"), r: 9 });
           D.rect(ctx, rx + 2, ry + 2, Math.max(5, clamp(dist / 1000, 0, 1) * (rw - 4)), 14, { fill: "#66bb6a", r: 7 });
@@ -407,7 +407,7 @@
         title: "為什麼地圖上的海看起來很平",
         steps: ["誇大 5×：剖面幾乎是平的。照真實比例，11 km 的起伏根本看不出來。", "拉到 40×：大陸棚、洋脊的細節浮出來，海溝卻切出畫面下緣。",
           "切到活動邊緣：海溝出現，深度直逼 11 km。", "拉沉積物滑桿：靠陸地那側厚、靠洋脊薄，離脊越遠，地殼越老，沉積時間也越久。"],
-        rule: "大陸棚水深小於 200 m、寬可達上百公里；不要把海岸線當成大陸的邊緣，大陸真正的邊界在大陸坡腳。"
+        rule: "大陸棚水深小於 200 m、寬可達上百公里；不要把海岸線當成大陸的邊緣，大陸的邊界其實在大陸坡腳。"
       });
       PL.ui.presets(ui.L.controls, { label: "情境", options: [
         { label: "大西洋型", apply: () => { actSel.set("passive"); exagS.set(12); ui.redraw(); drawChart(); } },

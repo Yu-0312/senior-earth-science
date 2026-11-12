@@ -7,7 +7,7 @@
   /* 溫室效應與輻射平衡 */
   PL.register("greenhouse-effect", {
     build(root) {
-      // 教學單層大氣模型:T_s = 255 K / (1 − ε/2)^(1/4);ε=0 時 −18 °C、ε≈0.78 時約 15 °C
+      // 教學單層大氣模型：T_s = 255 K / (1 − ε/2)^(1/4);ε=0 時 −18 °C、ε≈0.78 時約 15 °C
       const Ts = e => 255 / Math.pow(1 - e / 2, 0.25) - 273.15;
       const ui = CK.scaffold(root, {
         aspect: 0.58, animate: true,
@@ -83,7 +83,7 @@
   /* 碳循環與大氣 CO₂ */
   PL.register("carbon-cycle-climate", {
     build(root) {
-      const GTC_PPM = 2.13;                     // 教學換算:1 ppm ≈ 2.13 GtC
+      const GTC_PPM = 2.13;                     // 教學換算：1 ppm ≈ 2.13 GtC
       const ui = CK.scaffold(root, {
         aspect: 0.58, animate: true,
         draw(dt, t) {
@@ -269,9 +269,9 @@
             D.text(ctx, v, W * 0.66, H * 0.22 + i * 30, { color: PL.col("text"), size: 11.5, align: "right", weight: "700" });
           });
           const glacial = c < 210, inter = c > 260;
-          D.text(ctx, glacial ? "冰期層位:CO₂ 低、全球比現今低 4–8 °C" : inter ? "間冰期層位:CO₂ 約 280 ppm、氣候溫暖" : "過渡層位:CO₂ 與溫度同步升降",
+          D.text(ctx, glacial ? "冰期層位：CO₂ 低、全球比現今低 4–8 °C" : inter ? "間冰期層位：CO₂ 約 280 ppm、氣候溫暖" : "過渡層位：CO₂ 與溫度同步升降",
             W * 0.55, H * 0.56, { color: glacial ? "#7fc4e8" : inter ? "#e8c34d" : PL.col("text-dim"), size: 10.5, align: "center" });
-          D.text(ctx, "同相位:CO₂ 與溫度一起變", W * 0.55, H * 0.63, { color: PL.col("text-faint"), size: 10, align: "center" });
+          D.text(ctx, "同相位：CO₂ 與溫度一起變", W * 0.55, H * 0.63, { color: PL.col("text-faint"), size: 10, align: "center" });
           // 怎麼讀冰芯
           CK.panel(ctx, W * 0.70, H * 0.10, W * 0.26, H * 0.34, "怎麼讀冰芯");
           ["氣泡=當年大氣的標本", "水分子 δ¹⁸O=當年氣溫", "越深越老：1 m ≈ 250 年"].forEach((s, i) =>

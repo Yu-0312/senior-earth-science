@@ -124,7 +124,7 @@
           D.text(ctx, "小行星帶", bx, H * 0.14, { color: "#ffab91", size: 10, align: "center" });
           D.text(ctx, "← 類地（岩石金屬）", bx - 12, H * 0.58, { color: "rgba(214,224,240,0.85)", size: 10.5, align: "right" });
           D.text(ctx, "類木（氣冰）→", bx + 12, H * 0.58, { color: "rgba(214,224,240,0.85)", size: 10.5, align: "left" });
-          if (narrow) D.text(ctx, "密度單位:g/cm³", W * 0.03, H * 0.08, { color: "rgba(214,224,240,0.75)", size: 9.5, align: "left" });
+          if (narrow) D.text(ctx, "密度單位：g/cm³", W * 0.03, H * 0.08, { color: "rgba(214,224,240,0.75)", size: 9.5, align: "left" });
           // 資料卡
           const isInner = p => p.kind === "rock" || p.kind === "earth";
           const group = pick === "all" ? null : PLANETS.filter(p => pick === "terrestrial" ? isInner(p) : !isInner(p));
@@ -192,7 +192,7 @@
           ctx.restore();
           D.text(ctx, "等時間掃過等面積（綠色扇形）", orb.fx + orb.a * 0.4, orb.cy + orb.b + 16, { color: "#a5d6a7", size: 10, align: "center" });
           // 第三律對照表
-          CK.panel(ctx, W * 0.60, H * 0.10, W * 0.34, H * 0.56, "第三律:T² = a³");
+          CK.panel(ctx, W * 0.60, H * 0.10, W * 0.34, H * 0.56, "第三律：T² = a³");
           const ROWS = [["水星", 0.39], ["金星", 0.72], ["地球", 1.0], ["火星", 1.52], ["木星", 5.2]];
           ROWS.forEach(([name, a], i) => {
             const Tp = Math.pow(a, 1.5);

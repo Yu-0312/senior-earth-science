@@ -4,7 +4,7 @@
   const PL = window.PhysicsLab, CK = window.EarthLab, D = PL.draw;
   const { clamp, lerp, TAU } = PL;
 
-  /* 年 → 易讀單位;fmtMa 為百萬年(Ma)版,給地質年代表用 */
+  /* 年 → 易讀單位；fmtMa 為百萬年(Ma)版,給地質年代表用 */
   function fmtAge(y) {
     if (y >= 1e8) return PL.fmt(y / 1e8, 2) + " 億年";
     if (y >= 1e4) return PL.fmt(y / 1e4, 1) + " 萬年";
@@ -20,7 +20,7 @@
       D.text(ctx, v, x + 12, y + 46 + i * 34 + 14, { color: hot ? PL.col("accent") : PL.col("text-faint"), size: 10 });
     });
   }
-  /* 控制區教學組合:note + procedure + presets 一次掛好(presets = [標籤, apply],套用後自動重繪);RD 一次建讀數 */
+  /* 控制區教學組合：note + procedure + presets 一次掛好(presets = [標籤, apply],套用後自動重繪);RD 一次建讀數 */
   function teach(ui, o) {
     if (o.note) PL.ui.note(ui.L.controls, o.note);
     if (o.proc) PL.ui.procedure(ui.L.controls, o.proc);
@@ -45,7 +45,7 @@
           const box = { x: W * 0.05, y: H * 0.16, w: W * 0.55, h: H * 0.60 };
           const layers = LITH.slice(0, n).map(l => ({ name: l.name, label: l.tag, h: 1, color: CK.rockColor(l.name) }));
           const dx = box.x + box.w * 0.30, slope = 0.34 + tilt * 0.006, drop = 18;
-          const dike = (yTop, yBot) => {  // 略斜的岩脈:x 隨 y 線性偏移,被斷層錯開才看得出來
+          const dike = (yTop, yBot) => {  // 略斜的岩脈：x 隨 y 線性偏移,被斷層錯開才看得出來
             const xt = dx + (yTop - (box.y - 6)) * slope, lean = (yBot - yTop) * slope;
             ctx.save(); ctx.fillStyle = "#6b4f3f"; ctx.beginPath();
             ctx.moveTo(xt - 6, yTop); ctx.lineTo(xt + 6, yTop);
@@ -172,7 +172,7 @@
     }
   });
 
-  /* 放射性定年與半衰期:64 顆原子示範母→子 */
+  /* 放射性定年與半衰期：64 顆原子示範母→子 */
   PL.register("half-life", {
     build(root) {
       const METHODS = [
@@ -605,7 +605,7 @@
           steps: ["t = 0：撞擊閃光，塵埃注入平流層；半年到 2 年，陽光掉到一成以下、氣溫降約 10 °C，光合作用停下來。",
                   "拉到 10 年：塵埃沉降，天色恢復，但食物鏈已崩潰重組。",
                   "切換對照事件：二疊紀末 96% 比 K–Pg 的 76% 更慘烈，主因卻是火山與缺氧。"],
-          rule: "滅絕率高低不能反推機制:K–Pg 有銥異常層與撞擊坑兩項「兇器證據」，其他四次大滅絕的主因多指向火山活動與海洋缺氧。" },
+          rule: "滅絕率高低不能反推機制：K–Pg 有銥異常層與撞擊坑兩項「兇器證據」，其他四次大滅絕的主因多指向火山活動與海洋缺氧。" },
         presets: [["撞擊瞬間", () => { yrS.set(0); dustS.set(0.6); }], ["黑暗冬季（1 年後）", () => yrS.set(1)],
                   ["10 年後（沉降）", () => yrS.set(10)]]
       });

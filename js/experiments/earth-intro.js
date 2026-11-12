@@ -459,7 +459,7 @@
       });
       const compressS = PL.ui.slider(ui.L.controls, { label: "近世壓縮", min: 0, max: 1, step: 0.1, value: 0, digits: 1 });
       const highlightS = PL.ui.slider(ui.L.controls, { label: "聚焦事件", min: 0, max: 7, step: 1, value: 6, digits: 0 });
-      PL.ui.note(ui.L.controls, "把 46 億年壓成一天：生命在清晨出現、恐龍在 11 點滅絕、人類在最後幾秒才出現，這就是地質時間有多長。");
+      PL.ui.note(ui.L.controls, "把 46 億年壓成一天：生命在清晨出現、恐龍在 11 點滅絕、人類在最後幾秒才出現，地質時間就是這麼長。");
       PL.ui.procedure(ui.L.controls, {
         title: "兩種看時間的方法",
         steps: [
