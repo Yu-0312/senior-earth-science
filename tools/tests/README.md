@@ -32,9 +32,10 @@ node --max-old-space-size=4096 tools/tests/meaning-audit.js   # 這支單跑要�
 | `perf-test.js` | 首次載入（壓縮後）與延遲載入沒有被抵銷 |
 | `apparatus-test.js` | 器材層瘦身後的安全網：原始碼裡每個 `PL.apparatus.*` 呼叫都有匯出、匯出的器材都有人用、gzip 不超過 16 KB |
 | `zh-hant-test.js` | 網站檔案不可混進簡體字（內嵌 2,233 個「只存在於簡體」的常用字，不需安裝套件） |
+| `wording-test.js` | 學生看得到的文字不用破折號「——」，中文句子不用半形標點（只看字串與 HTML 文字，不看註解） |
 | `build-consistency.js` | 全站版本號一致（含 `duo/` 的兩個頁面）、SW 快取清單與實際檔案相符 |
 | `graph-ink-test.js` | 圖表裡的曲線與陰影，在兩種主題下都與底板有足夠對比 |
-| `lab-test.js` | 自訂實驗室的混合模型：酸鹼中和、緩衝、沉澱、氣體與指示劑（39 項） |
+| `lab-test.js` | 自由實驗室的結構檢查：lab.js 語法正確、程式用到的每個元素 lab.html 裡都有 |
 | `control-response-test.js` | **暫停狀態下**每一根滑桿、每一個步進器（− +）都要造成看得見的改變；選項晶片列出沒有立即反應的 |
 | `probe-pollution-test.js` | 探測引擎（sim-insight）掃滑桿量關係後，必須把實驗還原到使用者看到的狀態：同一實驗建置兩次、有無探測，讀數都要一致 |
 | `formula-text-test.js` | 公式轉純文字（說明頁 `p/` 與離線退路共用）：不認得的 LaTeX 指令不可被吃掉，⇌、↑↓、上下標等都要保留 |

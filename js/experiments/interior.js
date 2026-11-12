@@ -67,7 +67,7 @@
           }
           D.disc(ctx, dot[0], dot[1], 5, { fill: ph === "s" ? "#ef5350" : "#5c91dc", glow: "#ffd54f", glowSize: 9 });
           CK.panel(ctx, W * 0.64, H * 0.12, W * 0.33, H * 0.52, "地震波分層探測");
-          const rows = [["地殼 0–35 km", "固態"], ["地函 35–2,890 km", "固態（可緩慢流動）"], ["外核 2,890–5,150 km", "液態!S 波進不去"], ["內核 5,150–6,371 km", "固態（高壓）"]];
+          const rows = [["地殼 0–35 km", "固態"], ["地函 35–2,890 km", "固態（可緩慢流動）"], ["外核 2,890–5,150 km", "液態，S 波進不去"], ["內核 5,150–6,371 km", "固態（高壓）"]];
           rows.forEach((rw, i) => {
             D.text(ctx, rw[0], W * 0.66, H * 0.22 + i * 26, { color: PL.col("text-dim"), size: 10.5 });
             D.text(ctx, rw[1], W * 0.95, H * 0.22 + i * 26, { color: i === 2 ? "#ef5350" : PL.col("text"), size: 10.5, align: "right", weight: i === 2 ? "700" : "400" });
